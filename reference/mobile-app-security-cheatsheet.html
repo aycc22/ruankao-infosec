@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 移动应用安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>移动应用安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 25 章 · 打印用</p>
+  </header>
+
+  <h2>一、系统三要素</h2>
+  <table>
+    <tr><th>部分</th><th>考点</th></tr>
+    <tr><td><strong>移动应用 App</strong></td><td>代码、权限、本地存储、组件安全</td></tr>
+    <tr><td><strong>通信网络</strong></td><td>TLS、假冒基站、钓鱼、中间人</td></tr>
+    <tr><td><strong>应用服务端</strong></td><td>鉴权、访问控制、防注入、审计</td></tr>
+  </table>
+  <p class="meta"><strong>移动应用系统三要素</strong>：应用终端加网络，后台服务端来扛。</p>
+
+  <h2>二、主要威胁</h2>
+  <ul>
+    <li>操作系统平台漏洞 / 提权</li>
+    <li>无线网络：监听、假冒基站、域名欺诈、钓鱼</li>
+    <li>恶意代码：重打包、诱惑下载、远程控制、恶意扣费</li>
+    <li>代码逆向工程、应用程序非法篡改、数据窃取</li>
+  </ul>
+  <p class="meta"><strong>移动应用主要威胁</strong>：系统无线恶意码，逆向篡改偷数据。</p>
+
+  <h2>三、Android 机制</h2>
+  <table>
+    <tr><th>机制</th><th>作用</th></tr>
+    <tr><td>权限声明</td><td>控制 App 能访问哪些资源</td></tr>
+    <tr><td>应用签名</td><td>验证来源与完整性</td></tr>
+    <tr><td>沙箱</td><td>进程/应用隔离</td></tr>
+    <tr><td>网络加密</td><td>TLS/HTTPS 传输保护</td></tr>
+  </table>
+  <p><strong>四大组件</strong>：Activity（界面）· Service（后台）· Content Provider（数据共享，易泄露/注入）· Broadcast Receiver（广播）</p>
+  <p>权限等级：<strong>normal · dangerous · signature · signatureOrSystem</strong></p>
+  <p>安装包：<strong>APK</strong>（有签名校验，不能篡改后当合法包）</p>
+  <p class="meta"><strong>Android 安全四机制</strong>：权限签名沙箱立，通信加密内核护。</p>
+  <p class="meta"><strong>Android 四大组件</strong>：活动界面服务跑，广播接收内容供。</p>
+
+  <h2>四、iOS 机制（对照记）</h2>
+  <ul>
+    <li>安全启动链 · 代码签名 · 沙箱 · 数据保护（强制加密）· ASLR</li>
+    <li>安装包：<strong>IPA</strong></li>
+  </ul>
+
+  <h2>五、三类风险与加固四防</h2>
+  <table>
+    <tr><th>风险</th><th>加固</th></tr>
+    <tr><td>逆向工程</td><td>代码混淆、加固壳（ProGuard 等）</td></tr>
+    <tr><td>篡改/二次打包</td><td>签名校验、完整性校验</td></tr>
+    <tr><td>动态调试</td><td>反调试检测</td></tr>
+    <tr><td>数据窃取</td><td>本地加密 + TLS 传输</td></tr>
+  </table>
+  <p class="meta"><strong>移动应用加固四防</strong>：防逆防调试，防篡防泄漏。</p>
+
+  <h2>六、金融移动安全五步法</h2>
+  <ol>
+    <li>安全开发管理</li>
+    <li>通信内容加密保护</li>
+    <li>App 安全加固</li>
+    <li>App 安全测评</li>
+    <li>App 安全监测</li>
+  </ol>
+  <p class="meta"><strong>金融移动安全五步法</strong>：开发通信先加固，测评监测全流程。</p>
+
+  <h2>七、等保移动互联扩展</h2>
+  <ul>
+    <li>移动互联对象 = <strong>安全通用要求</strong> + <strong>移动互联安全扩展要求</strong></li>
+    <li>关注：移动终端管理、移动应用管控、无线接入、应用软件安全</li>
+  </ul>
+  <p class="meta"><strong>等保移动互联扩展</strong>：通用不够再加移，终端应用要管住。</p>
+
+  <h2>八、易错陷阱</h2>
+  <ul>
+    <li>敏感数据<strong>勿明文存本地</strong></li>
+    <li>传输必须 <strong>TLS/HTTPS</strong>，不能 HTTP 裸奔</li>
+    <li>Content Provider 易导致泄露与 SQL 注入</li>
+    <li>混淆 ≠ 加密；加固是综合防护手段</li>
+    <li>等保测评 ≠ 风险评估（第 18 课）</li>
+  </ul>
+
+  <h2>九、下午卷模板</h2>
+  <p>先写<strong>传输加密 + 本地加密</strong> → 再写<strong>认证/权限/加固</strong> → <strong>测评与监测</strong> → 点名<strong>等保移动互联扩展</strong>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0021-mobile-app-security.html">第 21 课</a> ·
+    <a href="./mnemonics.html#lesson-21">口诀</a> ·
+    <a href="./classified-protection-cheatsheet.html">等保速查</a> ·
+    <a href="./textbook/ch25.html">教材精读第 25 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
