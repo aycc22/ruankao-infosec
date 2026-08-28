@@ -360,7 +360,8 @@ footer {
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
   }
 
-  .nav-overlay {
+  /* 仅打开目录时显示遮罩；勿写 .nav-overlay { display:block }，会覆盖 [hidden] 导致整页常暗 */
+  body.nav-open .nav-overlay {
     display: block;
     position: fixed;
     inset: 0;
