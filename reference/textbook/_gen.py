@@ -337,9 +337,22 @@ MORE = [
             "等保工控对象 = 安全通用要求 + 工业控制安全扩展要求；认名 IEC 62443。",
         ]),
     ], ["工控优先可用，不是机密优先。", "SCADA 偏远程监视调度，DCS 偏厂内分布控制。", "功能安全故障 ≠ 信息安全入侵。"], ("工控系统安全的首要关注通常是？", "可用性与连续运行", "美观界面", "社交分享", "游戏性能")),
-    (25, "移动应用安全需求分析与安全保护工程", "第 24 课", [
-        ("25.1–25.3 移动安全", ["Android/iOS 权限、代码混淆、本地存储加密、通信 TLS、反调试。"]),
-    ], ["移动应用敏感数据勿明文存本地。"], ("移动应用传输敏感数据应使用？", "TLS/HTTPS", "HTTP", "FTP", "Telnet")),
+    (25, "移动应用安全需求分析与安全保护工程", "第 21 课", [
+        ("25.1 移动应用安全威胁与需求", [
+            "系统三要素：<strong>移动应用 App</strong>、<strong>通信网络</strong>、<strong>应用服务端</strong>。",
+            "威胁：OS 平台漏洞、无线网络（监听/假冒基站/钓鱼）、恶意代码、逆向工程、非法篡改、数据窃取。",
+        ]),
+        ("25.2 Android / iOS 安全机制", [
+            "Android：权限声明、应用签名、沙箱、网络加密、内核安全；四大组件 Activity/Service/Content Provider/Broadcast Receiver。",
+            "权限等级：normal、dangerous、signature、signatureOrSystem；安装包 <strong>APK</strong>。",
+            "iOS：安全启动链、代码签名、沙箱、数据保护（强制加密）、ASLR；安装包 <strong>IPA</strong>。",
+        ]),
+        ("25.3 保护机制与综合应用", [
+            "三类风险：逆向工程、篡改、数据窃取；加固：防逆向、防调试、防篡改、防窃取（混淆/TLS/签名校验）。",
+            "金融移动安全五步：安全开发管理 → 通信加密 → 加固 → 测评 → 监测。",
+            "移动互联对象 = 安全通用要求 + <strong>移动互联安全扩展要求</strong>。",
+        ]),
+    ], ["敏感数据勿明文存本地。", "Content Provider 易导致泄露与 SQL 注入。", "传输必须 TLS/HTTPS。"], ("移动应用传输敏感数据应使用？", "TLS/HTTPS", "HTTP", "FTP", "Telnet")),
     (26, "大数据安全需求分析与安全保护工程", "第 24 课", [
         ("26.1–26.3 大数据安全", ["数据分类分级、脱敏、访问审计、隐私计算概念；生命周期安全。"]),
     ], ["大数据=大量聚合后的隐私风险上升。"], ("大数据环境下保护隐私的常用技术是？", "数据脱敏", "删除所有日志", "公开数据集", "禁用加密")),
@@ -359,6 +372,12 @@ for item in MORE:
             "lesson_link": "../../lessons/0020-ics-security.html",
             "cheatsheet": "../ics-security-cheatsheet.html",
             "cheatsheet_label": "工控安全速查",
+        }
+    if num == 25:
+        extra = {
+            "lesson_link": "../../lessons/0021-mobile-app-security.html",
+            "cheatsheet": "../mobile-app-security-cheatsheet.html",
+            "cheatsheet_label": "移动应用安全速查",
         }
     CHAPTERS.append({
         "num": num, "file": f"ch{num:02d}.html", "title": title,

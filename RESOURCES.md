@@ -61,6 +61,7 @@
 - 第 21 章网络设备安全（辅助）：[51CTO·交换机代际演进](https://rk.51cto.com/article/368612.html)、[Cisco·RADIUS 与 TACACS+ 比较](https://www.cisco.com/c/zh_tw/support/docs/security-vpn/remote-authentication-dial-user-service-radius/13838-10.html)
 - 第 23 章云计算安全（辅助）：[博客园·devdog·第二十三章](https://www.cnblogs.com/devdog/p/15570570.html)、[51CTO·IaaS/PaaS/SaaS 辨析](https://rk.51cto.com/article/594459.html)、[绿盟·等保云计算扩展要求](https://blog.nsfocus.net/djbh-cloud-computing-extension-requirements/)
 - 第 24 章工控安全（辅助）：[博客园·autopwn·第二十四章](https://www.cnblogs.com/autopwn/p/16571920.html)、[51CTO·工控防火墙应用](https://rk.51cto.com/article/310644.html)
+- 第 25 章移动应用安全（辅助）：[博客园·devdog·第二十五章](https://www.cnblogs.com/devdog/p/15575500.html)、[CSDN·2023 下半年案例分析 Android 组件](https://blog.csdn.net/qdzx2008/article/details/143948288)
 - 2023–2025 机考考点分布（本工作区）：[`reference/exam-2023-2025.html`](reference/exam-2023-2025.html)
   只收录可公开核对的考点清单与题型，不收录完整回忆卷；二手来源包括 [信管网 2025 综合知识公开题干](https://www.cnitpm.com/pm1/179799rht2l9gca8.html)、[信管网试题栏目](https://www.cnitpm.com/class/19/e6_1.html)。
 

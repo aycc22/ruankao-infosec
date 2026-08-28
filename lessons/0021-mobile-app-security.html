@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 21 课 · 移动应用安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 21 · 约 18 分钟</div>
+    <h1>装在口袋里的风险：移动应用安全需求分析与保护工程</h1>
+    <p class="meta">本课目标：分清移动应用三要素；背住 Android 四大组件与权限机制；秒判逆向/篡改/窃取三类风险；掌握加固四防与金融 App 五步法；下午卷能写通信加密 + 本地存储 + 加固对策。</p>
+  </header>
+
+  <h2>开场：工控守工厂，手机 App 守什么？</h2>
+  <p>
+    第 20 课守的是<strong>工厂产线</strong>；本课落到<strong>手机 App</strong>——支付、政务、办公都在掌上完成。
+    考点核心不是「装个杀毒软件」，而是：<strong>终端 + 网络 + 服务端</strong>三层一起守；敏感数据<strong>传输加密、本地加密</strong>；防<strong>逆向、篡改、窃取</strong>。
+    教材对应<strong>第 25 章</strong>；与第 12 课等保扩展要求（移动互联）直接挂钩。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 工控系统相对传统 IT，安全需求优先序通常是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 可用性优先于完整性与机密性</button>
+      <button class="opt">B. 机密性优先于可用性与完整性</button>
+      <button class="opt">C. 完整性优先于可用性与机密性</button>
+      <button class="opt">D. 三者同等且顺序任意排列</button>
+    </div>
+    <div class="explain">答案 A。工控：可用 &gt; 完整 &gt; 机密（第 20 课核心考点）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 等保定级对象是工业控制系统时，正确表述是？</div>
+    <div class="opts">
+      <button class="opt">A. 只需满足安全通用要求即可</button>
+      <button class="opt" data-correct="true">B. 通用要求叠加工业控制扩展要求</button>
+      <button class="opt">C. 只需满足云计算扩展要求即可</button>
+      <button class="opt">D. 工控系统不需要等级保护</button>
+    </div>
+    <div class="explain">答案 B。工控对象 = 通用 + 工控扩展。本课移动对象同理：通用 + 移动互联扩展。</div>
+  </div>
+
+  <h2>一、移动应用系统三要素</h2>
+  <p>教材把移动应用安全看成<strong>端到端系统</strong>，不是只看手机：</p>
+  <table>
+    <tr><th>组成部分</th><th>说明</th><th>考点</th></tr>
+    <tr><td><strong>移动应用（App）</strong></td><td>安装在终端上的客户端程序</td><td>代码安全、本地存储、权限申请</td></tr>
+    <tr><td><strong>通信网络</strong></td><td>Wi-Fi、4G/5G、互联网</td><td>窃听、假冒基站、钓鱼、中间人</td></tr>
+    <tr><td><strong>应用服务端</strong></td><td>后台 API、数据库、业务逻辑</td><td>鉴权、访问控制、防注入、日志审计</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>移动应用系统三要素</strong>）：<strong>应用终端加网络，后台服务端来扛</strong>（字头：应网服）。
+  </div>
+
+  <h2>二、主要威胁（选择题 + 下午卷素材）</h2>
+  <table>
+    <tr><th>威胁类别</th><th>典型表现</th></tr>
+    <tr><td><strong>操作系统平台威胁</strong></td><td>系统漏洞、提权、沙箱绕过；App 安全依赖 OS</td></tr>
+    <tr><td><strong>无线网络攻击</strong></td><td>通信监听、假冒基站、域名欺诈、网络钓鱼</td></tr>
+    <tr><td><strong>恶意代码</strong></td><td>APK 重打包、诱惑下载、远程控制、恶意扣费</td></tr>
+    <tr><td><strong>代码逆向工程</strong></td><td>反编译获取密钥、业务逻辑、接口地址</td></tr>
+    <tr><td><strong>应用程序非法篡改</strong></td><td>二次打包、盗版 App、签名被替换</td></tr>
+    <tr><td><strong>数据窃取</strong></td><td>本地明文存储、截获通信、越权读取</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>移动应用主要威胁</strong>）：<strong>系统无线恶意码，逆向篡改偷数据</strong>。
+  </div>
+  <div class="callout warn">
+    易错：移动 App 威胁不只「手机中毒」——<strong>服务端鉴权弱、HTTP 明文传输</strong>同样是高频考点。
+  </div>
+
+  <h2>三、Android 安全机制（上午卷常考）</h2>
+  <p>Android 是开源移动终端 OS，分层：Linux 内核层 → 系统运行层 → 应用框架层 → 应用层。</p>
+  <table>
+    <tr><th>机制</th><th>作用</th></tr>
+    <tr><td><strong>权限声明机制</strong></td><td>App 须声明并获授权才能访问相机、通讯录等</td></tr>
+    <tr><td><strong>应用程序签名</strong></td><td>验证来源与完整性，防二次打包篡改</td></tr>
+    <tr><td><strong>沙箱机制</strong></td><td>不同 App/进程隔离，互不能直接访问数据</td></tr>
+    <tr><td><strong>网络通信加密</strong></td><td>鼓励 TLS/HTTPS 保护传输</td></tr>
+    <tr><td><strong>内核安全机制</strong></td><td>底层进程与资源隔离</td></tr>
+  </table>
+  <p><strong>四大组件</strong>（2023 案例分析考过）：</p>
+  <table>
+    <tr><th>组件</th><th>作用</th><th>安全注意</th></tr>
+    <tr><td><strong>Activity</strong></td><td>界面交互</td><td>导出组件可被外部调用，需权限控制</td></tr>
+    <tr><td><strong>Service</strong></td><td>后台服务</td><td>防止未授权绑定与启动</td></tr>
+    <tr><td><strong>Content Provider</strong></td><td>跨应用数据共享</td><td>易导致<strong>敏感信息泄露、SQL 注入</strong></td></tr>
+    <tr><td><strong>Broadcast Receiver</strong></td><td>接收系统/应用广播</td><td>注意广播劫持与信息泄露</td></tr>
+  </table>
+  <p>权限保护等级常考：<strong>normal</strong>（普通）· <strong>dangerous</strong>（危险，需用户授权）· <strong>signature</strong>（签名级）· <strong>signatureOrSystem</strong>（签名或系统级）。</p>
+  <p>安装包格式：<strong>APK</strong>（本质是 zip 结构，但有签名校验——<strong>不能改内容后仍当合法包使用</strong>）。</p>
+  <div class="callout ok">
+    口诀（<strong>Android 安全四机制</strong>）：<strong>权限签名沙箱立，通信加密内核护</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>Android 四大组件</strong>）：<strong>活动界面服务跑，广播接收内容供</strong>（Activity · Service · Broadcast Receiver · Content Provider）。
+  </div>
+
+  <h2>四、iOS 安全机制（与 Android 对照记）</h2>
+  <table>
+    <tr><th>机制</th><th>要点</th></tr>
+    <tr><td><strong>安全启动链</strong></td><td>从芯片到 OS 逐级校验，根信任在硬件</td></tr>
+    <tr><td><strong>代码签名</strong></td><td>未签名/签名无效 App 不能正常运行</td></tr>
+    <tr><td><strong>沙箱机制</strong></td><td>App 只能访问自己沙箱内资源</td></tr>
+    <tr><td><strong>数据保护</strong></td><td>强制加密存储敏感数据</td></tr>
+    <tr><td><strong>ASLR</strong></td><td>地址空间布局随机化，增内存攻击难度</td></tr>
+  </table>
+  <p>安装包格式：<strong>IPA</strong>（iOS）；与 Android APK 对照记即可。</p>
+  <div class="callout warn">
+    易错：iOS 闭源 ≠ 绝对安全；考点仍是<strong>签名、沙箱、加密、启动链</strong>这些机制名称。
+  </div>
+
+  <h2>五、App 安全风险与加固四防</h2>
+  <p>教材归纳三类核心风险：<strong>逆向工程</strong> · <strong>篡改</strong> · <strong>数据窃取</strong>。</p>
+  <table>
+    <tr><th>加固手段</th><th>防什么</th><th>技术示例</th></tr>
+    <tr><td><strong>防逆向</strong></td><td>反编译、静态分析</td><td>代码混淆（ProGuard 等）、加固壳</td></tr>
+    <tr><td><strong>防调试</strong></td><td>动态调试、断点分析</td><td>反调试检测、发现调试则退出/告警</td></tr>
+    <tr><td><strong>防篡改</strong></td><td>二次打包、盗版</td><td>签名校验、完整性哈希校验</td></tr>
+    <tr><td><strong>防窃取</strong></td><td>本地/传输数据泄露</td><td>本地加密存储、TLS/HTTPS 传输</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>移动应用加固四防</strong>）：<strong>防逆防调试，防篡防泄漏</strong>（逆向 · 调试 · 篡改 · 窃取）。
+  </div>
+  <div class="callout warn">
+    易错：<strong>敏感数据勿明文存本地</strong>（SharedPreferences、SQLite 都要加密）；传输必须 TLS，不能 HTTP 裸奔。
+  </div>
+
+  <h2>六、App 安全监测（认名即可）</h2>
+  <p>上线前后可用安全检测覆盖：</p>
+  <ul>
+    <li>身份认证机制 · 通信会话安全 · 敏感信息保护</li>
+    <li>日志安全策略 · 交易流程安全 · 服务端鉴权</li>
+    <li>访问控制 · 数据防篡改 · 防 SQL 注入 · 防钓鱼</li>
+    <li>App 安全漏洞扫描（SAST/DAST 思路）</li>
+  </ul>
+  <p>商用加固工具认名：腾讯乐固、360 加固、梆梆加固；开源混淆常见 <strong>ProGuard</strong>。</p>
+
+  <h2>七、金融移动安全五步法（下午卷模板）</h2>
+  <ol>
+    <li><strong>安全开发管理</strong>：SDL、代码审查、第三方 SDK 评估</li>
+    <li><strong>通信内容加密</strong>：全链路 TLS；证书校验；禁明文 API</li>
+    <li><strong>App 安全加固</strong>：混淆 + 防调试 + 防篡改 + 防窃取</li>
+    <li><strong>App 安全测评</strong>：漏洞扫描、渗透测试、合规检测</li>
+    <li><strong>App 安全监测</strong>：运行时监测、异常行为告警、版本更新</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>金融移动安全五步法</strong>）：<strong>开发通信先加固，测评监测全流程</strong>。
+  </div>
+  <p>运营商/泛互联网 App 额外风险：账号密码窃取、计费 SDK 破解、恶意刷量、社工库诈骗——对策仍回到<strong>认证 + 加密 + 加固 + 监测</strong>。</p>
+
+  <h2>八、等保 2.0：通用 + 移动互联扩展</h2>
+  <p>
+    与云、工控一样：定级对象是<strong>采用移动互联技术的系统</strong>时 = <strong>安全通用要求</strong> + <strong>移动互联安全扩展要求</strong>。
+    扩展侧关注：移动终端管理、移动应用管控、无线接入安全、移动应用软件安全等。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>等保移动互联扩展</strong>）：<strong>通用不够再加移，终端应用要管住</strong>。
+  </div>
+
+  <h2>九、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 移动应用系统由哪三部分构成？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 移动应用、通信网络、应用服务端</button>
+      <button class="opt">B. 仅手机硬件与充电器</button>
+      <button class="opt">C. 仅桌面浏览器与打印机</button>
+      <button class="opt">D. 仅工控 PLC 与 RTU</button>
+    </div>
+    <div class="explain">答案 A。移动安全是 App + 网络 + 服务端端到端问题。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 移动应用传输敏感数据，首选应使用？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. TLS / HTTPS 加密通道</button>
+      <button class="opt">B. 明文 HTTP 协议</button>
+      <button class="opt">C. 明文 FTP 协议</button>
+      <button class="opt">D. 明文 Telnet 协议</button>
+    </div>
+    <div class="explain">答案 A。传输层必须加密，防窃听与中间人攻击。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · Android 中负责跨应用数据共享、易导致 SQL 注入的组件是？</div>
+    <div class="opts">
+      <button class="opt">A. 仅 Activity 界面组件</button>
+      <button class="opt" data-correct="true">B. Content Provider 内容提供组件</button>
+      <button class="opt">C. 仅系统桌面壁纸服务</button>
+      <button class="opt">D. 仅 USB 充电管理模块</button>
+    </div>
+    <div class="explain">答案 B。Content Provider 共享数据，配置不当可泄露或注入（2023 案例考点）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 对 APK 二次打包盗版，最有效的防护思路是？</div>
+    <div class="opts">
+      <button class="opt">A. 把安装包改名为 zip 直接替换</button>
+      <button class="opt" data-correct="true">B. 数字签名校验与完整性校验</button>
+      <button class="opt">C. 关闭所有网络通信功能</button>
+      <button class="opt">D. 删除全部用户界面组件</button>
+    </div>
+    <div class="explain">答案 B。防篡改靠签名 + 完整性校验；改名 zip 不能绕过签名校验。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 代码混淆、反调试检测主要防范？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 逆向工程与动态调试分析</button>
+      <button class="opt">B. 仅机房空调温度异常</button>
+      <button class="opt">C. 仅工控 PLC 通信中断</button>
+      <button class="opt">D. 仅数据库索引失效问题</button>
+    </div>
+    <div class="explain">答案 A。混淆防静态逆向，反调试防动态分析。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 金融类移动 App 安全保护的正确步骤组合是？</div>
+    <div class="opts">
+      <button class="opt">A. 只装杀毒软件、不做任何测评</button>
+      <button class="opt" data-correct="true">B. 安全开发、通信加密、加固、测评、监测</button>
+      <button class="opt">C. 只用 HTTP、不做身份认证</button>
+      <button class="opt">D. 明文存 Token、禁止版本更新</button>
+    </div>
+    <div class="explain">答案 B。金融移动安全五步法：开发 → 加密 → 加固 → 测评 → 监测。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Mobile apps should store sensitive tokens?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. In plain text on local storage</button>
+      <button class="opt" data-correct="true">B. Encrypted, not in plain text locally</button>
+      <button class="opt">C. Only inside public log files</button>
+      <button class="opt">D. Only on unencrypted HTTP</button>
+    </div>
+    <div class="explain">答案 B。敏感令牌/密钥须加密存储，禁止本地明文（sensitive data must not be stored in plain text）。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某银行 App 用 HTTP 传登录口令，Token 明文存 SharedPreferences，未做代码混淆，后台 API 无频率限制。请：（1）指出主要风险；（2）给出至少 5 条整改措施。</p>
+    <div class="ans">
+      <strong>（1）主要风险</strong><br>
+      · HTTP 明文 → 中间人窃听口令与 Token。<br>
+      · 本地明文 Token → 手机被 Root/越狱或恶意 App 读取。<br>
+      · 无混淆 → 逆向获取接口地址与加密逻辑。<br>
+      · API 无频率限制 → 撞库、暴力破解。<br>
+      · 端到端缺监测 → 异常登录难以及时发现。<br><br>
+      <strong>（2）整改措施（示例）</strong><br>
+      ① <strong>通信加密</strong>：全链路 HTTPS/TLS；证书校验；禁明文 API。<br>
+      ② <strong>本地存储</strong>：Token/密钥加密存储；敏感数据不落明文日志。<br>
+      ③ <strong>身份认证</strong>：多因素认证；服务端鉴权 + 会话超时；API 频率限制。<br>
+      ④ <strong>App 加固</strong>：代码混淆、防调试、签名校验防二次打包。<br>
+      ⑤ <strong>组件安全</strong>：最小权限；Content Provider 等导出组件加访问控制。<br>
+      ⑥ <strong>安全测评与监测</strong>：漏洞扫描/渗透测试；运行时异常行为监测。<br>
+      ⑦ <strong>合规</strong>：等保通用 + <strong>移动互联扩展</strong>。<br>
+      答题模板：<strong>先写传输加密 + 本地加密 → 再写认证/加固/监测 → 点名等保扩展</strong>。
+    </div>
+  </details>
+
+  <h2>十、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 25 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch25.html">第 25 章 移动应用安全</a>，对照<a href="../reference/mobile-app-security-cheatsheet.html">移动应用安全速查卡</a>背三要素与加固四防。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：三要素；Android 四大组件；加固四防；金融五步法；等保怎么叠。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 三要素：应用终端加网络，后台服务端来扛；② 威胁：系统无线恶意码，逆向篡改偷数据；③ 加固：防逆防调试，防篡防泄漏；④ 金融：开发通信先加固，测评监测全流程；⑤ 等保：通用不够再加移。</li>
+  </ol>
+
+  <h2>十一、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 25 章 移动应用安全需求分析与安全保护工程（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>备考笔记整理：<a href="https://www.cnblogs.com/devdog/p/15575500.html">博客园·devdog·第 25 章</a></li>
+    <li>2023 案例 Android 组件考点：<a href="https://blog.csdn.net/qdzx2008/article/details/143948288">CSDN·2023 下半年案例分析</a></li>
+    <li>速查：<a href="../reference/mobile-app-security-cheatsheet.html">移动应用安全速查</a> · <a href="../reference/mnemonics.html#lesson-21">第 21 课口诀</a> · <a href="./0012-classified-protection.html">第 12 课 等保 2.0</a> · <a href="./0020-ics-security.html">第 20 课 工控安全</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「Content Provider 为什么容易 SQL 注入」「混淆和加固有什么区别」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 21 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：大数据安全需求分析与安全保护工程（教材第 26 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
