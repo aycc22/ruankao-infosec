@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 11 课 · 网络安全风险评估</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 11 · 约 18 分钟</div>
+    <h1>算清楚再动手：网络安全风险评估</h1>
+    <p class="meta">本课目标：背住五要素与七步流程；会用「可能性 × 损失」算风险；区分自/检查/委托三种模式；掌握威胁与脆弱性识别要点；会选四种风险处置策略；知道下午卷怎么按流程答题。</p>
+  </header>
+
+  <h2>开场：买了防火墙就够安全了吗？</h2>
+  <p>
+    前 10 课学了防火墙、IDS、补丁、蜜罐……都是<strong>具体防护手段</strong>。
+    但企业常问：<strong>我到底有多危险？先修哪里？钱花在哪最值？</strong>
+    这就需要<strong>网络安全风险评估</strong>——教材第 16 章，也是<strong>下午卷案例高频考点</strong>（2023–2025 机考清单标红缺口之一）。
+    一句话：<strong>知己知彼，先算风险再定措施</strong>。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 蜜罐技术最突出的特点是？</div>
+    <div class="opts">
+      <button class="opt">A. 对合法业务流量做访问控制</button>
+      <button class="opt" data-correct="true">B. 故意暴露陷阱以诱捕攻击者</button>
+      <button class="opt">C. 对已知漏洞自动安装补丁</button>
+      <button class="opt">D. 集中多源日志做关联分析</button>
+    </div>
+    <div class="explain">答案 B。A 防火墙 · C 补丁 · D SIEM。蜜罐核心是诱捕与欺骗。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 在特定服务端口侦听并对请求应答，属于哪种蜜罐配置？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 诱骗服务</button>
+      <button class="opt">B. 弱化系统</button>
+      <button class="opt">C. 强化系统</button>
+      <button class="opt">D. 用户模式服务器</button>
+    </div>
+    <div class="explain">答案 A。端口侦听 + 模拟应答 = 诱骗服务。</div>
+  </div>
+
+  <h2>一、风险评估是什么</h2>
+  <p>
+    <strong>网络安全风险</strong>：因系统存在<strong>脆弱性</strong>，遭受人为或自然<strong>威胁</strong>而导致安全事件的可能影响。
+    <strong>风险评估</strong>：依据信息安全标准，对保密性、完整性、可控性、可用性等属性做科学评价，确认风险等级。
+  </p>
+  <div class="callout ok">
+    教材定义（简记）：评估<strong>威胁者利用资产脆弱性，造成资产损失的严重程度</strong>。
+    <br>核心公式：<strong>风险值 = 安全事件可能性 × 安全事件损失</strong>（R = f(Ep, Ev)）。
+    <br>例：被攻击概率 0.8 × 经济损失 2 万元 → 风险值 = <strong>1.6 万元</strong>。
+    <br>口诀（<strong>风险计算公式</strong>）：<strong>风险等于可能乘损失</strong>。
+  </div>
+
+  <h2>二、五要素（上午选择 + 下午案例都要写）</h2>
+  <table>
+    <tr><th>要素</th><th>角色</th></tr>
+    <tr><td><strong>资产</strong></td><td>需要保护的对象，因有价值而成为攻击目标</td></tr>
+    <tr><td><strong>威胁</strong></td><td>可能对资产造成损害的潜在事件</td></tr>
+    <tr><td><strong>脆弱性</strong></td><td>资产可被威胁利用的弱点（漏洞、管理缺陷）</td></tr>
+    <tr><td><strong>安全措施</strong></td><td>保护资产、修补脆弱性、抵御威胁</td></tr>
+    <tr><td><strong>风险</strong></td><td>威胁利用脆弱性造成损害的可能性与影响</td></tr>
+  </table>
+  <p>逻辑链：资产有价值 → 存在脆弱性 → 威胁可利用 → <strong>安全措施降低风险</strong>。</p>
+  <div class="callout warn">
+    <strong>易错：</strong>有的资料写「风险 = 威胁 × 脆弱性 × 资产价值」，教材精确定义是<strong>可能性 × 损失</strong>。
+    五要素里的威胁、脆弱性、资产价值会<strong>分别影响</strong>可能性和损失，但公式本身记「可能乘损失」。
+  </div>
+
+  <h2>三、三种评估模式</h2>
+  <table>
+    <tr><th>模式</th><th>谁做</th><th>考试关键词</th></tr>
+    <tr><td><strong>自评估</strong></td><td>系统拥有者自己</td><td>依靠自身力量评估自有系统</td></tr>
+    <tr><td><strong>检查评估</strong></td><td>网络安全/业务主管机关</td><td>依据法规、标准、管理规定</td></tr>
+    <tr><td><strong>委托评估</strong></td><td>使用单位委托专业机构</td><td>第三方评估机构实施</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>三种评估模式</strong>）：<strong>自评自查，检查监管，委托外包</strong>。</p>
+
+  <h2>四、七步流程（下午卷得分关键 · 按顺序写）</h2>
+  <ol>
+    <li><strong>准备</strong>：确定评估对象与范围（拓扑、协议、设备、业务、已有防护等），输出《范围界定报告》</li>
+    <li><strong>资产识别</strong>：鉴定清单 + 价值估算（基于 CIA，1–5 级）</li>
+    <li><strong>威胁识别</strong>：来源、途径、效果、意图、频率</li>
+    <li><strong>脆弱性识别</strong>：技术 + 管理；用扫描/检查/问卷/访谈/渗透测试</li>
+    <li><strong>已有安全措施确认</strong>：现有措施能否防利用、能否抵御已确认威胁</li>
+    <li><strong>风险分析</strong>：赋值 → 算可能性 → 算损失 → 得风险值与等级</li>
+    <li><strong>风险处置与管理</strong>：对不可接受风险制定处理计划，并<strong>再评估残余风险</strong></li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>风险评估七步</strong>）：<strong>准资威脆措析处</strong>——准备、资产、威胁、<strong>脆</strong>弱性、已有措施、分析、处置（七字对七步）。
+    <br>下午卷：<strong>七步按顺序写，一步不跳</strong>，比单点技术细节更拿分。
+  </div>
+
+  <h2>五、资产识别：鉴定 + 价值估算</h2>
+  <p>
+    <strong>鉴定</strong>：列出资产清单。常见六类：网络设备、主机、服务器、应用、数据、文档。
+    <strong>价值估算</strong>：不是物理价格，是相对重要程度——基于<strong>保密性 C、完整性 I、可用性 A</strong> 三属性，各 1–5 级赋值。
+  </p>
+  <table>
+    <tr><th>等级</th><th>含义</th></tr>
+    <tr><td>5 很高</td><td>破坏后可能造成非常严重损失</td></tr>
+    <tr><td>3 中等</td><td>破坏后可能造成中等程度损失</td></tr>
+    <tr><td>1 很低</td><td>破坏后影响很小，可忽略</td></tr>
+  </table>
+
+  <h2>六、威胁识别：五个维度</h2>
+  <table>
+    <tr><th>维度</th><th>考什么</th></tr>
+    <tr><td><strong>来源</strong></td><td>自然（雷电、洪水）/ 人为（盗窃、网络攻击）</td></tr>
+    <tr><td><strong>途径</strong></td><td>病毒、木马、蠕虫、漏洞利用、嗅探等组合手段</td></tr>
+    <tr><td><strong>效果</strong></td><td>抽象为三类：<strong>非法访问、欺骗、拒绝服务</strong></td></tr>
+    <tr><td><strong>意图</strong></td><td>挑战、情报获取、恐怖主义、经济利益、报复</td></tr>
+    <tr><td><strong>频率</strong></td><td>历史事件、行业报告、监测统计数据</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>威胁效果三类</strong>）：<strong>非欺拒</strong>（非法访问、欺骗、拒绝服务）。</p>
+
+  <h2>七、脆弱性识别：技术 + 管理</h2>
+  <table>
+    <tr><th>类型</th><th>例子</th></tr>
+    <tr><td><strong>技术脆弱性</strong></td><td>OS/应用漏洞、弱口令、配置不当、架构缺陷</td></tr>
+    <tr><td><strong>管理脆弱性</strong></td><td>制度缺失、职责不清、培训不足、应急不完善</td></tr>
+  </table>
+  <p>识别方法（与第 8 课衔接）：<strong>漏洞扫描、人工检查、问卷调查、安全访谈、渗透测试</strong>。</p>
+  <div class="callout info">
+    口诀（<strong>脆弱性识别五法</strong>）：<strong>扫问访渗人</strong>（扫描、问卷、访谈、渗透、人工检查）。
+    <br>漏扫发现已知漏洞，渗透测试在<strong>获授权</strong>后模拟攻击验证利用——第 8 课已学过，这里直接用于脆弱性识别。
+  </div>
+
+  <h2>八、风险分析与计算</h2>
+  <p>分析步骤（教材 16.2.6，与七步流程中的「分析」对应）：</p>
+  <ol>
+    <li>识别资产并赋值</li>
+    <li>识别威胁并赋频率</li>
+    <li>识别脆弱性并赋严重程度</li>
+    <li>判断安全事件<strong>可能性</strong></li>
+    <li>计算安全事件<strong>损失</strong> → 得<strong>风险值</strong></li>
+  </ol>
+  <table>
+    <tr><th>计算方法</th><th>特点</th><th>输出</th></tr>
+    <tr><td>定性</td><td>主观赋值（很高/高/中/低/很低）</td><td>无关紧要、可接受、待观察、不可接受</td></tr>
+    <tr><td>定量</td><td>量化为数据</td><td>风险数值（如 1.6 万元）</td></tr>
+    <tr><td>综合</td><td>定性 + 定量结合</td><td>数值 + 定性结论</td></tr>
+  </table>
+  <p>具体运算：<strong>相乘法</strong>（可能性 × 损失）或 <strong>矩阵法</strong>（二维矩阵查表）。</p>
+
+  <h2>九、风险处置四策略（选择 + 案例必考）</h2>
+  <table>
+    <tr><th>策略</th><th>干什么</th><th>题干信号</th></tr>
+    <tr><td><strong>降低</strong></td><td>采取措施减概率或减影响</td><td>部署防火墙、打补丁、加密、冗余</td></tr>
+    <tr><td><strong>转移</strong></td><td>把部分后果转给第三方</td><td>购买保险、外包、签订合同</td></tr>
+    <tr><td><strong>接受</strong></td><td>承认残余风险，需书面确认</td><td>处理成本高于损失、管理层批准</td></tr>
+    <tr><td><strong>规避</strong></td><td>取消或改变高风险活动</td><td>放弃高风险业务、不用不成熟技术</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>风险处置四策略</strong>）：<strong>降转接避</strong>（降低、转移、接受、规避）。
+    <br><strong>忽略而不记录 ≠ 接受</strong>——接受必须明确决策并留痕。
+    <br>处置后要做<strong>再评估</strong>：残余风险是否降到可接受水平；仍不可接受则继续处理或正式接受。
+  </div>
+
+  <h2>十、常用工具与应用场景</h2>
+  <table>
+    <tr><th>环节</th><th>工具/手段</th></tr>
+    <tr><td>拓扑发现</td><td>ping、traceroute、网管平台</td></tr>
+    <tr><td>脆弱性扫描</td><td>Nmap、Nessus、X-Scan（第 8 课口诀：网有图老 X）</td></tr>
+    <tr><td>渗透测试</td><td>Metasploit、BackTrack（须法律授权）</td></tr>
+    <tr><td>威胁识别</td><td>Snort/Suricata（IDS）、Wireshark、审计数据分析</td></tr>
+  </table>
+  <p>主要应用场景：网络安全规划与设计、<strong>等级保护</strong>、运维与应急响应、数据安全管理。</p>
+  <div class="callout warn">
+    <strong>风险评估 ≠ 等保测评</strong>：风险评估找风险、定处置；等保测评对照等级要求做符合性检查。两者有关联，但不是一回事（第 17 课等保专讲）。
+  </div>
+
+  <h2>十一、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 网络安全风险值的计算公式是？</div>
+    <div class="opts">
+      <button class="opt">A. 资产价值 + 威胁频率 + 脆弱性等级</button>
+      <button class="opt" data-correct="true">B. 安全事件可能性 × 安全事件损失</button>
+      <button class="opt">C. 威胁数量 × 漏洞数量</button>
+      <button class="opt">D. 安全措施数量 ÷ 资产总数</button>
+    </div>
+    <div class="explain">答案 B。教材公式 R = f(Ep, Ev)，即可能性乘损失。A/C/D 都不是标准公式。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 由主管机关依据法规标准发起的风险评估属于？</div>
+    <div class="opts">
+      <button class="opt">A. 自评估</button>
+      <button class="opt" data-correct="true">B. 检查评估</button>
+      <button class="opt">C. 委托评估</button>
+      <button class="opt">D. 渗透评估</button>
+    </div>
+    <div class="explain">答案 B。主管机关 + 法规标准 = 检查评估。自评估是拥有者自己做；委托评估是找第三方机构。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 风险评估流程中，「确认已有防火墙能否抵御已识别威胁」属于哪一步？</div>
+    <div class="opts">
+      <button class="opt">A. 资产识别</button>
+      <button class="opt">B. 威胁识别</button>
+      <button class="opt" data-correct="true">C. 已有安全措施确认</button>
+      <button class="opt">D. 风险处置</button>
+    </div>
+    <div class="explain">答案 C。评估现有措施有效性 = 已有安全措施确认，在脆弱性识别之后、风险分析之前。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 威胁效果抽象为哪三类？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性、完整性、可用性</button>
+      <button class="opt" data-correct="true">B. 非法访问、欺骗、拒绝服务</button>
+      <button class="opt">C. 病毒、蠕虫、木马</button>
+      <button class="opt">D. 降低、转移、接受、规避</button>
+    </div>
+    <div class="explain">答案 B。A 是资产安全属性；C 是攻击工具；D 是风险处置策略。威胁效果记「非欺拒」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 企业购买网络安全保险，属于哪种风险处置？</div>
+    <div class="opts">
+      <button class="opt">A. 降低</button>
+      <button class="opt" data-correct="true">B. 转移</button>
+      <button class="opt">C. 接受</button>
+      <button class="opt">D. 规避</button>
+    </div>
+    <div class="explain">答案 B。买保险 = 把部分经济后果转给保险公司。打补丁/防火墙 = 降低；取消业务 = 规避。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 资产价值估算主要依据哪三个安全属性？</div>
+    <div class="opts">
+      <button class="opt">A. 真实性、不可否认性、可控性</button>
+      <button class="opt" data-correct="true">B. 保密性、完整性、可用性</button>
+      <button class="opt">C. 机密性、可控性、可追溯性</button>
+      <button class="opt">D. 合法性、合规性、经济性</button>
+    </div>
+    <div class="explain">答案 B。资产价值基于 CIA 三属性相对赋值，不是物理经济价格。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Risk value equals the probability of a security event multiplied by its impact. This describes?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Vulnerability scanning</button>
+      <button class="opt" data-correct="true">B. Risk assessment</button>
+      <button class="opt">C. Penetration testing</button>
+      <button class="opt">D. Security audit logging</button>
+    </div>
+    <div class="explain">答案 B。Risk assessment = 风险评估；公式为 possibility × impact（loss）。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位 Web 系统存在 SQL 注入漏洞，面临外部攻击威胁，已部署 WAF 但规则不完善。请写出风险评估主要步骤及建议处置措施。</p>
+    <div class="ans">
+      ① <strong>准备</strong>：界定 Web 系统范围（拓扑、业务、已有 WAF/防火墙等）。<br>
+      ② <strong>资产识别</strong>：Web 服务器、数据库、业务数据等，按 CIA 赋值。<br>
+      ③ <strong>威胁识别</strong>：外部攻击者、SQL 注入途径、效果为非法访问/数据泄露。<br>
+      ④ <strong>脆弱性识别</strong>：SQL 注入漏洞（技术脆弱性），可用漏扫 + 渗透测试确认。<br>
+      ⑤ <strong>已有措施确认</strong>：WAF 规则不完善，不能完全抵御注入攻击。<br>
+      ⑥ <strong>风险分析</strong>：评估可能性与损失，计算风险值，判定为不可接受。<br>
+      ⑦ <strong>风险处置</strong>：<strong>降低</strong>——修复代码漏洞、完善 WAF 规则、参数化查询；<strong>再评估</strong>残余风险。<br>
+      答题模板：<strong>七步流程写全 → 点出具体脆弱性/威胁 → 处置策略 + 技术措施 → 再评估闭环</strong>。
+    </div>
+  </details>
+
+  <h2>十二、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 16 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch16.html">第 16 章 网络安全风险评估</a>，对照<a href="../reference/risk-assessment-cheatsheet.html">风险评估速查卡</a>背七步流程与四策略。</li>
+    <li><strong>口述流程（10 分钟）</strong>：不看笔记，完整说出「准资威脆措析处」七步，并举例说明「降低 vs 转移 vs 规避 vs 接受」。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 风险计算公式：风险等于可能乘损失；② 风险评估七步：准资威脆措析处；③ 风险处置四策略：降转接避；④ 威胁效果三类：非欺拒；⑤ 脆弱性识别五法：扫问访渗人。</li>
+  </ol>
+
+  <h2>十三、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 16 章 网络安全风险评估技术原理与应用（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>备考笔记（辅助）：<a href="https://www.cnblogs.com/devdog/p/15559471.html">博客园 · devdog 第 16 章</a> · <a href="https://www.cnblogs.com/evan-whc/p/17091637.html">Evan-whc 第 16 章</a></li>
+    <li>风险处置辨析（辅助）：<a href="https://rk.51cto.com/article/310445.html">51CTO · 风险评估方法论</a></li>
+    <li>速查：<a href="../reference/risk-assessment-cheatsheet.html">风险评估速查</a> · <a href="../reference/mnemonics.html#lesson-11">第 11 课口诀</a> · <a href="./0010-active-defense-honeypot.html">第 10 课 蜜罐</a> · <a href="./0008-vulnerability-patch.html">第 8 课 漏洞扫描</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「七步流程和下午卷怎么写」「降低和转移怎么快速区分」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 11 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：网络安全等级保护（等保 2.0）——定级、备案、测评与整改。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

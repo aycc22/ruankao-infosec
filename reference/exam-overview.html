@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 考试全貌与安全属性</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>考试全貌与安全属性速查</h1>
+    <p class="meta">软考信息安全工程师（中级）· 2026 年 10 月考季 · 打印后贴墙，考前每天过一遍</p>
+  </header>
+
+  <h2>一、考试结构（机考，两科连考）</h2>
+  <table>
+    <tr><th></th><th>科目一：基础知识（上午）</th><th>科目二：应用技术（下午）</th></tr>
+    <tr><td><strong>题型</strong></td><td>75 道单项选择题（含 5 道英文题）</td><td>4-5 道案例分析大题，每大题 3-4 个小问</td></tr>
+    <tr><td><strong>满分</strong></td><td>75 分</td><td>75 分</td></tr>
+    <tr><td><strong>及格线</strong></td><td colspan="2">各 45 分（60%）。两科须同一次考试均 ≥45，成绩不保留</td></tr>
+    <tr><td><strong>时间</strong></td><td colspan="2">连考共 240 分钟；科目一最长作答 120 分钟、最短 90 分钟</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <strong>报名提醒：</strong>2026 年下半年考试时间 <strong>10 月 24-27 日</strong>（以准考证批次为准）。
+    各省报名窗口集中在 8 月中至 9 月中，差异大、逾期不补报：山东 8/21-9/3、宁夏 8/21-9/10、
+    青海 8/28-9/7、湖北 8/31-9/10、新疆/兵团 8/17-9/18、山西 8/17-9/14。
+    官网：<a href="https://www.ruankao.org.cn">www.ruankao.org.cn</a>
+  </div>
+
+  <h2>二、科目一知识域地图（按 2020 年大纲）</h2>
+  <ol>
+    <li><strong>基础与模型</strong>：安全属性、安全体系与模型（如 BLP）、物理与环境安全</li>
+    <li><strong>网络攻击</strong>：端口扫描、口令破解、缓冲区溢出、SQL 注入、恶意代码、拒绝服务、网络钓鱼、社交工程、会话劫持</li>
+    <li><strong>密码学</strong>：对称（DES/AES/IDEA）、非对称（RSA）、Hash 函数、数字签名、数字证书、PKI、国产密码算法、安全协议</li>
+    <li><strong>防护技术</strong>：防火墙、VPN、入侵检测/防御（IDS/IPS）、网络物理隔离、安全审计、漏洞防护、主动防御</li>
+    <li><strong>系统与数据安全</strong>：操作系统安全、数据库安全、网络设备安全</li>
+    <li><strong>管理与合规</strong>：风险评估、应急响应、测评技术与标准、等级保护 2.0、《网络安全法》《数据安全法》《个人信息保护法》</li>
+  </ol>
+
+  <h2>三、科目二案例题方向</h2>
+  <p>风险评估与需求分析 · 安全方案设计 · 安全设备部署与使用 · 系统安全配置与管理 · 网站安全工程 · 云计算 / 工控 / 移动应用 / 大数据安全工程</p>
+
+  <h2>四、信息安全属性（本课程术语表 · 第一版）</h2>
+  <table>
+    <tr><th>属性</th><th>英文</th><th>含义</th><th>典型手段</th><th>反例</th></tr>
+    <tr>
+      <td><strong>机密性</strong></td><td>Confidentiality</td>
+      <td>只有授权者能查看信息</td><td>加密、访问控制、权限管理</td><td>数据泄露</td>
+    </tr>
+    <tr>
+      <td><strong>完整性</strong></td><td>Integrity</td>
+      <td>数据未经授权不可被修改</td><td>哈希校验、数字签名</td><td>数据被篡改</td>
+    </tr>
+    <tr>
+      <td><strong>可用性</strong></td><td>Availability</td>
+      <td>授权者需要时系统可用</td><td>冗余、备份、抗 DDoS</td><td>服务瘫痪</td>
+    </tr>
+    <tr>
+      <td><strong>真实性</strong></td><td>Authenticity</td>
+      <td>身份/信息来源可验证</td><td>认证、数字证书</td><td>身份冒充</td>
+    </tr>
+    <tr>
+      <td><strong>不可否认性</strong>（抗抵赖性）</td><td>Non-repudiation</td>
+      <td>行为者无法否认自己的操作</td><td>数字签名、审计日志</td><td>事后抵赖</td>
+    </tr>
+    <tr>
+      <td><strong>可控性</strong></td><td>Controllability</td>
+      <td>信息传播范围可控制</td><td>内容过滤、权限策略</td><td>敏感信息失控扩散</td>
+    </tr>
+  </table>
+
+  <p class="meta">记忆口诀：CIA 三兄弟——机密性防「偷看」，完整性防「篡改」，可用性防「瘫痪」。</p>
+
+  <h2>五、关键资源</h2>
+  <ul>
+    <li>官方教材：《信息安全工程师教程（第 2 版）》蒋建春主编，清华大学出版社，ISBN 9787302559344（26 章）</li>
+    <li>大纲：《信息安全工程师考试大纲》（2020 年审定通过版）——命题依据</li>
+    <li>官方真题：清华社《信息安全工程师 2018 至 2022 年试题分析与解答》</li>
+    <li>机考后三年：<a href="./exam-2023-2025.html">2023–2025 考点分布</a>（回忆/二手来源，非官方整卷）</li>
+  </ul>
+
+  <footer>
+    来源：中国计算机技术职业资格网及各省人事考试机构 2026 下半年报考通知（湖北、山东、青海、新疆等）。
+    本表为备考速查，考试安排以官方最新公告为准。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 17 课 · 网站安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 17 · 约 18 分钟</div>
+    <h1>守好门户：网站安全需求分析与保护工程</h1>
+    <p class="meta">本课目标：背住 Web 安全工程五阶段；威胁与对策成对写；秒判 XSS / CSRF / SQL 注入；认 XSS 三类与 CSRF 防护；会写文件上传与会话加固；知道 WAF 放哪、干什么。</p>
+  </header>
+
+  <h2>开场：流量过了设备，还要过 Web 应用</h2>
+  <p>
+    第 16 课守的是<strong>路由器、交换机</strong>；本课落到<strong>对外网站</strong>——用户浏览器 ↔ Web 服务器 ↔ 应用程序 ↔ 数据库。
+    防火墙挡不了 SQL 注入（第 5、15 课），所以 Web 安全要在<strong>应用层</strong>加固，必要时再加 <strong>WAF</strong>。
+    教材对应<strong>第 22 章</strong>；下午卷爱考「威胁 + 对策」成对写。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 网络设备远程管理，优先应选用？</div>
+    <div class="opts">
+      <button class="opt">A. 明文 Telnet 协议登录</button>
+      <button class="opt" data-correct="true">B. SSH 加密协议登录</button>
+      <button class="opt">C. 开放 HTTP 网页管理</button>
+      <button class="opt">D. 关闭全部身份认证</button>
+    </div>
+    <div class="explain">答案 B。SSH 加密认证与传输；Telnet 明文易被窃听（第 16 课）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 用发送方私钥生成数字签名，验签时用谁的密钥？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点复习）。</div>
+  </div>
+
+  <h2>一、网站安全工程五阶段</h2>
+  <p>教材把网站安全保护当成<strong>工程</strong>来做，不是装个防火墙就完事：</p>
+  <ol>
+    <li><strong>需求分析</strong>：识别资产、威胁、合规要求（等保、业务 CIA）</li>
+    <li><strong>设计</strong>：定架构（DMZ 放 Web）、选技术、写安全方案</li>
+    <li><strong>实施</strong>：加固 OS/DB/Web 服务器/应用，部署 WAF、HTTPS</li>
+    <li><strong>测评</strong>：漏洞扫描、渗透测试、等保测评</li>
+    <li><strong>运维</strong>：补丁、日志审计、监测防篡改、应急响应</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>网站安全工程五阶段</strong>）：<strong>先分析后设计，实施测评再运维</strong>（字头：分设实测评运 → 需求分析·设计·实施·测评·运维）。
+  </div>
+
+  <h2>二、网站主要威胁（下午卷素材库）</h2>
+  <table>
+    <tr><th>威胁</th><th>典型表现</th><th>破坏属性</th></tr>
+    <tr><td><strong>非授权访问</strong></td><td>越权、弱口令进后台</td><td>机密性、完整性</td></tr>
+    <tr><td><strong>网页篡改</strong></td><td>首页被改、挂黑页</td><td>完整性</td></tr>
+    <tr><td><strong>数据泄露</strong></td><td>用户信息、订单外泄</td><td>机密性</td></tr>
+    <tr><td><strong>恶意代码</strong></td><td>网页木马、挂马跳转</td><td>完整性、可用性</td></tr>
+    <tr><td><strong>网站假冒</strong></td><td>钓鱼站仿冒官网</td><td>机密性</td></tr>
+    <tr><td><strong>拒绝服务</strong></td><td>大流量拖垮站点</td><td>可用性</td></tr>
+    <tr><td><strong>后台管理威胁</strong></td><td>/admin 暴露、默认口令</td><td>全面</td></tr>
+  </table>
+  <div class="callout warn">
+    下午卷答题套路：<strong>每条威胁配一条对策</strong>，别只列威胁不写措施。
+  </div>
+
+  <h2>三、五大 Web 漏洞（威胁 ↔ 对策成对背）</h2>
+  <table>
+    <tr><th>漏洞</th><th>一句话原理</th><th>首选对策</th></tr>
+    <tr><td><strong>SQL 注入</strong></td><td>把恶意 SQL 拼进查询，骗数据库执行</td><td><strong>参数化查询</strong>（第 15 课）</td></tr>
+    <tr><td><strong>XSS</strong></td><td>往页面注入脚本，偷 Cookie、冒充用户</td><td>输出转义、CSP、HttpOnly Cookie</td></tr>
+    <tr><td><strong>CSRF</strong></td><td>借用户已登录的 Cookie，伪造「本人操作」</td><td>Anti-CSRF Token、SameSite Cookie</td></tr>
+    <tr><td><strong>文件上传</strong></td><td>上传 Webshell，远程执行命令</td><td>上传目录<strong>不可执行</strong> + 类型白名单</td></tr>
+    <tr><td><strong>会话安全</strong></td><td>Session ID / Cookie 被窃，顶号登录</td><td>HTTPS + HttpOnly + Secure + 超时轮换</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>SQL 注入防护</strong>）：<strong>简单过滤挡不住注入，参数化查询才可靠</strong>（第 15 课复习）。
+    <br>口诀（<strong>文件上传防护</strong>）：<strong>上传目录禁执行，白名单验类型</strong>。
+  </div>
+
+  <h2>四、XSS 与 CSRF：最易混的两兄弟</h2>
+  <table>
+    <tr><th></th><th>XSS（跨站脚本）</th><th>CSRF（跨站请求伪造）</th></tr>
+    <tr><td><strong>攻击什么</strong></td><td>在<strong>目标网站页面</strong>里跑恶意脚本</td><td>让浏览器<strong>替用户发请求</strong>到目标站</td></tr>
+    <tr><td><strong>利用什么</strong></td><td>用户对网站的信任（页面可信）</td><td>网站对浏览器 Cookie 的信任</td></tr>
+    <tr><td><strong>能偷 Cookie 吗</strong></td><td><strong>能</strong>（脚本读 document.cookie）</td><td><strong>不能读响应</strong>，只能发请求</td></tr>
+    <tr><td><strong>典型危害</strong></td><td>偷会话、弹假窗、改页面</td><td>转账、改密、删帖（用户不知情）</td></tr>
+    <tr><td><strong>英文缩写</strong></td><td>XSS</td><td>CSRF</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>XSS 与 CSRF 区别</strong>）：<strong>XSS 偷脚本盗 Cookie，CSRF 借 Cookie 发请求</strong>。
+  </div>
+
+  <h3>4.1 XSS 三类（上午选择常考）</h3>
+  <table>
+    <tr><th>类型</th><th>恶意脚本存在哪</th><th>识别词</th></tr>
+    <tr><td><strong>存储型</strong></td><td>存进数据库/服务器，持久存在</td><td>留言板、评论区「人人中招」</td></tr>
+    <tr><td><strong>反射型</strong></td><td>在 URL 参数里，不持久存储</td><td>恶意链接，点一次中一次</td></tr>
+    <tr><td><strong>DOM 型</strong></td><td>浏览器端 JS 改 DOM，不经服务器存</td><td>location.hash、前端拼接</td></tr>
+  </table>
+  <p><strong>防护</strong>：输入校验 + <strong>输出转义/编码</strong>；<strong>Content-Security-Policy（CSP）</strong> 限制脚本来源；Cookie 设 <strong>HttpOnly</strong>（JS 读不到）。</p>
+  <div class="callout ok">
+    口诀（<strong>XSS 三种类型</strong>）：<strong>存储持久反射链，DOM 改页在浏览器</strong>。
+  </div>
+
+  <h3>4.2 CSRF 防护三件套</h3>
+  <ul>
+    <li><strong>Anti-CSRF Token</strong>：表单/ AJAX 带随机 Token，服务端与 Session 比对 ← 最可靠</li>
+    <li><strong>Referer 检查</strong>：看请求来源是否本站（辅助，HTTPS 下 Referer 可能被藏）</li>
+    <li><strong>SameSite Cookie</strong>：Strict / Lax，限制第三方站点带 Cookie 发请求</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>CSRF 防护三件套</strong>）：<strong>Token 校验 Referer 查，SameSite Cookie 把关</strong>（字头：T R S → Token·Referer·SameSite）。
+  </div>
+
+  <h2>五、文件上传与会话加固</h2>
+  <p><strong>文件上传</strong>（下午卷高频）：</p>
+  <ul>
+    <li>上传目录与 Web 根目录<strong>分离</strong>，并设<strong>不可执行</strong>（禁止脚本解析）</li>
+    <li>白名单校验扩展名与 MIME；重命名存储；限制大小</li>
+    <li>陷阱：只改后缀为 .jpg 但内容是 PHP → 必须内容检测 + 禁执行</li>
+  </ul>
+  <p><strong>会话安全</strong>：</p>
+  <ul>
+    <li>全站 <strong>HTTPS</strong>（TLS）；Cookie 设 <strong>HttpOnly</strong> + <strong>Secure</strong></li>
+    <li>登录后<strong>轮换 Session ID</strong>；空闲超时、登出失效</li>
+    <li>重要操作二次验证（改密、转账）</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>Web 会话安全</strong>）：<strong>HTTPS 加 HttpOnly，Secure 过期要轮换</strong>。
+  </div>
+
+  <h2>六、WAF：Web 专用「虚拟补丁」</h2>
+  <p>
+    <strong>WAF</strong>（Web Application Firewall，Web 应用防火墙）部署在<strong>Web 入口</strong>（常在防火墙之后、Web 服务器之前），
+    分析 HTTP/HTTPS 流量，按<strong>规则库 + 语义分析</strong>拦截 SQL 注入、XSS、恶意上传等。
+    可做<strong>虚拟补丁</strong>（第 8 课）——代码还没修时临时拦利用，<strong>不替代</strong>修代码和打官方补丁。
+  </p>
+  <div class="callout warn">
+    易错：普通防火墙 / IPS 主要看 IP、端口、包特征；<strong>WAF 才深入看 HTTP 内容与 SQL/XSS 特征</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>WAF 部署要点</strong>）：<strong>WAF 串联 Web 入口，规则语义拦注入</strong>。
+  </div>
+
+  <h2>七、全栈加固清单（案例题直接抄）</h2>
+  <ol>
+    <li><strong>操作系统</strong>：最小安装、补丁、主机加固（第 14 课）</li>
+    <li><strong>数据库</strong>：分权、参数化、SSL、审计（第 15 课）</li>
+    <li><strong>Web 服务器</strong>：关多余模块、限请求大小、IIS/Apache/Nginx 补丁与日志</li>
+    <li><strong>Web 应用</strong>：输入校验、输出转义、CSRF Token、安全编码</li>
+    <li><strong>通信</strong>：全站 HTTPS；HSTS；禁明文传输敏感数据</li>
+    <li><strong>域名/DNS</strong>：防劫持、DNSSEC（概念题）</li>
+    <li><strong>后台管理</strong>：独立域名或 VPN 接入、强认证、IP 白名单、操作审计</li>
+    <li><strong>监测防护</strong>：WAF、防篡改（文件完整性/hash 检测）、漏洞扫描、流量清洗</li>
+  </ol>
+
+  <h2>八、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 跨站请求伪造的英文缩写是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. CSRF</button>
+      <button class="opt">B. XSS</button>
+      <button class="opt">C. SQL</button>
+      <button class="opt">D. MITM</button>
+    </div>
+    <div class="explain">答案 A。CSRF = Cross-Site Request Forgery。XSS 是跨站脚本；MITM 是中间人。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 留言板存进恶意脚本，所有访客打开都会执行。属于 XSS 的？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 存储型 XSS</button>
+      <button class="opt">B. 反射型 XSS</button>
+      <button class="opt">C. DOM 型 XSS</button>
+      <button class="opt">D. CSRF 攻击</button>
+    </div>
+    <div class="explain">答案 A。脚本持久存服务器 = 存储型。反射型在 URL 参数；DOM 型改浏览器 DOM；CSRF 不发脚本而是伪造请求。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 防止 SQL 注入最有效的方法是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 参数化查询绑定用户输入</button>
+      <button class="opt">B. 仅隐藏数据库报错页面</button>
+      <button class="opt">C. 过滤用户输入中的单引号</button>
+      <button class="opt">D. 部署网络包过滤防火墙</button>
+    </div>
+    <div class="explain">答案 A。参数化把输入当数据（第 15 课）。隐藏报错/过滤单引号不可靠；包过滤防火墙不看 SQL。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 攻击者诱导已登录用户访问恶意页，自动向银行站发起转账请求。属于？</div>
+    <div class="opts">
+      <button class="opt">A. XSS 跨站脚本攻击</button>
+      <button class="opt" data-correct="true">B. CSRF 跨站请求伪造</button>
+      <button class="opt">C. SQL 注入攻击</button>
+      <button class="opt">D. 缓冲区溢出攻击</button>
+    </div>
+    <div class="explain">答案 B。用户已登录 → 浏览器自动带 Cookie 发请求 = CSRF。XSS 要在页面注入脚本；这里没有「跑脚本偷 Cookie」而是「借 Cookie 发请求」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 防范 CSRF 最可靠的技术措施是？</div>
+    <div class="opts">
+      <button class="opt">A. 关闭服务器全部 Cookie 功能</button>
+      <button class="opt" data-correct="true">B. 表单提交携带 Anti-CSRF Token</button>
+      <button class="opt">C. 仅对密码字段做 MD5 哈希</button>
+      <button class="opt">D. 禁止用户通过 HTTPS 访问网站</button>
+    </div>
+    <div class="explain">答案 B。Token 与 Session 比对，攻击者页面拿不到合法 Token。Referer 可被绕过；关 Cookie 网站无法维持登录；禁 HTTPS 更危险。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 允许用户上传头像，首要安全措施是？</div>
+    <div class="opts">
+      <button class="opt">A. 上传目录设为 Web 可执行脚本</button>
+      <button class="opt" data-correct="true">B. 上传目录禁止执行并校验文件类型</button>
+      <button class="opt">C. 仅允许上传大于 100 MB 的文件</button>
+      <button class="opt">D. 关闭服务器全部病毒扫描功能</button>
+    </div>
+    <div class="explain">答案 B。禁执行防 Webshell；白名单验类型。A 等于主动留后门；C/D 与上传安全无关或起反作用。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Web Application Firewall is abbreviated as?（英文题）</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. WAF</button>
+      <button class="opt">B. WAN</button>
+      <button class="opt">C. WLAN</button>
+      <button class="opt">D. WAS</button>
+    </div>
+    <div class="explain">答案 A。WAF = Web Application Firewall。WAN 广域网；WLAN 无线局域网；WAS 非标准缩写。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某政府网站存在 SQL 注入、XSS、弱口令后台、未启用 HTTPS。请写出网站安全加固措施（不少于 5 点）。</p>
+    <div class="ans">
+      ① <strong>应用层</strong>：代码改用<strong>参数化查询</strong>防 SQL 注入；输出<strong>转义</strong> + CSP + HttpOnly Cookie 防 XSS；表单加 <strong>Anti-CSRF Token</strong>。<br>
+      ② <strong>通信</strong>：全站部署 <strong>HTTPS</strong>；Cookie 设 Secure；重要操作二次认证。<br>
+      ③ <strong>后台</strong>：改默认口令；管理入口 IP 白名单或 VPN；独立域名；操作审计。<br>
+      ④ <strong>上传</strong>：若有上传功能，目录<strong>不可执行</strong> + 白名单验类型。<br>
+      ⑤ <strong>边界</strong>：部署 <strong>WAF</strong> 于 Web 入口；防火墙 + IDS 联动（第 5、6 课）。<br>
+      ⑥ <strong>主机与库</strong>：OS/DB/Web 服务器补丁与最小权限（第 14、15 课）。<br>
+      ⑦ <strong>监测</strong>：日志集中审计；防篡改；定期漏洞扫描与渗透测试。<br>
+      答题模板：<strong>参数化 + HTTPS + Token + WAF + 后台加固 + 补丁审计</strong>，威胁对策成对写。
+    </div>
+  </details>
+
+  <h2>九、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 22 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch22.html">第 22 章 网站安全</a>，对照<a href="../reference/website-security-cheatsheet.html">网站安全速查卡</a>背威胁与对策。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：XSS 和 CSRF 区别；存储型 XSS 怎么认；CSRF 怎么防；WAF 放哪。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 五阶段：先分析后设计，实施测评再运维；② XSS/CSRF：XSS 偷脚本 CSRF 借 Cookie；③ 注入：参数化查询；④ 上传：目录禁执行；⑤ WAF：串联 Web 入口。</li>
+  </ol>
+
+  <h2>十、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 22 章 网站安全需求分析与安全保护工程（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>OWASP Top 10 Web 应用安全风险（概念对齐，<a href="https://owasp.org/www-project-top-ten/">OWASP</a>）</li>
+    <li>教材精读 ch22 自测：CSRF 缩写（<a href="../reference/textbook/ch22.html">ch22.html</a>）</li>
+    <li>速查：<a href="../reference/website-security-cheatsheet.html">网站安全速查</a> · <a href="../reference/mnemonics.html#lesson-17">第 17 课口诀</a> · <a href="./0016-network-device-security.html">第 16 课 网络设备安全</a> · <a href="../reference/attacks-glossary.html">攻击词汇表</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「反射型和 DOM 型怎么分」「WAF 和 IPS 有啥区别」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 17 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：云计算安全需求分析与安全保护工程（教材第 23 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

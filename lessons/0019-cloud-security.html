@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 19 课 · 云计算安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 19 · 约 18 分钟</div>
+    <h1>责任共担：云计算安全需求分析与保护工程</h1>
+    <p class="meta">本课目标：分清 IaaS / PaaS / SaaS 谁管什么；背住四种部署模式；秒判云特有威胁（逃逸、残留、多租户）；知道等保云扩展怎么叠；下午卷能写责任划分 + 隔离对策。</p>
+  </header>
+
+  <h2>开场：网站守完了，业务上云怎么守？</h2>
+  <p>
+    第 17 课守的是<strong>自建网站</strong>；上云之后，机房、虚拟机、平台甚至应用可能不在你手里。
+    考点核心不是「云厂商全包」，而是<strong>责任共担</strong>：底座归厂商，业务与数据归你——服务模式不同，分界线不同。
+    教材对应<strong>第 23 章</strong>；与第 12 课等保扩展要求（云）直接挂钩。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 = 按标准做符合性判定；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点复习。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 用发送方私钥做数字签名，验签应使用？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点）。</div>
+  </div>
+
+  <h2>一、服务模式三层：IaaS / PaaS / SaaS</h2>
+  <p>从「租空机房」到「直接用软件」，厂商管得越来越多，你管得越来越少：</p>
+  <table>
+    <tr><th>模式</th><th>厂商主要提供</th><th>用户主要负责</th><th>典型例子</th></tr>
+    <tr><td><strong>IaaS</strong><br>基础设施即服务</td><td>物理机房、服务器、存储、网络、<strong>虚拟化/Hypervisor</strong></td><td><strong>操作系统</strong>、中间件、应用、数据、主机防火墙规则、补丁</td><td>云主机 ECS/CVM</td></tr>
+    <tr><td><strong>PaaS</strong><br>平台即服务</td><td>再往上管到 OS、运行时、中间件、托管数据库引擎</td><td><strong>应用代码</strong>、业务数据、访问控制、加密配置</td><td>云数据库、应用托管</td></tr>
+    <tr><td><strong>SaaS</strong><br>软件即服务</td><td>几乎全栈：应用本身也由厂商运维</td><td><strong>账号与权限</strong>、数据分类/合规、终端安全、使用配置</td><td>企业邮箱、CRM、钉钉类</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>IaaS/PaaS/SaaS 责任边界</strong>）：<strong>IaaS 你管系统和应用，PaaS 你管应用和数据，SaaS 你管账号和用法</strong>。
+  </div>
+  <div class="callout warn">
+    易错：无论哪种模式，<strong>数据怎么分类、谁能访问、密钥怎么管</strong>，用户侧通常仍要负责——不是「上云就甩锅」。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>云安全责任共担</strong>）：<strong>云上安全大家扛，厂商管底座用户管业务</strong>。
+  </div>
+
+  <h2>二、部署模式四种</h2>
+  <table>
+    <tr><th>模式</th><th>一句话</th><th>考场关键词</th></tr>
+    <tr><td><strong>私有云</strong></td><td>组织独占，自建或专属托管</td><td>可控性强、成本高</td></tr>
+    <tr><td><strong>社区云</strong></td><td>有共同需求的组织共享</td><td>同行/联盟共用</td></tr>
+    <tr><td><strong>公有云</strong></td><td>对公众开放，多租户共享基础设施</td><td>弹性、按量；隔离要求高</td></tr>
+    <tr><td><strong>混合云</strong></td><td>私有 + 公有（或多种）组合</td><td>敏感数据本地、弹性用公有</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>云计算四种部署模式</strong>）：<strong>私有独占社区共，公有开放混合拼</strong>（字头：私社公混）。
+  </div>
+
+  <h2>三、云特有威胁（下午卷素材库）</h2>
+  <p>传统威胁（弱口令、泄露、DoS）仍在；云环境还要多背这些「云味」威胁：</p>
+  <table>
+    <tr><th>威胁</th><th>典型表现</th><th>破坏什么</th></tr>
+    <tr><td><strong>虚拟机逃逸</strong></td><td>从客户机冲出 Hypervisor，威胁宿主机及其他租户</td><td>全面</td></tr>
+    <tr><td><strong>多租户越权</strong></td><td>租户 A 访问到租户 B 的计算/存储/网络</td><td>机密性</td></tr>
+    <tr><td><strong>数据残留</strong></td><td>释放虚拟盘/快照后，旧数据仍可被恢复</td><td>机密性</td></tr>
+    <tr><td><strong>共享技术漏洞</strong></td><td>同一 Hypervisor/硬件侧信道被利用</td><td>机密性、完整性</td></tr>
+    <tr><td><strong>不安全接口/API</strong></td><td>管理 API 弱认证、明文、过度授权</td><td>全面</td></tr>
+    <tr><td><strong>滥用云服务</strong></td><td>用弹性资源挖矿、发垃圾、打 DDoS</td><td>可用性、合规</td></tr>
+    <tr><td><strong>过度依赖/服务中断</strong></td><td>厂商故障、账号被封导致业务停摆</td><td>可用性</td></tr>
+    <tr><td><strong>数据丢失/泄露</strong></td><td>误删、未加密、跨境不合规</td><td>机密性、完整性</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>云环境特有威胁</strong>）：<strong>逃逸残留共漏洞，接口滥用加中断</strong>。
+  </div>
+
+  <h2>四、多租户隔离：云安全的地基</h2>
+  <p>公有云的核心差异是<strong>多租户共享</strong>，必须<strong>逻辑隔离</strong>：</p>
+  <ul>
+    <li><strong>计算</strong>：CPU/内存隔离；禁止虚拟机直接访问宿主机物理硬件；检测/告警<strong>虚拟机逃逸</strong></li>
+    <li><strong>存储</strong>：卷/对象按租户隔离；加密；删除后防<strong>数据残留</strong>（安全擦除/覆盖）</li>
+    <li><strong>网络</strong>：VPC/安全组/微分段；<strong>管理流量与业务流量分离</strong>；按业务安全等级划区域</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>多租户隔离三层</strong>）：<strong>计算存储网络三层隔，租户互访要堵住</strong>。
+  </div>
+
+  <h2>五、等保 2.0：通用要求 + 云扩展</h2>
+  <p>
+    第 12 课说过：每个等级 = <strong>安全通用要求</strong> + <strong>安全扩展要求</strong>。
+    定级对象是<strong>云计算</strong>形态时，除通用要求外，还要满足<strong>云计算安全扩展要求</strong>。
+  </p>
+  <ul>
+    <li><strong>云服务商</strong>：保障云平台自身安全，并提供安全服务能力（隔离、加密、审计、镜像保护等）</li>
+    <li><strong>云租户</strong>：业务系统配置、数据安全、账号权限——责任不因上云而消失</li>
+    <li>扩展控制点常考关键词：<strong>基础设施位置</strong>、<strong>镜像与快照保护</strong>、云服务商选择、供应链/云计算环境管理</li>
+  </ul>
+  <p>相关标准名（认即可）：</p>
+  <ul>
+    <li>GB/T 31167《云计算服务安全指南》</li>
+    <li>GB/T 31168《云计算服务安全能力要求》</li>
+    <li>等保基本要求中的<strong>云计算安全扩展要求</strong>（与 GB/T 22239 体系配套）</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>等保云扩展要求</strong>）：<strong>通用不够再加云扩，镜像快照要管住</strong>。
+  </div>
+  <div class="callout warn">
+    原则常考：<strong>安全管理责任不变，数据归属关系不变</strong>——上云不等于把合规责任全交给厂商。
+  </div>
+
+  <h2>六、保护机制与运维（案例题可抄）</h2>
+  <p><strong>技术机制</strong>（教材常列）：身份鉴别 · 访问控制 · 数据完整性 · 入侵防范 · 安全审计 · 云操作系统安全增强。</p>
+  <p><strong>运维五件套</strong>：</p>
+  <ol>
+    <li>持续<strong>风险评估</strong>（资产、脆弱性）</li>
+    <li>内部防护：强认证、操作审计、远程安全登录</li>
+    <li>网络与日志<strong>监测</strong></li>
+    <li><strong>应急响应</strong>（接第 13 课）</li>
+    <li><strong>容灾备份</strong>（防厂商中断与数据丢失）</li>
+  </ol>
+  <p><strong>隐私保护</strong>按生命周期：采集告知 → 传输加密 → 存储加密与访问控制 → 使用最小化 → 维护与事件处置。</p>
+  <div class="callout ok">
+    口诀（<strong>云安全运维要点</strong>）：<strong>评估监测加应急，认证审计再备份</strong>。
+  </div>
+
+  <h2>七、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 租用云虚拟机，自己安装操作系统和业务软件。主要属于？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. IaaS 基础设施即服务</button>
+      <button class="opt">B. PaaS 平台即服务模式</button>
+      <button class="opt">C. SaaS 软件即服务模式</button>
+      <button class="opt">D. DaaS 数据即服务模式</button>
+    </div>
+    <div class="explain">答案 A。用户管 OS 与应用 = IaaS。PaaS 平台已管 OS；SaaS 直接用成品软件。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · SaaS 模式下，用户侧最典型的责任是？</div>
+    <div class="opts">
+      <button class="opt">A. 维护物理机房与 Hypervisor</button>
+      <button class="opt" data-correct="true">B. 管理账号权限与数据使用</button>
+      <button class="opt">C. 修补虚拟化层全部漏洞</button>
+      <button class="opt">D. 采购并更换机房空调设备</button>
+    </div>
+    <div class="explain">答案 B。SaaS 厂商管全栈；用户管账号、权限、数据分类与合规使用。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 从客户虚拟机突破到宿主机，进而威胁其他租户。属于？</div>
+    <div class="opts">
+      <button class="opt">A. SQL 注入攻击</button>
+      <button class="opt">B. CSRF 跨站伪造</button>
+      <button class="opt" data-correct="true">C. 虚拟机逃逸</button>
+      <button class="opt">D. 钓鱼社会工程</button>
+    </div>
+    <div class="explain">答案 C。冲出 Hypervisor = 虚拟机逃逸，云环境特有高危威胁。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 删除云盘后旧数据仍可被恢复读取。主要对应？</div>
+    <div class="opts">
+      <button class="opt">A. 缓冲区溢出</button>
+      <button class="opt" data-correct="true">B. 数据残留风险</button>
+      <button class="opt">C. SYN Flood 攻击</button>
+      <button class="opt">D. ARP 欺骗攻击</button>
+    </div>
+    <div class="explain">答案 B。云存储释放后未安全擦除 → 数据残留。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 云计算形态做等保时，正确表述是？</div>
+    <div class="opts">
+      <button class="opt">A. 只需满足安全通用要求即可</button>
+      <button class="opt" data-correct="true">B. 通用要求叠加云计算扩展要求</button>
+      <button class="opt">C. 只需满足工控扩展要求即可</button>
+      <button class="opt">D. 上云后不再需要等级保护</button>
+    </div>
+    <div class="explain">答案 B。云对象 = 通用 + 云扩展（第 12 课扩展要求）。上云不免除等保义务。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 「敏感系统放私有云，弹性业务用公有云」属于？</div>
+    <div class="opts">
+      <button class="opt">A. 纯私有云部署</button>
+      <button class="opt">B. 纯公有云部署</button>
+      <button class="opt" data-correct="true">C. 混合云部署模式</button>
+      <button class="opt">D. 仅社区云部署</button>
+    </div>
+    <div class="explain">答案 C。私有 + 公有组合 = 混合云。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Shared responsibility in cloud means?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Vendor alone owns all security</button>
+      <button class="opt" data-correct="true">B. Provider and customer share duties</button>
+      <button class="opt">C. Customer ignores data protection</button>
+      <button class="opt">D. Only physical locks are required</button>
+    </div>
+    <div class="explain">答案 B。Shared responsibility = 云厂商与客户共同分担安全职责。不是厂商全包，也不是用户可不管数据。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位将业务迁到公有云 IaaS。请：（1）划分云服务商与用户安全责任；（2）写出至少 4 条云安全加固措施。</p>
+    <div class="ans">
+      <strong>（1）责任划分</strong><br>
+      · <strong>云服务商</strong>：物理机房、硬件、网络基础设施、<strong>虚拟化/Hypervisor</strong>、云平台自身安全与基础隔离能力。<br>
+      · <strong>用户（租户）</strong>：客户机 <strong>OS</strong>、中间件、应用、业务数据、账号权限、主机安全策略、补丁、加密与备份策略。<br>
+      · 原则：<strong>责任共担</strong>；数据归属与安全管理责任不因上云消失。<br><br>
+      <strong>（2）加固措施（示例）</strong><br>
+      ① <strong>租户隔离</strong>：VPC/安全组；管理面与业务面分离。<br>
+      ② <strong>身份与访问</strong>：强认证、最小权限、操作审计。<br>
+      ③ <strong>数据安全</strong>：传输/存储加密；密钥自管或 KMS；防残留（安全删除）。<br>
+      ④ <strong>虚拟化防护</strong>：关注逃逸与镜像/快照保护；及时打平台补丁（协同厂商）。<br>
+      ⑤ <strong>监测与应急</strong>：日志集中、入侵检测、备份容灾、应急预案。<br>
+      ⑥ <strong>合规</strong>：等保通用 + <strong>云扩展</strong>；选用通过安全评估的云服务（党政等场景）。<br>
+      答题模板：<strong>先画责任线，再写隔离/身份/加密/监测/备份</strong>。
+    </div>
+  </details>
+
+  <h2>八、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 23 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch23.html">第 23 章 云计算安全</a>，对照<a href="../reference/cloud-security-cheatsheet.html">云计算安全速查卡</a>背责任矩阵与威胁。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：IaaS/PaaS/SaaS 用户各管什么；虚拟机逃逸是什么；等保云扩展怎么叠；四种部署模式。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 责任共担：厂商管底座用户管业务；② 三模式：IaaS 管系统、PaaS 管应用、SaaS 管账号；③ 威胁：逃逸残留共漏洞；④ 隔离：计算存储网络三层隔；⑤ 等保：通用不够再加云扩。</li>
+  </ol>
+
+  <h2>九、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 23 章 云计算安全需求分析与安全保护工程（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>备考笔记整理：<a href="https://www.cnblogs.com/devdog/p/15570570.html">博客园·devdog·第 23 章</a></li>
+    <li>等保云扩展要点：<a href="https://blog.nsfocus.net/djbh-cloud-computing-extension-requirements/">绿盟·云计算扩展要求</a></li>
+    <li>速查：<a href="../reference/cloud-security-cheatsheet.html">云计算安全速查</a> · <a href="../reference/mnemonics.html#lesson-19">第 19 课口诀</a> · <a href="./0012-classified-protection.html">第 12 课 等保 2.0</a> · <a href="./0018-milestone-review.html">第 18 课 阶段总结</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「PaaS 和 IaaS 边界怎么画」「虚拟机逃逸和容器逃逸有啥区别」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 19 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：工控安全需求分析与安全保护工程（教材第 24 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 10 课 · 主动防御与蜜罐</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 10 · 约 18 分钟</div>
+    <h1>不只会挡：主动防御、蜜罐与蜜网</h1>
+    <p class="meta">本课目标：分清主动防御与被动防御；背住蜜罐四种配置方式；会判蜜罐 vs 防火墙/IDS；知道蜜网是什么、低交互与高交互有何不同；了解第 15 章其他主动防御技术的考点定位。</p>
+  </header>
+
+  <h2>开场：守了这么久，能不能反过来「钓鱼」</h2>
+  <p>
+    前九课学的多是<strong>被动防御</strong>：防火墙挡流量、IDS 看告警、补丁堵漏洞、杀毒查恶意代码——都是「守」。
+    第 15 章讲的是<strong>主动防御</strong>：不只挡，还要<strong>诱敌、欺骗、收集情报</strong>。
+    本章考点很多，但上午卷最高频的是 <strong>15.6 网络攻击陷阱技术</strong>——也就是蜜罐和蜜网。
+    其他技术（白名单、流量清洗、可信计算等）知道「干什么、和蜜罐怎么分」即可。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 题干写「伪装软件、远程控制、不会自我复制」，应判为？</div>
+    <div class="opts">
+      <button class="opt">A. 网络蠕虫</button>
+      <button class="opt" data-correct="true">B. 特洛伊木马</button>
+      <button class="opt">C. 计算机病毒</button>
+      <button class="opt">D. 逻辑炸弹</button>
+    </div>
+    <div class="explain">答案 B。伪装 + 远控 + 不自传 = 木马。蠕虫关键词是独立、自传播、扫网。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 零日漏洞最关键的特征是？</div>
+    <div class="opts">
+      <button class="opt">A. 信息已公开且厂商已有补丁</button>
+      <button class="opt" data-correct="true">B. 新发现且厂商尚未提供补丁</button>
+      <button class="opt">C. 只出现在过期操作系统中</button>
+      <button class="opt">D. 只能依靠防火墙规则发现</button>
+    </div>
+    <div class="explain">答案 B。零日 = 零补丁。有补丁没打 ≠ 零日。</div>
+  </div>
+
+  <h2>一、主动防御 vs 被动防御</h2>
+  <table>
+    <tr><th>被动防御</th><th>主动防御</th></tr>
+    <tr><td>防火墙、IDS/IPS、审计、补丁、杀毒</td><td>蜜罐/蜜网、欺骗、流量牵引、软件白名单、流量清洗</td></tr>
+    <tr><td>挡在门外、事后追溯</td><td><strong>故意设陷阱，诱捕攻击者</strong></td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>主动 vs 被动防御</strong>）：<strong>被动挡和查，主动诱和骗</strong>。
+    <br>蜜罐是主动防御的典型代表，也是 IDS 技术的重要发展方向（教材原话，选择题出现过）。
+  </div>
+
+  <h2>二、蜜罐是什么</h2>
+  <p>
+    <strong>蜜罐（Honeypot）</strong>：一种<strong>欺骗技术</strong>，故意部署的陷阱系统/服务，<strong>没有真实业务用途</strong>。
+    正常用户不会访问蜜罐；凡是有流量进出蜜罐，几乎都意味着扫描或攻击——因此能<strong>聚焦攻击流量</strong>，详细记录攻击者的手法、工具、恶意代码样本，用于监测、分析、溯源和威胁情报。
+  </p>
+  <div class="callout warn">
+    <strong>陷阱：</strong>蜜罐 <strong>≠</strong> 防火墙（不做访问控制策略）· <strong>≠</strong> IDS（不旁路监测真实业务）· <strong>≠</strong> 审计（不记录合法业务操作）。
+    <br>关键词：诱捕、欺骗、故意暴露、收集攻击数据。
+  </div>
+
+  <h2>三、四种配置方式（真题必考）</h2>
+  <p>教材与历年真题反复考蜜罐的四种不同配置，务必逐条对上关键词：</p>
+  <table>
+    <tr><th>配置方式</th><th>干什么</th><th>考试关键词</th></tr>
+    <tr><td><strong>诱骗服务</strong><br>Deception Service</td><td>在<strong>特定 IP 服务端口</strong>侦听，像真实应用一样对网络请求<strong>应答</strong></td><td>端口侦听、模拟服务响应（如 FTP 版本号）</td></tr>
+    <tr><td><strong>弱化系统</strong><br>Weakened System</td><td>配置<strong>已知弱点</strong>的操作系统，让攻击者更容易进入，方便收集攻击数据</td><td>故意留漏洞、易入侵</td></tr>
+    <tr><td><strong>强化系统</strong><br>Hardened System</td><td>弱化系统的改进版：既能收集攻击数据，又具备更完善的<strong>取证</strong>能力，看起来更「安全」</td><td>弱化 + 取证</td></tr>
+    <tr><td><strong>用户模式服务器</strong><br>User Mode Server</td><td>以<strong>用户进程</strong>运行在主机上，模拟功能健全的操作系统，迷惑攻击者并记录行为</td><td>用户进程、模拟 OS、便于隔离控制</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>蜜罐四种配置</strong>）：<strong>诱骗听端口，弱化留漏洞，强化能取证，用户进程跑</strong>。
+    <br>2023 年真题：「特定端口侦听并对网络请求应答」→ <strong>诱骗服务</strong>。
+  </div>
+
+  <h2>四、低交互 vs 高交互 · 三类主机</h2>
+  <table>
+    <tr><th>交互程度</th><th>特点</th><th>长短板</th></tr>
+    <tr><td><strong>低交互</strong></td><td>只模拟有限服务（如某个端口应答）</td><td>部署简单、风险低；攻击者较易识破</td></tr>
+    <tr><td><strong>高交互</strong></td><td>提供真实/完整的操作系统环境</td><td>情报丰富；维护成本高，被控后风险大</td></tr>
+  </table>
+  <p>蜜罐主机常见三类（了解即可）：<strong>空系统</strong>（无业务的真实完整 OS）· <strong>镜像系统</strong>（对生产环境镜像模拟）· <strong>虚拟系统</strong>（虚拟机部署，不含真实业务数据）。</p>
+  <p>还可按用途分：<strong>研究型</strong>（深入分析攻击）与<strong>产品型</strong>（商用部署）。研究型蜜网多为高交互。</p>
+
+  <h2>五、蜜网 Honeynet</h2>
+  <p>
+    <strong>蜜网</strong> = 由<strong>多个蜜罐</strong>，配合路由器、防火墙、IDS、审计等组成的<strong>陷阱网络</strong>（也称陷阱网络）。
+    常配合<strong>流量牵引/重定向</strong>技术：识别到攻击流量后，通过路由改变或代理把攻击者「引」到蜜罐里，在受控环境中秘密监视和取证。
+  </p>
+  <ul>
+    <li>捕获恶意代码样本，供后续行为分析；</li>
+    <li>入侵取证，记录攻击者完整操作链；</li>
+    <li>分流攻击流量，保护真实业务；</li>
+    <li>丰富安全特征库，反哺 IDS/IPS 规则。</li>
+  </ul>
+  <div class="callout info">
+  现代蜜网多基于<strong>虚拟化/云计算</strong>部署，成本比早期「堆物理机」低很多。
+  第 9 课提过「蜜罐抑制蠕虫传播」——蜜罐可以吸引并困住扫描传播的蠕虫，正是主动防御与恶意代码防范的衔接点。
+  </div>
+
+  <h2>六、第 15 章其他技术（知道分工即可）</h2>
+  <table>
+    <tr><th>技术</th><th>一句话</th></tr>
+    <tr><td><strong>入侵阻断</strong></td><td>检测到入侵后主动切断连接或隔离主机</td></tr>
+    <tr><td><strong>软件白名单</strong></td><td>只允许已知合法程序运行（默认拒绝未知）</td></tr>
+    <tr><td><strong>流量清洗</strong></td><td>抗 DDoS，在入口过滤恶意洪泛流量</td></tr>
+    <tr><td><strong>可信计算</strong></td><td>从硬件信任根度量启动链，确保系统未被篡改</td></tr>
+    <tr><td><strong>数字水印</strong></td><td>在数据中嵌入隐蔽标记，用于溯源与版权保护</td></tr>
+    <tr><td><strong>入侵容忍</strong></td><td>系统被部分入侵后仍能继续提供核心服务</td></tr>
+  </table>
+  <p>上午卷若考「诱捕攻击者、分析攻击手法」，选<strong>蜜罐</strong>；考「只允许名单内程序跑」，选<strong>白名单</strong>；考「过滤 DDoS 洪泛」，选<strong>流量清洗</strong>。</p>
+
+  <h2>七、局限与部署要点</h2>
+  <ul>
+    <li>蜜罐<strong>必须隔离部署</strong>：被攻破后不能成为攻击内网的跳板；</li>
+    <li>低交互易被识破，高交互维护成本高、被控风险大；</li>
+    <li>蜜罐是<strong>补充手段</strong>，不能替代防火墙、补丁、终端防护等基础防线。</li>
+  </ul>
+
+  <h2>八、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 蜜罐技术最突出的特点是？</div>
+    <div class="opts">
+      <button class="opt">A. 对合法业务流量做访问控制</button>
+      <button class="opt" data-correct="true">B. 故意暴露陷阱以诱捕攻击者</button>
+      <button class="opt">C. 对已知漏洞自动安装补丁</button>
+      <button class="opt">D. 集中多源日志做关联分析</button>
+    </div>
+    <div class="explain">答案 B。A 是防火墙；C 是补丁管理；D 是 SIEM。蜜罐核心是诱捕与欺骗。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 在特定服务端口侦听并对请求应答，属于哪种配置？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 诱骗服务</button>
+      <button class="opt">B. 弱化系统</button>
+      <button class="opt">C. 强化系统</button>
+      <button class="opt">D. 用户模式服务器</button>
+    </div>
+    <div class="explain">答案 A。端口侦听 + 模拟应答 = 诱骗服务。弱化/强化是整台 OS；用户模式是用户进程模拟 OS。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 弱化系统与强化系统的主要区别是？</div>
+    <div class="opts">
+      <button class="opt">A. 弱化系统不能收集任何攻击数据</button>
+      <button class="opt" data-correct="true">B. 强化系统在收集数据基础上增强取证能力</button>
+      <button class="opt">C. 强化系统故意不安装任何补丁</button>
+      <button class="opt">D. 弱化系统以用户进程方式运行</button>
+    </div>
+    <div class="explain">答案 B。弱化 = 故意留洞易进入；强化 = 弱化改进 + 更强取证。用户模式才是用户进程模拟。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 蜜网（Honeynet）的正确描述是？</div>
+    <div class="opts">
+      <button class="opt">A. 单台低交互蜜罐的别名</button>
+      <button class="opt" data-correct="true">B. 多个蜜罐与网络设备组成的陷阱网络</button>
+      <button class="opt">C. 用于清洗 DDoS 流量的专用设备</button>
+      <button class="opt">D. 只允许白名单程序运行的主机</button>
+    </div>
+    <div class="explain">答案 B。蜜网是体系框架，含多个蜜罐及路由/防火墙/IDS 等。C 是流量清洗；D 是白名单。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 低交互蜜罐相比高交互蜜罐，主要优势是？</div>
+    <div class="opts">
+      <button class="opt">A. 能记录更完整的攻击操作链</button>
+      <button class="opt" data-correct="true">B. 部署简单且被控后风险较低</button>
+      <button class="opt">C. 攻击者更难识破其为假系统</button>
+      <button class="opt">D. 可完全替代生产环境防火墙</button>
+    </div>
+    <div class="explain">答案 B。低交互模拟有限、风险低；高交互情报多但维护成本高、被控风险大。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 用于过滤 DDoS 恶意洪泛流量的主动防御技术是？</div>
+    <div class="opts">
+      <button class="opt">A. 蜜罐</button>
+      <button class="opt">B. 软件白名单</button>
+      <button class="opt" data-correct="true">C. 网络流量清洗</button>
+      <button class="opt">D. 数字水印</button>
+    </div>
+    <div class="explain">答案 C。流量清洗专抗 DDoS 洪泛。蜜罐诱捕分析；白名单管程序；水印做溯源标记。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · A decoy system with no real business purpose, designed to lure attackers is a?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Firewall</button>
+      <button class="opt" data-correct="true">B. Honeypot</button>
+      <button class="opt">C. VPN gateway</button>
+      <button class="opt">D. Security audit log</button>
+    </div>
+    <div class="explain">答案 B。Honeypot = 蜜罐：无真实业务、故意诱捕攻击者的欺骗系统。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某企业希望在不暴露真实业务的前提下，收集攻击者使用的工具和手法，并记录完整操作过程供溯源。请推荐合适技术并说明部署要点。</p>
+    <div class="ans">
+      ① <strong>推荐技术</strong>：部署<strong>蜜罐/蜜网</strong>（高交互型更适合记录完整操作链）；可配合 IDS 与流量牵引，把可疑流量引向陷阱网络。<br>
+      ② <strong>部署要点</strong>：与生产网<strong>严格隔离</strong>，防止被控后成为跳板；选合适配置（研究型可用弱化/强化系统）；做好日志异地备份与取证。<br>
+      ③ <strong>补充措施</strong>：蜜罐不能替代防火墙与补丁；收集到的情报应反哺 IDS 规则与威胁预警。<br>
+      答题模板：<strong>选蜜罐 → 说目的（诱捕+情报）→ 说隔离 → 说不能替代基础防线</strong>。
+    </div>
+  </details>
+
+  <h2>九、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 15 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch15.html">第 15 章 网络安全主动防御技术</a>，重点看 15.6 陷阱技术；对照<a href="../reference/honeypot-cheatsheet.html">蜜罐速查卡</a>背四种配置。</li>
+    <li><strong>口述辨析（10 分钟）</strong>：不看笔记，用一句话区分蜜罐、防火墙、IDS、流量清洗各干什么。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 主动 vs 被动防御：被动挡和查，主动诱和骗；② 蜜罐四种配置：诱骗听端口，弱化留漏洞，强化能取证，用户进程跑。</li>
+  </ol>
+
+  <h2>十、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 15 章 网络安全主动防御技术与应用（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>真题考点（辅助）：<a href="https://www.cnitpm.com/pm1/145881fohgmzo948.html">信管网 · 蜜罐四种配置</a> · <a href="https://www.educity.cn/tiku/60011215.html">希赛 · 诱骗服务辨析</a></li>
+    <li>陷阱网络（辅助）：<a href="https://c4pr1c3.github.io/cuc-ns/chap0x11/main.html">蜜罐和蜜网 · 网络安全</a></li>
+    <li>速查：<a href="../reference/honeypot-cheatsheet.html">蜜罐速查</a> · <a href="../reference/mnemonics.html#lesson-10">第 10 课口诀</a> · <a href="./0009-malware-defense.html">第 9 课 恶意代码防范</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「四种配置怎么快速区分」「蜜罐和 IDS 到底差在哪」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 10 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：网络安全风险评估——资产、威胁、脆弱性怎么算风险。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

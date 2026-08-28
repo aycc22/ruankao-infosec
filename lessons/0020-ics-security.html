@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 20 课 · 工控安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 20 · 约 18 分钟</div>
+    <h1>可用性优先：工控安全需求分析与保护工程</h1>
+    <p class="meta">本课目标：分清 SCADA / DCS / PLC / RTU；背住「可用 &gt; 完整 &gt; 机密」；秒判震网与协议明文；掌握电力十六字方针与边界防护；下午卷能写分区隔离 + 加固对策。</p>
+  </header>
+
+  <h2>开场：云守完了，工厂生产线怎么守？</h2>
+  <p>
+    第 19 课守的是<strong>云上业务</strong>；工厂、电网、水厂用的是<strong>工业控制系统（ICS）</strong>——管阀门、电机、离心机，停一秒都可能出事。
+    考点核心不是「再套一遍 IT 防火墙」，而是：<strong>先保能用，再谈保密</strong>；协议往往<strong>无认证、明文</strong>；边界常用<strong>工业防火墙 / 网闸</strong>。
+    教材对应<strong>第 24 章</strong>；与第 12 课等保扩展要求（工业控制）直接挂钩。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 = 符合性判定；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 云计算形态做等保时，正确表述是？</div>
+    <div class="opts">
+      <button class="opt">A. 只需满足安全通用要求即可</button>
+      <button class="opt" data-correct="true">B. 通用要求叠加云计算扩展要求</button>
+      <button class="opt">C. 只需满足工控扩展要求即可</button>
+      <button class="opt">D. 上云后不再需要等级保护</button>
+    </div>
+    <div class="explain">答案 B。云对象 = 通用 + 云扩展。本课工控对象同理：通用 + 工控扩展。</div>
+  </div>
+
+  <h2>一、工控是什么：两大类 + 核心组件</h2>
+  <p>ICS（Industrial Control System）由控制、监测、数据处理与人机展示等组件构成，通常分<strong>离散制造</strong>（装配线、机床）与<strong>过程控制</strong>（炼油、化工、电力）两大类。</p>
+  <table>
+    <tr><th>组件</th><th>全称关键词</th><th>一句话</th></tr>
+    <tr><td><strong>SCADA</strong></td><td>数据采集与监视控制</td><td>远程分布设备监控；中心 <strong>MTU</strong> + 现场 <strong>RTU</strong> + 通信</td></tr>
+    <tr><td><strong>DCS</strong></td><td>分布式控制系统</td><td>现场分布控制、中心集中管理（过程工业常用）</td></tr>
+    <tr><td><strong>PLC</strong></td><td>可编程逻辑控制器</td><td>执行运算、顺序、定时；控制装备动作的<strong>基础单元</strong></td></tr>
+    <tr><td><strong>RTU</strong></td><td>远程终端单元</td><td>现场采集、测量、上传；与 MTU 通信</td></tr>
+    <tr><td><strong>MTU</strong></td><td>主终端单元</td><td>调度中心侧：收集与监测，指挥 RTU</td></tr>
+    <tr><td><strong>HMI</strong></td><td>人机界面</td><td>操作员与控制器之间的界面与数据交互</td></tr>
+    <tr><td><strong>PCS</strong></td><td>过程控制系统</td><td>按温度/压力等参数闭环调节，保持设定状态</td></tr>
+  </table>
+  <p>常见工控协议：<strong>Modbus、OPC、DNP3</strong> 等；早期多封闭专用网，现逐步叠加 TCP/IP，暴露面变大。</p>
+  <div class="callout ok">
+    口诀（<strong>工控核心组件分工</strong>）：<strong>远看 SCADA 采监视，近控 DCS 分布管，PLC 做动作，RTU 采现场</strong>。
+  </div>
+  <div class="callout warn">
+    易错：SCADA 偏<strong>远程监视调度</strong>；DCS 偏<strong>厂内分布控制、集中管理</strong>——别把名字对调。
+  </div>
+
+  <h2>二、最大考点：可用 &gt; 完整 &gt; 机密</h2>
+  <table>
+    <tr><th>系统类型</th><th>安全需求优先序</th><th>为什么</th></tr>
+    <tr><td>传统 IT</td><td><strong>机密性 → 完整性 → 可用性</strong></td><td>先防泄密，再防篡改</td></tr>
+    <tr><td>工控 ICS</td><td><strong>可用性 → 完整性 → 机密性</strong></td><td>停产、伤人、断电代价极大</td></tr>
+  </table>
+  <p>因此：补丁要先<strong>离线验证</strong>；扫描要<strong>低影响</strong>；杀毒多用<strong>白名单</strong>——不能为了「打补丁」随便停关键产线。</p>
+  <div class="callout ok">
+    口诀（<strong>工控安全需求优先序</strong>）：<strong>先保能用再保完整，机密性排在最后</strong>（可用 &gt; 完整 &gt; 机密）。
+  </div>
+
+  <h2>三、威胁与隐患（选择题素材）</h2>
+  <p><strong>标志性案例</strong>：2010 年 <strong>Stuxnet（震网）</strong>——针对伊朗核设施西门子工控，利用多枚 0-day，破坏离心机物理过程。</p>
+  <p>威胁五类（教材口径）：自然灾害与环境 · 内部误操作 · 设备<strong>功能安全</strong>故障 · 恶意代码 · 网络攻击。</p>
+  <p>隐患高频点：</p>
+  <ul>
+    <li><strong>协议缺安全设计</strong>：无认证、无加密、明文、难审计</li>
+    <li><strong>产品 / OS / 固件漏洞</strong>：PLC、SCADA、HMI、DCS 及底层软件</li>
+    <li><strong>开放接入</strong>：无隔离直接上互联网 → 扫描、DoS、蠕虫摆渡</li>
+    <li><strong>供应链</strong>：多厂商设备与维保，后门与补丁滞后风险</li>
+  </ul>
+  <div class="callout warn">
+    易错：设备<strong>质量/功能故障</strong>（功能安全）≠ 网络入侵（信息安全）——案例题要先分清类别。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>工控特有安全隐患</strong>）：<strong>协议明文缺认证，开放接入供应链</strong>。
+  </div>
+
+  <h2>四、保护机制：边界、认证、远程、加固</h2>
+  <table>
+    <tr><th>机制</th><th>考点要点</th></tr>
+    <tr><td><strong>物理与环境</strong></td><td>工程师站/服务器区域门禁与监控；封 USB/光驱等不必要接口</td></tr>
+    <tr><td><strong>安全分区与边界</strong></td><td>开发/测试/生产分离；物理隔离或逻辑隔离；<strong>工业防火墙、工业网闸、单向隔离</strong></td></tr>
+    <tr><td><strong>身份与访问</strong></td><td>关键系统多因素；最小特权；改默认口令；证书不乱共享</td></tr>
+    <tr><td><strong>远程访问</strong></td><td>原则上禁对公网开 HTTP/FTP/Telnet；确需则 VPN + 限时 + 日志</td></tr>
+    <tr><td><strong>恶意代码</strong></td><td>离线充分验证的杀软或<strong>程序白名单</strong></td></tr>
+    <tr><td><strong>监测与应急</strong></td><td>协议深度检测；预案演练；关键设备<strong>冗余</strong>（电源/设备/网络）</td></tr>
+  </table>
+  <p><strong>工控防火墙 vs 传统防火墙</strong>：前者能<strong>深度解析工控协议</strong>（如 Modbus），可做指令级白名单；后者主要认通用 IT 协议。</p>
+  <div class="callout ok">
+    口诀（<strong>工控边界防护设备</strong>）：<strong>工业防火墙能解析，网闸单向隔内外</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>工控远程访问原则</strong>）：<strong>公网高危服务先关掉，确需远程走 VPN</strong>。
+  </div>
+
+  <h2>五、等保 2.0：通用 + 工控扩展</h2>
+  <p>
+    与云一样：定级对象是<strong>工业控制系统</strong>时 = <strong>安全通用要求</strong> + <strong>工业控制系统安全扩展要求</strong>。
+    技术侧仍落在「一中心、三重防护」框架：物理环境 · 通信网络 · 区域边界 · 计算环境 · 安全管理中心；管理侧五大类照旧。
+  </p>
+  <p>认名即可：GB/T 22239—2019；工控扩展相关要求（如 GA/T 1390.5 系列表述）；国际常提 <strong>IEC 62443</strong>。</p>
+  <div class="callout ok">
+    口诀（<strong>等保工控扩展要求</strong>）：<strong>通用不够再加工控，分区隔离要到位</strong>。
+  </div>
+
+  <h2>六、下午卷神器：电力监控「十六字方针」</h2>
+  <table>
+    <tr><th>四句</th><th>含义</th></tr>
+    <tr><td><strong>安全分区</strong></td><td>生产控制大区 / 管理信息大区；控制区与非控制区再细分</td></tr>
+    <tr><td><strong>网络专用</strong></td><td>生产控制用专用网络，不与互联网混用</td></tr>
+    <tr><td><strong>横向隔离</strong></td><td>控制大区与管理大区用<strong>横向单向安全隔离装置</strong>（接近物理隔离）</td></tr>
+    <tr><td><strong>纵向认证</strong></td><td>上下级之间用认证、加密、访问控制做纵向边界防护</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>电力监控安全十六字方针</strong>）：<strong>安全分区网络专，横向隔离纵向认</strong>（字头：分专横纵）。
+  </div>
+
+  <h2>七、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 工控系统相对传统 IT，安全需求优先序通常是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 可用性优先于完整性与机密性</button>
+      <button class="opt">B. 机密性优先于可用性与完整性</button>
+      <button class="opt">C. 完整性优先于可用性与机密性</button>
+      <button class="opt">D. 三者同等且顺序任意排列</button>
+    </div>
+    <div class="explain">答案 A。工控停机代价大 → 可用 &gt; 完整 &gt; 机密。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 对远程分布设备做数据采集与监视调度，典型系统是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. SCADA 数据采集与监视</button>
+      <button class="opt">B. 仅指办公邮件服务器</button>
+      <button class="opt">C. 仅指公有云对象存储</button>
+      <button class="opt">D. 仅指个人智能手机</button>
+    </div>
+    <div class="explain">答案 A。SCADA = Supervisory Control And Data Acquisition。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 执行顺序控制与定时指令、控制装备动作的基础单元是？</div>
+    <div class="opts">
+      <button class="opt">A. 仅 HMI 人机界面终端</button>
+      <button class="opt" data-correct="true">B. PLC 可编程逻辑控制器</button>
+      <button class="opt">C. 仅 MTU 主终端单元</button>
+      <button class="opt">D. 仅公有云虚拟机实例</button>
+    </div>
+    <div class="explain">答案 B。PLC 是工控基础控制单元；HMI 是界面，MTU 在调度中心侧。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 2010 年针对核设施离心机工控的标志性恶意代码是？</div>
+    <div class="opts">
+      <button class="opt">A. Conficker 蠕虫病毒</button>
+      <button class="opt" data-correct="true">B. Stuxnet 震网病毒</button>
+      <button class="opt">C. WannaCry 勒索软件</button>
+      <button class="opt">D. Mirai 物联网僵尸</button>
+    </div>
+    <div class="explain">答案 B。震网（Stuxnet）是工控物理破坏标志案例。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 电力监控系统安全总体方案的十六字方针是？</div>
+    <div class="opts">
+      <button class="opt">A. 安全扫描漏洞修补横向加密纵向备份</button>
+      <button class="opt" data-correct="true">B. 安全分区网络专用横向隔离纵向认证</button>
+      <button class="opt">C. 安全审计日志留存横向开放纵向明文</button>
+      <button class="opt">D. 安全外包责任转嫁横向共享纵向匿名</button>
+    </div>
+    <div class="explain">答案 B。分 · 专 · 横 · 纵：安全分区、网络专用、横向隔离、纵向认证。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 工控防火墙相对传统防火墙，最核心差异通常是？</div>
+    <div class="opts">
+      <button class="opt">A. 只能阻断 HTTP 网页流量</button>
+      <button class="opt" data-correct="true">B. 能深度解析工控专用协议</button>
+      <button class="opt">C. 完全不能做访问控制策略</button>
+      <button class="opt">D. 只能部署在家用路由器上</button>
+    </div>
+    <div class="explain">答案 B。解析 Modbus 等协议、指令级控制，是工控防火墙考点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · ICS availability usually comes before?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Only aesthetic interface design</button>
+      <button class="opt" data-correct="true">B. Confidentiality in priority order</button>
+      <button class="opt">C. Only social media marketing</button>
+      <button class="opt">D. Only gaming frame rate goals</button>
+    </div>
+    <div class="explain">答案 B。工控优先可用性，机密性通常排在后面（availability before confidentiality）。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某水厂 SCADA 曾对公网开放维护端口，现场 PLC 使用默认口令，办公网与控制网仅用普通防火墙隔离。请：（1）指出主要风险；（2）给出至少 5 条整改措施。</p>
+    <div class="ans">
+      <strong>（1）主要风险</strong><br>
+      · 公网暴露 → 扫描、入侵、远程恶意指令。<br>
+      · 默认口令 → 未授权登录 PLC/HMI。<br>
+      · 普通防火墙难解析工控协议 → 恶意控制指令可能漏过。<br>
+      · 可用性受威胁：误操作或攻击可导致供水中断。<br><br>
+      <strong>（2）整改措施（示例）</strong><br>
+      ① <strong>安全分区</strong>：办公/管理与生产控制分域；开发测试生产分离。<br>
+      ② <strong>边界加固</strong>：工业防火墙 / 网闸 / 单向隔离；禁止控制网直连互联网。<br>
+      ③ <strong>身份访问</strong>：改默认口令；关键操作多因素；最小特权。<br>
+      ④ <strong>远程运维</strong>：确需则 VPN + 限时 + 全程审计；关闭 Telnet/FTP 等。<br>
+      ⑤ <strong>主机防护</strong>：离线验证的白名单/杀软；封多余 USB。<br>
+      ⑥ <strong>监测应急</strong>：协议深度检测、日志审计、预案演练、关键节点冗余。<br>
+      ⑦ <strong>合规</strong>：等保通用 + <strong>工控扩展</strong>。<br>
+      答题模板：<strong>先讲可用优先 → 再写分区隔离 → 身份/远程/白名单/监测</strong>。
+    </div>
+  </details>
+
+  <h2>八、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 24 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch24.html">第 24 章 工控安全</a>，对照<a href="../reference/ics-security-cheatsheet.html">工控安全速查卡</a>背组件与十六字方针。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：可用优先序；SCADA vs DCS vs PLC；震网是什么；电力十六字；工控防火墙差异；等保怎么叠。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 优先序：先保能用再保完整；② 组件：远看 SCADA、近控 DCS、PLC 做动作；③ 十六字：安全分区网络专，横向隔离纵向认；④ 边界：工业防火墙能解析，网闸单向隔内外；⑤ 等保：通用不够再加工控。</li>
+  </ol>
+
+  <h2>九、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 24 章 工控安全需求分析与安全保护工程（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>备考笔记整理：<a href="https://www.cnblogs.com/autopwn/p/16571920.html">博客园·第 24 章工控安全</a></li>
+    <li>等保基本要求：<a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=BAFB47E8874764186BDB7865E8344DAF">GB/T 22239—2019</a>（含扩展要求场景）</li>
+    <li>速查：<a href="../reference/ics-security-cheatsheet.html">工控安全速查</a> · <a href="../reference/mnemonics.html#lesson-20">第 20 课口诀</a> · <a href="./0012-classified-protection.html">第 12 课 等保 2.0</a> · <a href="./0019-cloud-security.html">第 19 课 云计算</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「SCADA 和 DCS 怎么一眼分清」「横向隔离和纵向认证差在哪」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 20 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：移动应用安全需求分析与安全保护工程（教材第 25 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

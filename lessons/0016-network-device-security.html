@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 16 课 · 网络设备安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 16 · 约 18 分钟</div>
+    <h1>守住骨干：网络设备安全</h1>
+    <p class="meta">本课目标：能数出交换机/路由器主要威胁；秒判交换机第几代工作在哪一层；记住 VTY/SNMP/SSH 加固要点；分清 RADIUS 与 TACACS+；认 Enable secret 与运维审计题型。</p>
+  </header>
+
+  <h2>开场：数据在库里，包先过设备</h2>
+  <p>
+    第 15 课守的是<strong>数据库</strong>；本课落到<strong>流量必经的骨干</strong>——路由器、交换机。
+    它们一旦被拿下，整网路由表、VLAN、管理口令都可能被改写。
+    上午常考交换机代际、路由器口令命令、SSH/SNMP 加固；下午案例常写「设备加固清单」。
+    教材对应<strong>第 21 章</strong>。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 防止 SQL 注入最有效的方法是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 参数化查询绑定用户输入</button>
+      <button class="opt">B. 仅隐藏数据库报错页面</button>
+      <button class="opt">C. 缩短数据库管理员口令</button>
+      <button class="opt">D. 关闭服务器对外 443 端口</button>
+    </div>
+    <div class="explain">答案 A。参数化把输入当数据（第 15 课）。库加固和设备加固常一起考。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 用发送方私钥生成数字签名，验签时用谁的密钥？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点复习）。</div>
+  </div>
+
+  <h2>一、两类设备，各守一层</h2>
+  <table>
+    <tr><th>设备</th><th>主要工作层</th><th>核心功能</th><th>考点词</th></tr>
+    <tr><td><strong>交换机</strong></td><td>数据链路层（二层）为主；三层交换机可到网络层</td><td>按 MAC / VLAN 转发帧</td><td>MAC 表、端口安全、VLAN</td></tr>
+    <tr><td><strong>路由器</strong></td><td>网络层（三层）</td><td>按 IP 选路、连接不同网段</td><td>路由表、ACL、路由协议</td></tr>
+  </table>
+  <p class="meta">第 5 课防火墙在边界过滤；本课是<strong>设备自身</strong>的管理与配置安全。</p>
+
+  <h2>二、交换机五代（2024 真题第 28 题）</h2>
+  <table>
+    <tr><th>代际</th><th>代表</th><th>工作层</th><th>识别依据</th></tr>
+    <tr><td>第一代</td><td>集线器 Hub</td><td><strong>物理层</strong></td><td>广播转发，共享带宽</td></tr>
+    <tr><td>第二代</td><td>以太网 / 二层交换机</td><td><strong>数据链路层</strong></td><td>认 MAC 地址选端口 ← 真题答案</td></tr>
+    <tr><td>第三代</td><td>三层交换机</td><td><strong>网络层</strong></td><td>带路由功能；一次路由多次交换</td></tr>
+    <tr><td>第四代</td><td>多业务交换机</td><td>三层 + 增值业务</td><td>叠加防火墙、负载均衡、IPS 等</td></tr>
+    <tr><td>第五代</td><td>智能 / 高性能交换机</td><td>—</td><td>教材提及；考试重点在前四代</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>交换机五代</strong>）：<strong>一代物理 Hub 广播，二代链路认 MAC，三层网络能路由，四代叠加防火墙</strong>（字头：物链网叠）。
+  </div>
+
+  <h2>三、主要威胁（对号入座）</h2>
+  <table>
+    <tr><th>对象</th><th>威胁</th><th>题干关键词</th></tr>
+    <tr><td rowspan="4"><strong>交换机</strong></td><td>MAC 地址泛洪</td><td>伪造 MAC 填满地址表 → 退化为广播</td></tr>
+    <tr><td>ARP 欺骗 / 中间人</td><td>伪造 ARP 绑错 MAC</td></tr>
+    <tr><td>弱口令 / 默认口令</td><td>admin、空口令进管理口</td></tr>
+    <tr><td>VLAN 跳跃</td><td>跨 VLAN 窃听或攻击</td></tr>
+    <tr><td rowspan="5"><strong>路由器</strong></td><td>DoS / DDoS</td><td>大流量或恶意包拖垮设备</td></tr>
+    <tr><td>路由协议攻击</td><td>BGP 前缀劫持、OSPF/RIP 伪造路由</td></tr>
+    <tr><td>口令泄露 / 明文存储</td><td>配置里口令可被直接看到</td></tr>
+    <tr><td>漏洞利用</td><td>固件缓冲区溢出、SNMP 漏洞</td></tr>
+    <tr><td>依赖性与物理</td><td>时钟/NTP、电源、机柜未上锁</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>网络设备威胁</strong>）：<strong>交换 MAC 泛洪 ARP 骗，路由协议流量洪；默认口令固件洞，物理依赖都要防</strong>（字头：交路默物）。
+  </div>
+
+  <h2>四、六大加固机制（下午卷可直接抄）</h2>
+  <ol>
+    <li><strong>访问控制</strong>：Console / VTY / HTTP / SNMP 等管理口用 <strong>ACL</strong> 限源 IP；<code>access-class</code> 绑定 ACL</li>
+    <li><strong>口令安全</strong>：<strong>改默认口令</strong>；强复杂度；路由器用 <strong>Enable secret</strong> 存<strong>密文</strong></li>
+    <li><strong>关闭非必要服务</strong>：关 CDP、HTTP、明文 Telnet；远程管理优先 <strong>SSH</strong></li>
+    <li><strong>SNMP 安全</strong>：优先 <strong>SNMPv3</strong>（认证+加密）；社区字符串够复杂；ACL 限网管 IP；不用就 <code>no snmp-server</code></li>
+    <li><strong>日志与审计</strong>：开 syslog；会话超时 <code>exec-timeout</code>；运维堡垒机做命令审计</li>
+    <li><strong>物理与补丁</strong>：机柜上锁；固件及时升级；配置定期备份</li>
+  </ol>
+  <div class="callout warn">
+    易错陷阱：<strong>网络设备管理应首先修改默认口令</strong>——不是先开 Telnet、不是关日志、不是共享 admin。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>网络设备六大加固</strong>）：<strong>先改默认口令，ACL 管住管理口，SSH 加密 SNMP 三代，补丁日志不能少</strong>（字头：默 ACL SSH 补）。
+  </div>
+
+  <h2>五、四个管理口怎么加固</h2>
+  <table>
+    <tr><th>接口</th><th>用途</th><th>加固要点</th></tr>
+    <tr><td><strong>Console</strong></td><td>物理串口本地管理</td><td>ACL + 物理上锁；防非授权接线</td></tr>
+    <tr><td><strong>VTY</strong></td><td>远程字符登录（Telnet/SSH）</td><td><code>access-class</code> 限 IP；<strong>SSH 替代 Telnet</strong>；<code>exec-timeout</code> 5–15 分钟</td></tr>
+    <tr><td><strong>HTTP/HTTPS</strong></td><td>Web 图形管理</td><td><code>ip http access-class</code>；能关 HTTP 就只留 HTTPS</td></tr>
+    <tr><td><strong>SNMP</strong></td><td>网管监控与 Trap</td><td>v3 + ACL + 复杂团体名；ACL 过滤非法网管（真题爱考 ACL 配 SNMP）</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>远程管理加固</strong>）：<strong>SSH 加密 Telnet 裸，VTY 口要配 ACL</strong>。
+  </div>
+
+  <h2>六、路由器口令：Enable secret</h2>
+  <p>
+    路由器特权口令应<strong>密文存储</strong>。Cisco 配置时用 <strong>Enable secret</strong> 命令（2024 真题第 21 题）。
+    明文 <code>enable password</code> 可被直接看到；<code>enable secret</code> 用不可逆散列保存。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>路由器特权口令</strong>）：<strong>路由器特权口令要密文，Enable secret 来保存</strong>。
+  </div>
+
+  <h2>七、AAA 与 RADIUS / TACACS+</h2>
+  <p><strong>AAA</strong> = Authentication（认证）+ Authorization（授权）+ Accounting（计费/审计）。</p>
+  <table>
+    <tr><th>协议</th><th>传输</th><th>特点</th><th>典型场景</th></tr>
+    <tr><td><strong>RADIUS</strong></td><td>UDP（1812 认证 / 1813 计费）</td><td>开放标准；<strong>认证与授权常绑定</strong></td><td>Wi‑Fi / VPN / 用户接入</td></tr>
+    <tr><td><strong>TACACS+</strong></td><td>TCP 49</td><td>AAA <strong>三者分离</strong>；可<strong>命令级</strong>授权与审计；报文加密更全</td><td>路由器 / 交换机 / 防火墙<strong>管理员</strong>登录</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>AAA 协议选型</strong>）：<strong>认证授权加计费，RADIUS 接用户，TACACS+ 管设备</strong>。
+  </div>
+
+  <h2>八、各管一段：交换机 vs 路由器</h2>
+  <table>
+    <tr><th>技术</th><th>交换机侧重</th><th>路由器侧重</th></tr>
+    <tr><td>ACL</td><td>限制 VLAN 间流量</td><td>边界防伪造源 IP、阻断恶意包</td></tr>
+    <tr><td>端口安全 / MAC 绑定</td><td>防 MAC 泛洪 ← 二层特有</td><td>一般不适用</td></tr>
+    <tr><td>路由协议认证</td><td>—</td><td>OSPF / RIP / BGP 认证 ← 三层特有</td></tr>
+    <tr><td>特权分级</td><td colspan="2">Cisco 特权级 0–15；最小权限给运维账号</td></tr>
+  </table>
+
+  <h2>九、运维安全审计（2024 真题第 13 题）</h2>
+  <p>运维堡垒 / 安全审计产品常见五类功能：</p>
+  <ul>
+    <li><strong>字符会话审计</strong>：SSH、Telnet 等命令行操作 ← 审计 SSH 属于此类</li>
+    <li><strong>图形操作审计</strong>：RDP、VNC、HTTP/HTTPS 图形界面</li>
+    <li>数据库运维审计、文件传输审计（FTP/SFTP）、合规审计</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>运维审计会话类型</strong>）：<strong>SSH 和 Telnet 是字符会话，RDP 和 VNC 是图形会话</strong>。
+  </div>
+
+  <h2>十、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 网络设备管理应首先采取的措施是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 修改设备默认管理口令</button>
+      <button class="opt">B. 开放 Telnet 方便远程维护</button>
+      <button class="opt">C. 关闭全部安全审计日志</button>
+      <button class="opt">D. 所有管理员共用 admin 账号</button>
+    </div>
+    <div class="explain">答案 A。默认口令是最高频突破口；B/C/D 都是反面教材。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 路由器配置时，用哪条命令以密文保存特权口令？</div>
+    <div class="opts">
+      <button class="opt">A. Blind</button>
+      <button class="opt" data-correct="true">B. Enable secret</button>
+      <button class="opt">C. Encryption</button>
+      <button class="opt">D. Secpwd</button>
+    </div>
+    <div class="explain">答案 B。2024 真题原题。Enable secret 存密文；Encryption/Secpwd 不是标准配置命令。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 第二代交换机根据 MAC 地址选端口，工作于 OSI 的？</div>
+    <div class="opts">
+      <button class="opt">A. 应用层</button>
+      <button class="opt" data-correct="true">B. 数据链路层</button>
+      <button class="opt">C. 传输层</button>
+      <button class="opt">D. 网络层</button>
+    </div>
+    <div class="explain">答案 B。二层交换机 = 数据链路层。网络层是三代三层交换机；MAC 转发不是应用层/传输层。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 运维审计产品中，审计 SSH 协议操作属于？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 字符会话审计</button>
+      <button class="opt">B. 图形操作审计</button>
+      <button class="opt">C. 数据库运维审计</button>
+      <button class="opt">D. 文件传输审计</button>
+    </div>
+    <div class="explain">答案 A。SSH/Telnet 是命令行字符会话；RDP/VNC 才是图形审计。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 远程管理路由器，优先应选用？</div>
+    <div class="opts">
+      <button class="opt">A. 明文 Telnet 协议登录</button>
+      <button class="opt" data-correct="true">B. SSH 加密协议登录</button>
+      <button class="opt">C. 开放 HTTP 网页管理</button>
+      <button class="opt">D. 关闭全部身份认证</button>
+    </div>
+    <div class="explain">答案 B。SSH 加密认证与传输；Telnet 明文易被窃听；HTTP 无加密；关认证更危险。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 需要对交换机管理员做命令级授权与审计，优先选？</div>
+    <div class="opts">
+      <button class="opt">A. 明文 HTTP 本地账号</button>
+      <button class="opt">B. SNMPv1 社区字符串</button>
+      <button class="opt" data-correct="true">C. TACACS+ 集中认证</button>
+      <button class="opt">D. 共享单一 enable 口令</button>
+    </div>
+    <div class="explain">答案 C。TACACS+ 专管网络设备，支持命令级 AAA。RADIUS 更偏用户接入；SNMP 不是登录认证协议。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Access Control List is abbreviated as?（英文题）</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. ACL</button>
+      <button class="opt">B. AAA</button>
+      <button class="opt">C. ARP</button>
+      <button class="opt">D. ASN</button>
+    </div>
+    <div class="explain">答案 A。ACL = Access Control List，访问控制列表；限 VTY/SNMP/流量都靠它。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位核心路由器仍使用默认口令，远程开 Telnet，SNMP 用 v1 默认团体名。请写出网络设备安全加固措施（不少于 5 点）。</p>
+    <div class="ans">
+      ① <strong>口令</strong>：改默认账号与口令；特权口令用 <strong>Enable secret</strong> 密文保存；强复杂度策略。<br>
+      ② <strong>远程管理</strong>：关 Telnet，启用 <strong>SSH</strong>；VTY 配 <strong>ACL</strong> 仅允许网管网段；设 <code>exec-timeout</code>。<br>
+      ③ <strong>SNMP</strong>：升级 <strong>SNMPv3</strong>；改复杂团体名；ACL 限网管 IP；不需要则关闭。<br>
+      ④ <strong>服务最小化</strong>：关 CDP、HTTP 等非必要服务；HTTP 若保留则限源 IP 且用 HTTPS。<br>
+      ⑤ <strong>路由与 ACL</strong>：路由协议启用认证；ACL 阻断内网伪造源地址等恶意包。<br>
+      ⑥ <strong>日志与 AAA</strong>：syslog 集中存储；管理员经 <strong>TACACS+</strong> 认证，命令可审计。<br>
+      ⑦ <strong>补丁与物理</strong>：固件升级；配置备份；机柜上锁。<br>
+      答题模板：<strong>改默认口令 + SSH + ACL + SNMPv3 + 关多余服务 + 日志/AAA</strong>，点到得分。
+    </div>
+  </details>
+
+  <h2>十一、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 21 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch21.html">第 21 章 网络设备安全</a>，对照<a href="../reference/network-device-cheatsheet.html">网络设备安全速查卡</a>背威胁与六大机制。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：二代交换机在哪一层；Enable secret 干什么；SSH 审计属哪类；RADIUS 和 TACACS+ 各管什么。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 网络设备六大加固：先改默认口令；② 交换机五代：二代链路认 MAC；③ 远程管理加固：SSH 加密 Telnet 裸；④ 路由器特权口令：Enable secret 存密文；⑤ AAA 协议选型：RADIUS 接用户，TACACS+ 管设备。</li>
+  </ol>
+
+  <h2>十二、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 21 章 网络设备安全（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>2024 年下半年综合知识真题：第 13 题（SSH 字符审计）、第 21 题（Enable secret）、第 28 题（二代交换机层级）</li>
+    <li>交换机代际（辅助）：<a href="https://rk.51cto.com/article/368612.html">51CTO · 交换机代际演进</a></li>
+    <li>AAA / RADIUS / TACACS+（辅助）：<a href="https://www.cisco.com/c/zh_tw/support/docs/security-vpn/remote-authentication-dial-user-service-radius/13838-10.html">Cisco · RADIUS 与 TACACS+ 比较</a></li>
+    <li>速查：<a href="../reference/network-device-cheatsheet.html">网络设备安全速查</a> · <a href="../reference/mnemonics.html#lesson-16">第 16 课口诀</a> · <a href="./0015-database-security.html">第 15 课 数据库系统安全</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「三代交换机和路由器有啥区别」「SNMP ACL 怎么考」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 16 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：网站安全需求分析与安全保护工程（教材第 22 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

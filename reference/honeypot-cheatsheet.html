@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 主动防御与蜜罐</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>主动防御 · 蜜罐与蜜网速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 15 章 · 打印用</p>
+  </header>
+
+  <h2>一、主动 vs 被动</h2>
+  <table>
+    <tr><th>被动防御</th><th>主动防御</th></tr>
+    <tr><td>防火墙、IDS/IPS、审计、补丁</td><td>蜜罐/蜜网、欺骗、流量牵引、白名单、流量清洗</td></tr>
+    <tr><td>挡在门外、事后查</td><td><strong>诱敌深入、收集情报</strong></td></tr>
+  </table>
+  <p class="meta"><strong>主动 vs 被动防御</strong>：被动挡和查，主动诱和骗。</p>
+
+  <h2>二、蜜罐核心</h2>
+  <ul>
+    <li><strong>无真实业务</strong>；流入/流出流量 ≈ 扫描或攻击</li>
+    <li>目的：监视、检测、分析、溯源攻击行为；收集威胁情报</li>
+    <li>本质：<strong>欺骗技术</strong>，故意暴露的陷阱系统</li>
+  </ul>
+
+  <h2>三、四种配置方式（真题高频）</h2>
+  <table>
+    <tr><th>配置</th><th>一句话</th><th>关键词</th></tr>
+    <tr><td><strong>诱骗服务</strong></td><td>特定端口侦听并应答</td><td>端口、模拟服务响应</td></tr>
+    <tr><td><strong>弱化系统</strong></td><td>故意留已知漏洞</td><td>易进入、收集攻击数据</td></tr>
+    <tr><td><strong>强化系统</strong></td><td>弱化系统 + 取证能力</td><td>看似安全、取证更强</td></tr>
+    <tr><td><strong>用户模式服务器</strong></td><td>用户进程模拟完整 OS</td><td>迷惑攻击者、便于隔离</td></tr>
+  </table>
+  <p class="meta"><strong>蜜罐四种配置</strong>：诱骗听端口，弱化留漏洞，强化能取证，用户进程跑。</p>
+
+  <h2>四、交互程度与主机类型</h2>
+  <table>
+    <tr><th>分类</th><th>特点</th></tr>
+    <tr><td><strong>低交互</strong></td><td>模拟有限服务；部署简单、风险低；易被识破</td></tr>
+    <tr><td><strong>高交互</strong></td><td>真实/完整环境；情报丰富；维护成本高、被控风险大</td></tr>
+    <tr><td>空系统</td><td>无业务的真实完整 OS</td></tr>
+    <tr><td>镜像系统</td><td>对生产业务镜像模拟</td></tr>
+    <tr><td>虚拟系统</td><td>虚拟机部署，无真实业务数据</td></tr>
+  </table>
+
+  <h2>五、蜜网 Honeynet</h2>
+  <ul>
+    <li>多个蜜罐 + 路由器/防火墙/IDS/审计 组成的<strong>陷阱网络</strong></li>
+    <li>常配合<strong>流量牵引/重定向</strong>，把攻击流量引向蜜罐</li>
+    <li>应用：捕获恶意代码、入侵取证、分流攻击、丰富特征库</li>
+  </ul>
+
+  <h2>六、与其他技术分工</h2>
+  <table>
+    <tr><th>技术</th><th>干什么</th><th>不是什么</th></tr>
+    <tr><td>防火墙</td><td>访问控制、隔离</td><td>不诱捕、不主动收集攻击手法</td></tr>
+    <tr><td>IDS/IPS</td><td>检测/阻断已知或异常攻击</td><td>不故意暴露假目标</td></tr>
+    <tr><td>蜜罐</td><td>诱捕 + 记录攻击全过程</td><td>不承担真实业务、不替代防火墙</td></tr>
+    <tr><td>流量清洗</td><td>抗 DDoS，过滤恶意流量</td><td>不分析攻击者手法</td></tr>
+    <tr><td>软件白名单</td><td>只允许已知合法程序运行</td><td>不诱捕攻击者</td></tr>
+  </table>
+
+  <h2>七、局限与风险</h2>
+  <ul>
+    <li>蜜罐被攻破后可能成为<strong>跳板</strong>攻击其他系统 → 必须隔离部署</li>
+    <li>低交互易被识别；高交互维护成本高</li>
+    <li>不能替代防火墙、补丁、终端防护等基础措施</li>
+  </ul>
+
+  <footer>
+    配套：<a href="../lessons/0010-active-defense-honeypot.html">第 10 课</a> ·
+    <a href="./mnemonics.html#lesson-10">口诀</a> ·
+    <a href="./textbook/ch15.html">教材第 15 章精读</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

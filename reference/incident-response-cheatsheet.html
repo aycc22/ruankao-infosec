@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 网络安全应急响应</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>网络安全应急响应速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 17 章 · PDCERF · 打印用</p>
+  </header>
+
+  <h2>一、核心概念</h2>
+  <ul>
+    <li><strong>应急响应</strong>：事发前准备 + 事发时/后按流程处置，控制损失、恢复业务、防止再犯</li>
+    <li>英文：<strong>Incident Response（IR）</strong></li>
+    <li>团队：<strong>CSIRT</strong>；国内协调常考 <strong>CNCERT/CC</strong></li>
+  </ul>
+
+  <h2>二、PDCERF 六阶段</h2>
+  <ol>
+    <li><strong>准备</strong> Preparation：团队、预案、工具、备份、演练、加固</li>
+    <li><strong>检测</strong> Detection：确认事件、定类型/级别、上报、保全证据</li>
+    <li><strong>抑制</strong> Containment：限制扩散（断网、隔离、封账号/端口）</li>
+    <li><strong>根除</strong> Eradication：清恶意、打补丁、清后门、改口令</li>
+    <li><strong>恢复</strong> Recovery：可信备份还原、验证、持续监测</li>
+    <li><strong>总结</strong> Follow-up：报告、复盘、改预案/策略、再评估</li>
+  </ol>
+  <p class="meta"><strong>应急响应六阶段</strong>：先准备，再检测，抑制住再根除，恢复完要总结（字头：备检抑根恢总）。</p>
+
+  <h2>三、抑制 vs 根除</h2>
+  <table>
+    <tr><th>抑制</th><th>根除</th></tr>
+    <tr><td>圈住火：限制范围</td><td>灭火源：彻底清除根因</td></tr>
+    <tr><td>断网、隔离、封堵</td><td>杀毒/清后门、补丁、重置凭证</td></tr>
+  </table>
+  <p class="meta"><strong>抑制 vs 根除</strong>：先抑制后根除；抑制是圈住火，根除是灭火源。</p>
+
+  <h2>四、事件四级（从重到轻）</h2>
+  <table>
+    <tr><th>级</th><th>名称</th></tr>
+    <tr><td>I</td><td>特别重大</td></tr>
+    <tr><td>II</td><td>重大</td></tr>
+    <tr><td>III</td><td>较大</td></tr>
+    <tr><td>IV</td><td>一般</td></tr>
+  </table>
+  <p class="meta"><strong>事件四级分类</strong>：特别重大最要紧，重大较大一般跟。</p>
+
+  <h2>五、预案与演练</h2>
+  <ul>
+    <li>预案含：组织职责、分级、报告、处置步骤、联系人与资源</li>
+    <li>演练：验证流程可执行，发现缺口</li>
+  </ul>
+
+  <h2>六、下午卷模板</h2>
+  <p>按 <strong>备检抑根恢总</strong> 写点；点明<strong>先抑制后根除</strong>；检测阶段写证据保全；恢复写可信备份与监测。</p>
+
+  <h2>七、英文速记</h2>
+  <table>
+    <tr><th>中文</th><th>英文</th></tr>
+    <tr><td>应急响应</td><td>Incident Response</td></tr>
+    <tr><td>准备</td><td>Preparation</td></tr>
+    <tr><td>检测</td><td>Detection</td></tr>
+    <tr><td>抑制</td><td>Containment</td></tr>
+    <tr><td>根除</td><td>Eradication</td></tr>
+    <tr><td>恢复</td><td>Recovery</td></tr>
+    <tr><td>总结/跟踪</td><td>Follow-up</td></tr>
+  </table>
+
+  <footer>
+    配套课程：<a href="../lessons/0013-incident-response.html">第 13 课</a> ·
+    <a href="./mnemonics.html#lesson-13">口诀</a> ·
+    <a href="./textbook/ch17.html">教材第 17 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

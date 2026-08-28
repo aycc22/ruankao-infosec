@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 12 课 · 网络安全等级保护（等保 2.0）</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 12 · 约 18 分钟</div>
+    <h1>合规主线：网络安全等级保护（等保 2.0）</h1>
+    <p class="meta">本课目标：背住「定备建测监」五环节；分清 GB 17859 五级名称与 GB/T 22239 基本要求；记住十大类（技术五 + 管理五）；会区分等保测评与风险评估；掌握备案机关/测评周期等高频数字点。</p>
+  </header>
+
+  <h2>开场：风险评估做完了，为什么还要做等保？</h2>
+  <p>
+    第 11 课的风险评估回答「我有多危险、先修哪」。
+    但国家还要求：网络运营者必须按<strong>等级</strong>建设、测评、整改——这就是<strong>网络安全等级保护</strong>（简称<strong>等保</strong>）。
+    法律依据：《网络安全法》第 21 条「国家实行网络安全等级保护制度」。
+    教材对应<strong>第 18 章</strong>（测评技术与标准），也是 2023–2025 机考上午卷高频块。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 风险值的教材公式是？</div>
+    <div class="opts">
+      <button class="opt">A. 威胁数量 × 漏洞数量</button>
+      <button class="opt" data-correct="true">B. 安全事件可能性 × 安全事件损失</button>
+      <button class="opt">C. 资产价值 + 威胁频率</button>
+      <button class="opt">D. 安全措施数量 ÷ 资产总数</button>
+    </div>
+    <div class="explain">答案 B。口诀：风险等于可能乘损失。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 企业购买网络安全保险，属于哪种风险处置？</div>
+    <div class="opts">
+      <button class="opt">A. 降低</button>
+      <button class="opt" data-correct="true">B. 转移</button>
+      <button class="opt">C. 接受</button>
+      <button class="opt">D. 规避</button>
+    </div>
+    <div class="explain">答案 B。买保险 = 转移；打补丁 = 降低；取消业务 = 规避。</div>
+  </div>
+
+  <h2>一、等保是什么（一句话）</h2>
+  <p>
+    对网络和信息系统按<strong>重要程度与受侵害程度</strong>划分安全保护等级，
+    再按等级落实安全建设、测评与监督检查的<strong>国家基本制度</strong>。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>等保法律依据</strong>）：<strong>等保是等级保护，网安法二十一开路</strong>。
+    <br>易错：<strong>风险评估 ≠ 等保测评</strong>——前者找风险定处置；后者对照等级基本要求做<strong>符合性</strong>检查。
+  </div>
+
+  <h2>二、五个工作环节（上午必考顺序）</h2>
+  <ol>
+    <li><strong>定级</strong>：确定保护对象与安全保护等级（可参考 GB/T 22240 定级指南）</li>
+    <li><strong>备案</strong>：向<strong>公安机关</strong>备案；常见考点：确定等级后 <strong>30 日内</strong></li>
+    <li><strong>建设整改</strong>：按基本要求与设计技术要求建设/加固</li>
+    <li><strong>等级测评</strong>：有资质的<strong>第三方测评机构</strong>对照标准测评（运营单位不能「自测代替」）</li>
+    <li><strong>监督检查</strong>：公安机关依法监督检查</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>等保五环节</strong>）：<strong>先定级，再备案，建设整改后测评，最后监督检查</strong>（字头：定备建测监）。
+    <br>高频数字：备案 <strong>30 日</strong>；三级及以上系统通常<strong>每年至少一次</strong>等级测评。
+  </div>
+
+  <h2>三、五级怎么记（GB 17859 名称最常考）</h2>
+  <p>
+    强制国家标准 <strong>GB 17859—1999</strong>《计算机信息系统安全保护等级划分准则》给出五级技术名称，上午卷爱考「第几级叫什么」：
+  </p>
+  <table>
+    <tr><th>级别</th><th>GB 17859 名称</th><th>一句话</th></tr>
+    <tr><td>第一级</td><td><strong>用户自主保护级</strong></td><td>用户自主访问控制为主</td></tr>
+    <tr><td>第二级</td><td><strong>系统审计保护级</strong></td><td>开始强调审计（「哪一级起要审计」常考二级）</td></tr>
+    <tr><td>第三级</td><td><strong>安全标记保护级</strong></td><td>强制访问控制 + 安全标记</td></tr>
+    <tr><td>第四级</td><td><strong>结构化保护级</strong></td><td>结构化保护与隐蔽信道等</td></tr>
+    <tr><td>第五级</td><td><strong>访问验证保护级</strong></td><td>访问验证，最高级</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>GB 17859 五级</strong>）：<strong>自己审计，标完结构，才能访问</strong>（字头：自审标结访）。实务中常见建设对象是 <strong>2–4 级</strong>。</p>
+
+  <h2>四、等保 2.0 核心标准（别混编号）</h2>
+  <table>
+    <tr><th>标准</th><th>考什么</th></tr>
+    <tr><td><strong>GB/T 22239—2019</strong></td><td>《基本要求》——建设整改「对照表」；等保 2.0 核心</td></tr>
+    <tr><td><strong>GB/T 28448—2019</strong></td><td>《测评要求》——怎么测、测什么</td></tr>
+    <tr><td><strong>GB/T 22240</strong></td><td>《定级指南》——怎么定级</td></tr>
+    <tr><td><strong>GB/T 25070</strong></td><td>《安全设计技术要求》——怎么设计</td></tr>
+    <tr><td><strong>GB 17859—1999</strong></td><td>五级划分准则（强制国标）</td></tr>
+  </table>
+  <div class="callout warn">
+    易混：<strong>GB/T 22239 ≠ GB 17859</strong>。22239 是基本要求；17859 是五级划分。
+    <br>题干问「等保 2.0 基本要求」→ 选 <strong>GB/T 22239—2019</strong>。
+  </div>
+
+  <h2>五、十大类要求：技术五 + 管理五</h2>
+  <p>GB/T 22239 每个等级的要求分<strong>安全通用要求</strong>与<strong>安全扩展要求</strong>。通用要求再分技术、管理两大块，共十大类：</p>
+  <table>
+    <tr><th>技术要求（外→内）</th><th>管理要求（要素→活动）</th></tr>
+    <tr><td>安全<strong>物理</strong>环境</td><td>安全管理制度</td></tr>
+    <tr><td>安全<strong>通信</strong>网络</td><td>安全管理机构</td></tr>
+    <tr><td>安全<strong>区域边界</strong></td><td>安全管理人员</td></tr>
+    <tr><td>安全<strong>计算</strong>环境</td><td>安全建设管理</td></tr>
+    <tr><td>安全<strong>管理中心</strong></td><td>安全运维管理</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>技术五大类</strong>）：<strong>物理通信管外线，边界计算管里头，管理中心总调度</strong>（字头：物通边算中）。
+    <br>口诀（<strong>管理五大类</strong>）：<strong>制度机构配人员，建设完了抓运维</strong>（字头：制机人建运）。
+    <br>扩展要求常考场景：云计算、移动互联、物联网、工业控制、大数据。
+  </div>
+
+  <h2>六、等级测评怎么考</h2>
+  <p><strong>等级测评</strong>：测评机构依据 GB/T 22239、GB/T 28448 等，判定定级对象是否达到相应等级保护能力。</p>
+  <table>
+    <tr><th>环节</th><th>做什么</th></tr>
+    <tr><td>测评准备</td><td>收集资料、了解对象、准备工具</td></tr>
+    <tr><td>方案编制</td><td>确定测评指标、对象与方法</td></tr>
+    <tr><td>现场测评</td><td>访谈、检查、测试（含漏扫/渗透等）</td></tr>
+    <tr><td>报告编制</td><td>出测评报告，支撑整改与备案材料</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>等保测评四步</strong>）：<strong>先准备，编方案，到现场，写报告</strong>（字头：备方现报）。</p>
+  <p>
+    按测评目标还可区分：等级测评（等保符合性）、验收测评、风险测评（风险管理视角）。
+    题干出现「对照等级基本要求做符合性判定」→ <strong>等级测评</strong>，不是风险评估。
+  </p>
+
+  <h2>七、和前几课怎么串起来</h2>
+  <ul>
+    <li>防火墙 / IDS / 补丁 / 蜜罐：落到「区域边界、计算环境、运维管理」等控制点</li>
+    <li>风险评估：可在建设整改、运维阶段识别风险，为等保整改提供输入</li>
+    <li>等保测评：查「是否达到该等级要求」，不是重新算一遍风险值</li>
+  </ul>
+  <div class="callout info">
+    下午卷模板：写等保工作 → 按<strong>定备建测监</strong>顺序列；写建设内容 → 点出<strong>物通边算中 / 制机人建运</strong>中相关类；写差距 → 对照 GB/T 22239 + 整改 + 复测。
+  </div>
+
+  <h2>八、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 《网络安全法》规定国家实行的基本制度是？</div>
+    <div class="opts">
+      <button class="opt">A. 风险评估制度</button>
+      <button class="opt" data-correct="true">B. 网络安全等级保护制度</button>
+      <button class="opt">C. 渗透测试强制制度</button>
+      <button class="opt">D. 蜜罐部署强制制度</button>
+    </div>
+    <div class="explain">答案 B。第 21 条：国家实行网络安全等级保护制度。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 等保工作五个环节的正确顺序是？</div>
+    <div class="opts">
+      <button class="opt">A. 测评 → 定级 → 备案 → 建设 → 检查</button>
+      <button class="opt" data-correct="true">B. 定级 → 备案 → 建设整改 → 等级测评 → 监督检查</button>
+      <button class="opt">C. 备案 → 定级 → 测评 → 建设 → 检查</button>
+      <button class="opt">D. 建设 → 定级 → 测评 → 备案 → 检查</button>
+    </div>
+    <div class="explain">答案 B。口诀：先定级，再备案，建设整改后测评，最后监督检查。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 等保 2.0《基本要求》对应的标准是？</div>
+    <div class="opts">
+      <button class="opt">A. GB 17859—1999</button>
+      <button class="opt" data-correct="true">B. GB/T 22239—2019</button>
+      <button class="opt">C. GB/T 20984—2007</button>
+      <button class="opt">D. ISO/IEC 27001</button>
+    </div>
+    <div class="explain">答案 B。17859 是五级划分；20984 是风险评估规范；27001 是信息安全管理体系。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · GB 17859 第二级的名称是？</div>
+    <div class="opts">
+      <button class="opt">A. 用户自主保护级</button>
+      <button class="opt" data-correct="true">B. 系统审计保护级</button>
+      <button class="opt">C. 安全标记保护级</button>
+      <button class="opt">D. 结构化保护级</button>
+    </div>
+    <div class="explain">答案 B。「自己审计……」里第二步是审计 = 系统审计保护级。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 下列哪项属于等保技术要求「十大类」之一？</div>
+    <div class="opts">
+      <button class="opt">A. 安全营销中心</button>
+      <button class="opt" data-correct="true">B. 安全区域边界</button>
+      <button class="opt">C. 安全采购招标</button>
+      <button class="opt">D. 安全绩效考核</button>
+    </div>
+    <div class="explain">答案 B。技术口诀「边界计算管里头」——边界 = 安全区域边界。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 二级及以上系统确定等级后，向公安机关备案的时限通常是？</div>
+    <div class="opts">
+      <button class="opt">A. 7 日内</button>
+      <button class="opt" data-correct="true">B. 30 日内</button>
+      <button class="opt">C. 90 日内</button>
+      <button class="opt">D. 一年内</button>
+    </div>
+    <div class="explain">答案 B。定级后 30 日内备案，是高频数字点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Classified protection evaluation checks whether a system meets the required security level. This is closest to?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Risk assessment only</button>
+      <button class="opt" data-correct="true">B. Grade protection evaluation</button>
+      <button class="opt">C. Penetration testing only</button>
+      <button class="opt">D. Malware signature update</button>
+    </div>
+    <div class="explain">答案 B。Grade / classified protection evaluation = 等级测评（符合性），不是单纯风险评估或渗透测试。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某市政务云平台拟按等保三级建设。请写出等级保护主要工作环节，并指出建设时应覆盖的技术类与管理类要求大类名称。</p>
+    <div class="ans">
+      ① 工作环节：<strong>定级 → 备案 → 建设整改 → 等级测评 → 监督检查</strong>（定备建测监）。<br>
+      ② 备案：确定等级后向<strong>公安机关</strong>备案（常见考点：30 日内）。<br>
+      ③ 建设依据：<strong>GB/T 22239—2019</strong> 基本要求（三级通用要求 + 云扩展要求）。<br>
+      ④ 技术五大类：安全物理环境、安全通信网络、安全区域边界、安全计算环境、安全管理中心。<br>
+      ⑤ 管理五大类：安全管理制度、安全管理机构、安全管理人员、安全建设管理、安全运维管理。<br>
+      ⑥ 测评：委托有资质测评机构，三级通常<strong>每年至少一次</strong>；结论不符合/基本符合则整改复测。<br>
+      答题模板：<strong>环节顺序写全 → 点标准编号 → 十大类点名 → 测评周期与整改闭环</strong>。
+    </div>
+  </details>
+
+  <h2>九、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 18 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch18.html">第 18 章 网络安全测评技术与标准</a>，对照<a href="../reference/classified-protection-cheatsheet.html">等保速查卡</a>背五环节与十大类。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出「先定级，再备案……」、五级「自己审计，标完结构，才能访问」、技术「物理通信管外线……」、管理「制度机构配人员……」。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 等保法律依据：网安法二十一；② 等保五环节：定备建测监；③ GB 17859 五级：自己审计，标完结构，才能访问；④ 技术五大类：物理通信管外线；⑤ 等保测评四步：备方现报。</li>
+  </ol>
+
+  <h2>十、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 18 章 网络安全测评技术与标准（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>国家标准：<a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=BAFB47E8874764186BDB7865E8344DAF">GB/T 22239—2019《基本要求》</a>（国家标准全文公开系统）</li>
+    <li>法律入口：<a href="https://flk.npc.gov.cn/">国家法律法规数据库</a>（核《网络安全法》现行文本）</li>
+    <li>备考笔记（辅助）：<a href="https://www.cnblogs.com/devdog/p/15565650.html">博客园 · devdog 第 18 章</a></li>
+    <li>速查：<a href="../reference/classified-protection-cheatsheet.html">等保速查</a> · <a href="../reference/mnemonics.html#lesson-12">第 12 课口诀</a> · <a href="./0011-network-risk-assessment.html">第 11 课 风险评估</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「五级名称怎么快背」「测评和风险评估下午卷怎么写」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 12 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：网络安全应急响应（教材第 17 章）——准备、检测、抑制、根除、恢复、总结。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

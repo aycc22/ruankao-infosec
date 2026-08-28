@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 3 课 · 密码学入门</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 03 · 约 20 分钟</div>
+    <h1>密码学入门：对称、非对称与哈希</h1>
+    <p class="meta">本课目标：分清对称加密 / 非对称加密 / 哈希三种工具；能说出数字签名为什么能「防篡改 + 防抵赖」。</p>
+  </header>
+
+  <h2>开场：为什么密码学是地基</h2>
+  <p>
+    还记得第 1 课的 CIA 吗？机密性靠<strong>加密</strong>、完整性靠<strong>哈希</strong>、防抵赖靠<strong>数字签名</strong>——
+    三样东西全是密码学。上午卷的密码题每年必考，下午卷的方案设计题（「请设计一个加密传输方案」）
+    更是直接拿它当答题模板。今天的课学完，你就拥有了下午卷的大招。
+  </p>
+
+  <h2>一、对称加密：一把钥匙开一把锁</h2>
+  <p>
+    加密和解密用<strong>同一把密钥</strong>，就像一把钥匙开一把锁。特点：<strong>快</strong>，适合加密大量数据。
+    代表算法：<strong>AES</strong>（现代标准）、DES（56 位密钥，已不安全）、3DES、IDEA、国产 <strong>SM4</strong>。
+  </p>
+  <p>
+    它的死穴是<strong>密钥分发</strong>：甲乙要通信，先得把同一把钥匙安全地送到对方手里——送钥匙的路上被偷了，一切白搭。
+    怎么解决？靠非对称加密（见下）。
+  </p>
+
+  <h2>二、非对称加密：公钥私钥两把锁</h2>
+  <p>
+    每个用户有一对钥匙：<strong>公钥</strong>（可以公开，谁都能拿到）和<strong>私钥</strong>（必须保密，只有自己知道）。两条铁律：
+  </p>
+  <ul>
+    <li><strong>公钥加密 → 私钥解密</strong>：别人用你的公钥加密发给你，只有你能解开。解决<strong>保密</strong>。</li>
+    <li><strong>私钥签名 → 公钥验签</strong>：你用私钥「盖章」，别人用你的公钥验证。解决<strong>认证 + 防抵赖</strong>。</li>
+  </ul>
+  <p>
+    代表算法：<strong>RSA</strong>、ECC、国产 <strong>SM2</strong>。特点：<strong>慢</strong>，不适合加密大数据——
+    所以实战中两者搭配：<strong>对称加密数据，非对称加密那把对称密钥</strong>（这叫「数字信封」思路，先记住结论）。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>对称 vs 非对称</strong>）：<strong>对称快、非对称慢；对称加密数据，非对称传密钥</strong>。
+    <br>口诀（<strong>非对称密钥方向</strong>）⚠️：<strong>公钥加密 → 私钥解（保密）；私钥签名 → 公钥验（认证+防抵赖）</strong>。
+  </div>
+
+  <h2>三、哈希：内容的一滴「指纹」</h2>
+  <p>
+    哈希函数把任意长度的输入，算成<strong>固定长度</strong>的输出（如 SHA-256 输出 256 位）。
+    三个特性是考试最爱：
+  </p>
+  <ul>
+    <li><strong>单向不可逆</strong>：从输出反推输入在计算上不可行——所以哈希<strong>不是加密</strong>（加密可逆，哈希不可逆，注意这个坑）；</li>
+    <li><strong>相同输入必得相同输出</strong>：同一份文件任何时候算，指纹都一样；</li>
+    <li><strong>雪崩效应</strong>：输入改一个比特，输出面目全非。</li>
+  </ul>
+  <p>
+    用途：<strong>完整性校验</strong>（发文件时附上哈希，收方一算对不上就是被改过）、<strong>口令存储</strong>（只存哈希不存明文）。
+    算法：MD5（128 位，已不安全）、SHA-1（已不安全）、SHA-256（现代标准）、国产 <strong>SM3</strong>。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>哈希 vs 加密</strong>）：<strong>哈希不是加密——加密可逆，哈希不可逆</strong>。
+    <br>口诀（<strong>算法淘汰与标准</strong>）：淘汰 <strong>DES / MD5 / SHA-1</strong>；现代 <strong>AES / SHA-256</strong>；国产 <strong>SM2 · SM3 · SM4</strong>。
+  </div>
+
+  <h2>四、数字签名：私钥盖章，公钥验章</h2>
+  <p>把前三样串起来就是下午卷的送分模型。发送方（比如银行）要发一条转账确认，流程是：</p>
+  <ol>
+    <li>对消息算<strong>哈希</strong>；</li>
+    <li>用<strong>自己的私钥</strong>加密这个哈希 = 「签名」；</li>
+    <li>消息 + 签名一起发出；</li>
+    <li>接收方用<strong>银行的公钥</strong>解出哈希 1，再对收到的消息重算哈希 2；</li>
+    <li>两个哈希相等 ⇒ 消息没被改（<strong>完整性</strong>）+ 确实出自银行（<strong>不可否认性</strong>）。</li>
+  </ol>
+  <p class="meta">口诀（<strong>数字签名作用</strong>）：<strong>私钥盖章，公钥验章</strong>——签名用私钥（只有我能签），验签用公钥（人人都能验）。私钥泄露，一切作废。</p>
+
+  <h2>五、动手练一练（点击选项，立刻看对错）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 下列哪项属于对称加密算法？</div>
+    <div class="opts">
+      <button class="opt">A. RSA算法</button>
+      <button class="opt" data-correct="true">B. AES算法</button>
+      <button class="opt">C. ECC算法</button>
+      <button class="opt">D. SM2算法</button>
+    </div>
+    <div class="explain">答案 B。AES 是对称加密（现代标准）。RSA、ECC、SM2 都是非对称的。记忆：对称「A 系」（AES）+ 国产 SM4；非对称「R 系」（RSA、ECC、SM2）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 甲用乙的公钥加密一条消息后发送。谁能够解密？</div>
+    <div class="opts">
+      <button class="opt">A. 只有甲能解密</button>
+      <button class="opt" data-correct="true">B. 只有乙能解密</button>
+      <button class="opt">C. 甲乙都能解密</button>
+      <button class="opt">D. 任何人都能解密</button>
+    </div>
+    <div class="explain">答案 B。公钥加密、私钥解密：乙的私钥只有乙有，所以只有乙能解。这正是「公钥可以满天飞，私钥打死不外借」的原因。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 下列关于哈希函数的描述，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 输入不同输出必不同</button>
+      <button class="opt" data-correct="true">B. 输入相同输出必相同</button>
+      <button class="opt">C. 可由输出反推输入</button>
+      <button class="opt">D. 输出长度随输入变长</button>
+    </div>
+    <div class="explain">答案 B。哈希是确定性的：同一输入必得同一输出。A 错在「必」——哈希存在碰撞（不同输入可能撞出相同输出）；C 违反单向性；D 违反定长输出。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 甲用自己的私钥对消息签名后发送。乙要用什么来验证签名？</div>
+    <div class="opts">
+      <button class="opt">A. 甲的私钥</button>
+      <button class="opt">B. 甲的证书</button>
+      <button class="opt" data-correct="true">C. 甲的公钥</button>
+      <button class="opt">D. 甲的密码</button>
+    </div>
+    <div class="explain">答案 C。私钥签名、公钥验签。B 是干扰项：证书里确实装着公钥，但「验证」直接用的工具是公钥本身。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 网站需要保证用户提交的订单数据「未被篡改且商家无法抵赖」，最适合采用？</div>
+    <div class="opts">
+      <button class="opt">A. 对称加密</button>
+      <button class="opt" data-correct="true">B. 数字签名</button>
+      <button class="opt">C. 端口扫描</button>
+      <button class="opt">D. 口令破解</button>
+    </div>
+    <div class="explain">答案 B。「防篡改」（完整性）+「防抵赖」（不可否认性）= 数字签名（哈希 + 私钥签名）。C、D 是攻击手法，用来当干扰项的。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · Which of the following is a symmetric encryption algorithm?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. RSA</button>
+      <button class="opt" data-correct="true">B. AES</button>
+      <button class="opt">C. ECC</button>
+      <button class="opt">D. SM2</button>
+    </div>
+    <div class="explain">答案 B。AES 是对称加密。英文题套路：考的就是你认不认识算法名和术语，词汇表<a href="../reference/crypto-cheatsheet.html">密码学速查表</a>里的英文词每天过一遍。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某银行需要向客户传输一份大文件，要求：① 传输过程保密；② 客户能验证文件未被篡改；③ 银行无法抵赖曾发出该文件。请给出方案。</p>
+    <div class="ans">
+      ① 保密：用<strong>对称加密（如 AES）</strong>加密文件——数据量大，对称加密快；对称密钥再用<strong>银行的非对称加密</strong>方式安全送达（数字信封思路）。<br>
+      ② 防篡改：对文件计算<strong>哈希</strong>，客户收到后重算比对。<br>
+      ③ 防抵赖：银行用<strong>私钥对哈希签名</strong>，客户用银行公钥验签。<br>
+      答题格式就这个套路：<strong>需求 → 技术 → 理由</strong>，每一条各占一行，得分点就到手了。
+    </div>
+  </details>
+
+  <h2>六、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 3 章（30 分钟）</strong>：<a href="../reference/textbook/ch03.html">教材精读 · 第 3 章 密码学</a>，重点看对称/非对称/哈希与数字签名流程。</li>
+    <li><strong>睡前默写（5 分钟）</strong>：写一句话总结每种工具「解决什么问题」——对称：保密；哈希：防篡改；签名：防抵赖防冒充。</li>
+    <li><strong>给家人讲（5 分钟）</strong>：用「寄保险箱」或「盖章」的比喻把数字签名讲明白——能讲出来，才是真会了。</li>
+  </ol>
+
+  <h2>七、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》密码学部分：对称（DES/3DES/AES/IDEA）、非对称（RSA）、Hash、数字签名、国产算法（<a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_10980501.html">清华大学出版社</a>）</li>
+    <li>速查卡：<a href="../reference/crypto-cheatsheet.html">密码学速查表</a>（打印）· <a href="../reference/attacks-glossary.html">攻击手法词汇表</a> · <a href="./0001-exam-overview-and-cia.html">第 1 课：CIA</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有任何不清楚的地方，随时问你的老师（我）。</strong>「为什么 DES 会不安全」「SM2 和 RSA 谁强」都是好问题。</p>
+    <p>下一课预告：数字证书与 PKI——公钥怎么证明「是我本人」？HTTPS 为什么安全？</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

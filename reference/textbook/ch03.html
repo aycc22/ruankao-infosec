@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教材精读 · 第 3 章 密码学基本理论</title>
+<link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Textbook · 第 3 章 · 约 15 分钟</div>
+    <h1>密码学基本理论</h1>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 3 课 ·
+      <a href="../crypto-cheatsheet.html">密码学速查</a></p>
+  </header>
+
+  <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
+    · <a href="../../lessons/0003-crypto-basics.html">相关课程</a></p>
+
+  <h2>3.1–3.2 密码体制</h2>
+  <ul>
+    <li>对称：同钥加解密，快，DES（不安全）、AES、SM4。</li>
+    <li>非对称：公钥/私钥，慢，RSA、ECC、SM2。</li>
+    <li>公钥加密→私钥解（保密）；私钥签→公钥验（认证+防抵赖）。</li>
+  </ul>
+  <h2>3.3 哈希函数</h2>
+  <ul>
+    <li>单向不可逆；相同输入相同输出；雪崩效应。</li>
+    <li>MD5、SHA-1 已不安全；SHA-256、SM3 为现代标准。</li>
+    <li>用途：完整性校验、口令存储（加盐哈希）、数字签名前置步骤。</li>
+  </ul>
+  <h2>3.4–3.6 数字签名与密钥管理</h2>
+  <ul>
+    <li>数字签名 = 对消息哈希后用私钥加密。</li>
+    <li>数字信封：对称密钥加密数据 + 非对称加密对称密钥。</li>
+    <li>密钥管理：生成、分发、存储、更新、销毁、恢复。</li>
+  </ul>
+  <h2>3.7 分组密码工作模式</h2>
+  <ul>
+    <li>ECB、CBC、CFB、OFB、CTR 等（知道名称即可，CBC 需 IV）。</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>易错陷阱：</strong>
+    <br>哈希不是加密；证书里是公钥不是私钥（第 6 章）。
+  </div>
+
+  <h2>章末自测（1 题）</h2>
+  <div class="quiz">
+    <div class="q">Q · 用于保证消息完整性的技术是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 哈希函数</button>
+      <button class="opt">B. 对称加密</button>
+      <button class="opt">C. 数字证书</button>
+      <button class="opt">D. 防火墙</button>
+    </div>
+    <div class="explain">答案 A。详见上文必背考点。</div>
+  </div>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》第 3 章 · 2020 年审定大纲。
+    本页为考点提炼，供无教材考生复习使用。
+  </footer>
+</main>
+<script src="../../assets/quiz.js"></script>
+<script src="../../assets/course-nav.js"></script>
+</body>
+</html>

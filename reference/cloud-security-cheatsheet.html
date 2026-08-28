@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 云计算安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>云计算安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 23 章 · 打印用</p>
+  </header>
+
+  <h2>一、总原则</h2>
+  <p><strong>责任共担</strong>：厂商管云平台底座，用户管云上业务与数据；上云不等于甩锅。</p>
+  <p class="meta"><strong>云安全责任共担</strong>：云上安全大家扛，厂商管底座用户管业务。</p>
+
+  <h2>二、IaaS / PaaS / SaaS 责任矩阵</h2>
+  <table>
+    <tr><th>模式</th><th>用户主要负责</th><th>厂商主要负责</th></tr>
+    <tr><td><strong>IaaS</strong></td><td>OS、中间件、应用、数据、主机策略</td><td>物理、网络、存储硬件、虚拟化</td></tr>
+    <tr><td><strong>PaaS</strong></td><td>应用代码、业务数据、访问与加密配置</td><td>再管到 OS、运行时、中间件</td></tr>
+    <tr><td><strong>SaaS</strong></td><td>账号权限、数据分类与合规使用、终端</td><td>几乎全栈应用与基础设施</td></tr>
+  </table>
+  <p class="meta"><strong>IaaS/PaaS/SaaS 责任边界</strong>：IaaS 你管系统和应用，PaaS 你管应用和数据，SaaS 你管账号和用法。</p>
+
+  <h2>三、四种部署模式</h2>
+  <ul>
+    <li><strong>私有云</strong>：组织独占</li>
+    <li><strong>社区云</strong>：共同需求组织共享</li>
+    <li><strong>公有云</strong>：公众开放、多租户</li>
+    <li><strong>混合云</strong>：私有 + 公有等组合</li>
+  </ul>
+  <p class="meta"><strong>云计算四种部署模式</strong>：私有独占社区共，公有开放混合拼（字头：私社公混）。</p>
+
+  <h2>四、云特有威胁</h2>
+  <table>
+    <tr><th>威胁</th><th>秒判</th></tr>
+    <tr><td>虚拟机逃逸</td><td>冲出 Hypervisor，危及其他租户</td></tr>
+    <tr><td>多租户越权</td><td>租户间资源/数据串访</td></tr>
+    <tr><td>数据残留</td><td>释放存储后旧数据可恢复</td></tr>
+    <tr><td>共享技术漏洞</td><td>共用虚拟化/硬件被利用</td></tr>
+    <tr><td>不安全 API</td><td>管理接口弱认证、过度授权</td></tr>
+    <tr><td>滥用云服务</td><td>挖矿、发垃圾、打 DDoS</td></tr>
+    <tr><td>过度依赖 / 中断</td><td>厂商故障导致业务停摆</td></tr>
+  </table>
+  <p class="meta"><strong>云环境特有威胁</strong>：逃逸残留共漏洞，接口滥用加中断。</p>
+
+  <h2>五、多租户隔离</h2>
+  <ul>
+    <li><strong>计算</strong>：CPU/内存隔离；禁直接访问宿主机硬件；逃逸检测告警</li>
+    <li><strong>存储</strong>：租户隔离 + 加密 + 防残留</li>
+    <li><strong>网络</strong>：VPC/安全组；管理流量与业务流量分离</li>
+  </ul>
+  <p class="meta"><strong>多租户隔离三层</strong>：计算存储网络三层隔，租户互访要堵住。</p>
+
+  <h2>六、等保云扩展</h2>
+  <ul>
+    <li>云对象 = <strong>安全通用要求</strong> + <strong>云计算安全扩展要求</strong></li>
+    <li>关键词：基础设施位置、镜像与快照保护、云服务商选择、环境管理</li>
+    <li>原则：安全管理责任不变，数据归属关系不变</li>
+    <li>认名：GB/T 31167 指南；GB/T 31168 能力要求</li>
+  </ul>
+  <p class="meta"><strong>等保云扩展要求</strong>：通用不够再加云扩，镜像快照要管住。</p>
+
+  <h2>七、运维与隐私</h2>
+  <ul>
+    <li>运维：风险评估 · 认证审计 · 监测 · 应急 · 容灾备份</li>
+    <li>隐私生命周期：采集告知 → 传输加密 → 存储控制 → 使用最小化 → 事件处置</li>
+  </ul>
+  <p class="meta"><strong>云安全运维要点</strong>：评估监测加应急，认证审计再备份。</p>
+
+  <h2>八、易错陷阱</h2>
+  <ul>
+    <li>云安全 ≠ 全由云厂商负责</li>
+    <li>SaaS 用户仍要管账号与数据合规</li>
+    <li>等保上云：不是「免等保」，而是「通用 + 云扩展」</li>
+    <li>等保测评 ≠ 风险评估（第 18 课易错点）</li>
+  </ul>
+
+  <h2>九、下午卷模板</h2>
+  <p>先画<strong>责任线</strong>（厂商 / 租户）→ 再写<strong>隔离 + 身份 + 加密 + 监测 + 备份</strong> → 点名<strong>等保云扩展</strong>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0019-cloud-security.html">第 19 课</a> ·
+    <a href="./mnemonics.html#lesson-19">口诀</a> ·
+    <a href="./classified-protection-cheatsheet.html">等保速查</a> ·
+    <a href="./textbook/ch23.html">教材精读第 23 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

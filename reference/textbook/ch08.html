@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教材精读 · 第 8 章 防火墙技术原理与应用</title>
+<link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Textbook · 第 8 章 · 约 15 分钟</div>
+    <h1>防火墙技术原理与应用</h1>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 5 课 ·
+      <a href="../firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a></p>
+  </header>
+
+  <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
+    · <a href="../../lessons/0005-firewall-vpn.html">相关课程</a></p>
+
+  <h2>8.1–8.3 三类防火墙</h2>
+  <ul>
+    <li>包过滤（网络层，无状态，看 IP/端口）；状态检测（会话表）；应用代理/网关（应用层，最安全最慢）。</li>
+    <li>规律：层次越高→查越多→越安全→越慢。</li>
+  </ul>
+  <h2>8.4–8.5 体系结构</h2>
+  <ul>
+    <li>双重宿主主机；屏蔽主机（包过滤+堡垒主机）；屏蔽子网（双路由器+DMZ）。</li>
+    <li>DMZ 放对外服务器，外网不能直入内网。</li>
+  </ul>
+  <h2>8.6 局限</h2>
+  <ul>
+    <li>防外不防内；不查内容（防不了 SQL 注入）；不杀毒；单点故障。</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>易错陷阱：</strong>
+    <br>维护状态表=状态检测；DMZ=屏蔽子网。
+  </div>
+
+  <h2>章末自测（1 题）</h2>
+  <div class="quiz">
+    <div class="q">Q · 维护连接状态表的是哪种防火墙？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 状态检测型</button>
+      <button class="opt">B. 包过滤型</button>
+      <button class="opt">C. 电路级</button>
+      <button class="opt">D. 透明代理</button>
+    </div>
+    <div class="explain">答案 A。详见上文必背考点。</div>
+  </div>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》第 8 章 · 2020 年审定大纲。
+    本页为考点提炼，供无教材考生复习使用。
+  </footer>
+</main>
+<script src="../../assets/quiz.js"></script>
+<script src="../../assets/course-nav.js"></script>
+</body>
+</html>

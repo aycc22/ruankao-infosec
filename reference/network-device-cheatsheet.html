@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 网络设备安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>网络设备安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 21 章 · 打印用</p>
+  </header>
+
+  <h2>一、设备分工</h2>
+  <ul>
+    <li><strong>交换机</strong>：MAC / VLAN 转发；二层为主，三层交换机可到网络层</li>
+    <li><strong>路由器</strong>：IP 选路；网络层；ACL、路由协议</li>
+  </ul>
+
+  <h2>二、交换机五代</h2>
+  <table>
+    <tr><th>代</th><th>层</th><th>识别</th></tr>
+    <tr><td>一</td><td>物理层</td><td>Hub，广播</td></tr>
+    <tr><td>二</td><td><strong>数据链路层</strong></td><td>认 MAC ← 真题</td></tr>
+    <tr><td>三</td><td>网络层</td><td>三层交换，带路由</td></tr>
+    <tr><td>四</td><td>三层+业务</td><td>防火墙、LB、IPS</td></tr>
+  </table>
+  <p class="meta"><strong>交换机五代</strong>：一代物理 Hub 广播，二代链路认 MAC，三层网络能路由，四代叠加防火墙。</p>
+
+  <h2>三、主要威胁</h2>
+  <ul>
+    <li><strong>交换机</strong>：MAC 泛洪、ARP 欺骗、弱口令、VLAN 跳跃</li>
+    <li><strong>路由器</strong>：DoS/DDoS、路由协议攻击（BGP 等）、口令泄露、固件漏洞、物理/依赖</li>
+  </ul>
+  <p class="meta"><strong>网络设备威胁</strong>：交换 MAC 泛洪 ARP 骗，路由协议流量洪；默认口令固件洞，物理依赖都要防。</p>
+
+  <h2>四、六大加固</h2>
+  <ol>
+    <li>访问控制：Console / VTY / HTTP / SNMP + <strong>ACL</strong></li>
+    <li>口令：<strong>改默认口令</strong>；<strong>Enable secret</strong> 密文</li>
+    <li>关非必要服务：CDP、HTTP、Telnet → <strong>SSH</strong></li>
+    <li>SNMP：<strong>v3</strong> + ACL + 复杂团体名</li>
+    <li>日志审计：syslog、exec-timeout、堡垒机</li>
+    <li>物理 + 固件补丁 + 配置备份</li>
+  </ol>
+  <p class="meta"><strong>网络设备六大加固</strong>：先改默认口令，ACL 管住管理口，SSH 加密 SNMP 三代，补丁日志不能少。</p>
+
+  <h2>五、管理口要点</h2>
+  <table>
+    <tr><th>口</th><th>加固</th></tr>
+    <tr><td>Console</td><td>物理锁 + ACL</td></tr>
+    <tr><td>VTY</td><td>SSH；access-class；exec-timeout</td></tr>
+    <tr><td>HTTP/S</td><td>限源 IP；关 HTTP 留 HTTPS</td></tr>
+    <tr><td>SNMP</td><td>v3；ACL 过滤网管；不用则关</td></tr>
+  </table>
+  <p class="meta">SSH 加密 Telnet 裸，VTY 口要配 ACL。</p>
+
+  <h2>六、AAA</h2>
+  <table>
+    <tr><th>协议</th><th>传输</th><th>场景</th></tr>
+    <tr><td>RADIUS</td><td>UDP 1812/1813</td><td>用户接入（Wi‑Fi/VPN）；认证授权常绑定</td></tr>
+    <tr><td>TACACS+</td><td>TCP 49</td><td>设备管理员；AAA 分离；命令级审计</td></tr>
+  </table>
+  <p class="meta">认证授权加计费，RADIUS 接用户，TACACS+ 管设备。</p>
+
+  <h2>七、交换机 vs 路由器</h2>
+  <ul>
+    <li>交换机特有：<strong>端口安全 / MAC 绑定</strong>（防泛洪）</li>
+    <li>路由器特有：<strong>路由协议认证</strong>、边界 ACL 防伪造源 IP</li>
+  </ul>
+
+  <h2>八、运维审计</h2>
+  <ul>
+    <li><strong>字符会话</strong>：SSH、Telnet</li>
+    <li><strong>图形会话</strong>：RDP、VNC、HTTP/HTTPS 图形</li>
+  </ul>
+
+  <h2>九、下午卷模板</h2>
+  <p>设备加固写：<strong>改默认口令 + Enable secret + SSH + VTY/SNMP ACL + SNMPv3 + 关 CDP/HTTP/Telnet + syslog/TACACS+ + 补丁备份</strong>。</p>
+
+  <h2>十、英文速记</h2>
+  <table>
+    <tr><th>中文</th><th>英文</th></tr>
+    <tr><td>访问控制列表</td><td>ACL / Access Control List</td></tr>
+    <tr><td>认证授权计费</td><td>AAA</td></tr>
+    <tr><td>安全外壳协议</td><td>SSH / Secure Shell</td></tr>
+    <tr><td>简单网络管理协议</td><td>SNMP</td></tr>
+    <tr><td>远程认证拨入用户服务</td><td>RADIUS</td></tr>
+  </table>
+
+  <footer>
+    配套课程：<a href="../lessons/0016-network-device-security.html">第 16 课</a> ·
+    <a href="./mnemonics.html#lesson-16">口诀</a> ·
+    <a href="./textbook/ch21.html">教材第 21 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

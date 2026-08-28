@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 课 · 数字证书、PKI 与 HTTPS</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 04 · 约 20 分钟</div>
+    <h1>公钥怎么证明「是我本人」：数字证书、PKI 与 HTTPS</h1>
+    <p class="meta">本课目标：说出证书里装的是什么、CA 和 RA 的分工；能复述 HTTPS 握手的五步流程。</p>
+  </header>
+
+  <h2>开场：第 3 课留了一个悬念</h2>
+  <p>
+    第 3 课说「公钥可以公开，谁都能拿到」——那问题来了：<strong>大街上捡到一把钥匙，你怎么知道它开的是哪家的门？</strong>
+    攻击者完全可以伪造一把「假银行的公钥」给你，你拿它加密，等于把机密直接交给了黑客。
+    今天的课就是答案：<strong>数字证书</strong>——公钥的身份证明。
+  </p>
+
+  <h2>一、数字证书：公钥的「身份证」</h2>
+  <p>
+    证书 = <strong>身份信息 + 公钥 + CA 的签名</strong>，由权威第三方 <strong>CA</strong>（认证中心，如 CFCA、各商业 CA）签发，
+    遵循 X.509 标准。浏览器拿到证书，用 CA 的公钥验证签名没被篡改，就相信「这个公钥确实是银行的」。
+  </p>
+  <div class="callout warn">
+    <strong>两个必记陷阱：</strong>
+    <br>① 证书里装的是<strong>公钥，不是私钥</strong>（私钥永远在自己手里）；
+    <br>② 证书是 <strong>CA 签发的</strong>，不是 RA。
+  </div>
+
+  <h2>二、PKI：证书背后的整套体系</h2>
+  <p>PKI（公钥基础设施）就是「发证、管证、验证的整套机器」。组成和分工是上午卷的送分题：</p>
+  <table>
+    <tr><th>组成</th><th>干什么</th><th>考法</th></tr>
+    <tr><td><strong>CA</strong> 认证中心</td><td>签发、管理、吊销证书（核心与信任根）</td><td>「谁签发证书」→ CA</td></tr>
+    <tr><td><strong>RA</strong> 注册机构</td><td>受理申请、<strong>审核身份</strong></td><td>「RA 能不能签发证书」→ 不能！</td></tr>
+    <tr><td>证书库</td><td>存放证书与吊销列表（LDAP 目录）</td><td>公共布告栏</td></tr>
+    <tr><td>密钥恢复系统</td><td>密钥丢失时找回</td><td>—</td></tr>
+  </table>
+  <p>
+    还有两个细节：PKI 是<strong>硬件 + 软件 + 人员 + 策略 + 过程</strong>的集合（选项只说「硬件」就是错的）；
+    证书到期自然作废，而私钥提前泄露 → CA 发布 <strong>CRL</strong>（吊销列表，离线）或 <strong>OCSP</strong>（在线实时查询）来作废。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>数字证书组成</strong>）：<strong>身份信息 + 公钥 + CA 签名</strong>（X.509）。
+    <br>口诀（<strong>PKI 五大服务</strong>）：<strong>认整签会恢</strong>（身份认证、完整性、数字签名、会话加密管理、密钥恢复）。
+    <br>口诀（<strong>证书作废 vs 过期</strong>）⚠️：<strong>吊销（CRL）≠ 过期</strong>；OCSP 是在线实时版。
+  </div>
+
+  <h2>三、HTTPS：PKI 最著名的应用</h2>
+  <p>
+    HTTPS = SSL/TLS + HTTP，走 <strong>TCP 443 端口</strong>（HTTP 是 80）。浏览器和服务器「握手」协商加密，过程就五步，是下午卷的模板：
+  </p>
+  <ol>
+    <li>客户端：我支持的算法列表发给你；</li>
+    <li>服务器：选定算法，把自己的<strong>证书</strong>发过来；</li>
+    <li>客户端：用 CA 公钥验证证书，提取服务器的<strong>公钥</strong>；</li>
+    <li>客户端：生成一把随机的<strong>对称密钥</strong>，用服务器公钥加密后传回；</li>
+    <li>服务器：用私钥解开，拿到对称密钥——之后双方都用它加密通信。</li>
+  </ol>
+  <p class="meta">口诀（<strong>HTTPS 传输思路</strong>）：<strong>先非对称握手（验身份传钥匙），后对称传输</strong>。
+  看到「握手」「会话密钥」「443」→ 想到 SSL 握手五步。</p>
+
+  <h2>四、动手练一练（点击选项，立刻看对错）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 数字证书的核心作用是什么？</div>
+    <div class="opts">
+      <button class="opt">A. 公开对称密钥</button>
+      <button class="opt" data-correct="true">B. 绑定公钥身份</button>
+      <button class="opt">C. 加密所有数据</button>
+      <button class="opt">D. 防止病毒入侵</button>
+    </div>
+    <div class="explain">答案 B。证书解决的是「这个公钥属于谁」——把公钥和身份绑定，再由 CA 签名作保。它本身不加密数据，更不防病毒。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 数字证书由谁签发？</div>
+    <div class="opts">
+      <button class="opt">A. 服务器自己</button>
+      <button class="opt" data-correct="true">B. 认证中心CA</button>
+      <button class="opt">C. 浏览器厂商</button>
+      <button class="opt">D. 域名注册商</button>
+    </div>
+    <div class="explain">答案 B。CA 用自己的私钥给证书签名。RA 只负责审核申请者身份，签发是 CA 的活——「RA 签发证书」是出题人最爱埋的坑。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · HTTPS 握手中，浏览器如何安全地把对称密钥发给服务器？</div>
+    <div class="opts">
+      <button class="opt">A. 明文直接发送</button>
+      <button class="opt" data-correct="true">B. 公钥加密发送</button>
+      <button class="opt">C. 私钥加密发送</button>
+      <button class="opt">D. 报文摘要发送</button>
+    </div>
+    <div class="explain">答案 B。客户端用服务器的公钥加密对称密钥（第 4 步）——只有服务器的私钥能解开。C 错：自己的私钥加密的是「签名」，不是传密钥用的。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 证书未到期但私钥泄露，CA 应如何让证书失效？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 发布吊销列表</button>
+      <button class="opt">B. 删除本地证书</button>
+      <button class="opt">C. 清空浏览器缓存</button>
+      <button class="opt">D. 重装操作系统</button>
+    </div>
+    <div class="explain">答案 A。发布 CRL（吊销列表），验证方查询后即不再信任。OCSP 是它的在线实时版。B、C、D 只是删了「你家的验证记录」，证书本身照样有效——没用。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · HTTPS 使用的默认端口是？</div>
+    <div class="opts">
+      <button class="opt">A. 80</button>
+      <button class="opt" data-correct="true">B. 443</button>
+      <button class="opt">C. 8080</button>
+      <button class="opt">D. 53</button>
+    </div>
+    <div class="explain">答案 B。HTTPS = 443，HTTP = 80，DNS = 53。这是「闭着眼睛都要选对」的送分题。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · Which component issues digital certificates in PKI?（英文题）</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. CA</button>
+      <button class="opt">B. DNS</button>
+      <button class="opt">C. IDS</button>
+      <button class="opt">D. IPS</button>
+    </div>
+    <div class="explain">答案 A。CA = Certificate Authority（认证中心），签发证书。DNS 解析域名，IDS/IPS 是入侵检测/防御系统——缩写题也是上午卷常客。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>用户访问某 https:// 网站时，浏览器弹出「证书不受信任」警告。请写出至少 3 种可能原因及对应处理。</p>
+    <div class="ans">
+      ① <strong>自签名证书</strong>：证书不是受信任 CA 签发 → 更换为受信任 CA 签发的证书；<br>
+      ② <strong>证书已过期</strong> → 申请续期并更换；<br>
+      ③ <strong>证书域名不匹配</strong>（如证书是 a.com，访问的是 b.com）→ 重新签发匹配域名的证书；<br>
+      ④ <strong>证书已被吊销</strong>（私钥泄露等）→ 查 CRL/OCSP，重新申请；<br>
+      ⑤ 根证书未安装 → 安装对应根证书。
+      答题套路再复习一遍：<strong>原因 + 对策</strong>成对写出，每条一行。
+    </div>
+  </details>
+
+  <h2>五、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 6 章（30 分钟）</strong>：<a href="../reference/textbook/ch06.html">教材精读 · 第 6 章 认证技术</a>，重点看数字证书、PKI、SSL/TLS，找课里没提的细节（如 X.509 字段、数字信封）。</li>
+    <li><strong>实战观察（5 分钟）</strong>：用手机或电脑浏览器打开任意 https 网站，点地址栏的小锁 → 查看证书：颁发者是谁？有效期到什么时候？证书里有没有私钥？（答案：没有。）</li>
+    <li><strong>睡前默写（5 分钟）</strong>：写一遍 SSL 握手五步的骨架（算法协商 → 发证书 → 验证提取公钥 → 公钥加密传对称密钥 → 对称通信）。</li>
+  </ol>
+
+  <h2>六、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》认证技术原理与应用章节（<a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_10980501.html">清华大学出版社</a>）</li>
+    <li>备考笔记：<a href="https://rk.51cto.com/article/524660.html">51CTO·数字证书 RA/CA 职责与签名验证</a>、<a href="https://rk.51cto.com/article/529261.html">51CTO·PKI 组成拆解</a></li>
+    <li>速查卡：<a href="../reference/pki-https-cheatsheet.html">证书/PKI/HTTPS 速查</a>（打印）· <a href="../reference/crypto-cheatsheet.html">密码学速查表</a> · <a href="./0003-crypto-basics.html">第 3 课：密码学</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有任何不清楚的地方，随时问你的老师（我）。</strong>「为什么要先验证书再传密钥」「CRL 和 OCSP 有什么区别」都是好问题。</p>
+    <p>下一课：<a href="./0005-firewall-vpn.html">第 5 课 · 防火墙与 VPN</a></p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

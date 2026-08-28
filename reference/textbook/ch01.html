@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教材精读 · 第 1 章 网络信息安全概述</title>
+<link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Textbook · 第 1 章 · 约 15 分钟</div>
+    <h1>网络信息安全概述</h1>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 1 课 ·
+      <a href="../exam-overview.html">考试全貌速查</a></p>
+  </header>
+
+  <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
+    · <a href="../../lessons/0001-exam-overview-and-cia.html">相关课程</a></p>
+
+  <h2>1.1–1.2 概念与现状</h2>
+  <ul>
+    <li>信息安全 = 保护信息的<strong>机密性、完整性、可用性</strong>及真实性、抗抵赖性、可控性等属性。</li>
+    <li>网络信息安全问题：黑客入侵、病毒蠕虫、信息泄露、拒绝服务、内部威胁等。</li>
+  </ul>
+  <h2>1.3 基本属性（必背）</h2>
+  <ul>
+    <li>机密性 Confidentiality：防偷看 → 加密、访问控制。</li>
+    <li>完整性 Integrity：防篡改 → 哈希、数字签名。</li>
+    <li>可用性 Availability：防瘫痪 → 冗余、备份、抗 DDoS。</li>
+    <li>抗抵赖性 / 不可否认性：防抵赖 → 数字签名、审计日志。</li>
+    <li>可控性：信息传播范围可控 → 权限策略、内容过滤。</li>
+  </ul>
+  <h2>1.4–1.5 目标与技术需求</h2>
+  <ul>
+    <li>基本目标：机密性、完整性、可用性、可控性、真实性、抗抵赖性。</li>
+    <li>基本功能：认证、访问控制、保密、抗抵赖、审计、可用性保障等。</li>
+    <li>技术需求清单（选择/多选）：物理环境安全、认证、访问控制、保密、漏洞扫描、恶意代码防护、内容安全、监测预警、应急响应。</li>
+  </ul>
+  <h2>1.6 安全管理</h2>
+  <ul>
+    <li>管理要素：政策、组织、资产、人员、技术、操作、应急等。</li>
+    <li>管理流程：定目标 → 建组织 → 风险评估 → 实施控制 → 检查改进。</li>
+  </ul>
+  <h2>1.7 法律法规（入门）</h2>
+  <ul>
+    <li>《网络安全法》2017：网络运营者安全义务、关键信息基础设施保护、数据本地化等。</li>
+    <li>详细法条见第 18 章精读及第 18 课（预告）。</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>易错陷阱：</strong>
+    <br>属性与攻击对应：泄露→机密性；篡改→完整性；DoS→可用性。
+    <br>CIA 是核心三元组，其他属性是扩展。
+  </div>
+
+  <h2>章末自测（1 题）</h2>
+  <div class="quiz">
+    <div class="q">Q · 信息安全「可用性」被破坏的典型攻击是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 拒绝服务攻击（DDoS）</button>
+      <button class="opt">B. 信息泄露</button>
+      <button class="opt">C. SQL 注入</button>
+      <button class="opt">D. 会话劫持</button>
+    </div>
+    <div class="explain">答案 A。详见上文必背考点。</div>
+  </div>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》第 1 章 · 2020 年审定大纲。
+    本页为考点提炼，供无教材考生复习使用。
+  </footer>
+</main>
+<script src="../../assets/quiz.js"></script>
+<script src="../../assets/course-nav.js"></script>
+</body>
+</html>

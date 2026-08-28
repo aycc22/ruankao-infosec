@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 操作系统安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>操作系统安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 19 章 · DAC/MAC/RBAC · 打印用</p>
+  </header>
+
+  <h2>一、核心机制</h2>
+  <ul>
+    <li>标识与鉴别、访问控制、<strong>最小特权</strong>、安全审计、可信路径、系统安全增强</li>
+  </ul>
+  <p class="meta"><strong>OS 安全四机制</strong>：先认人，再控权，特权要最小，事事留审计。</p>
+
+  <h2>二、DAC / MAC / RBAC</h2>
+  <table>
+    <tr><th>模型</th><th>要点</th></tr>
+    <tr><td>DAC</td><td>属主自主授权；灵活；权限可转授</td></tr>
+    <tr><td>MAC</td><td>系统按标签强制；用户不能改密级</td></tr>
+    <tr><td>RBAC</td><td>权限→角色→用户；易管、最小权限、职责分离</td></tr>
+  </table>
+  <p class="meta"><strong>访问控制三模型</strong>：DAC 主人自己定，MAC 标签系统定，RBAC 角色中间转。</p>
+
+  <h2>三、最小权限与多级安全</h2>
+  <ul>
+    <li><strong>最小特权</strong>：只给完成任务必需的最少权限（Least Privilege）</li>
+    <li>BLP / 多级安全：<strong>禁止上读下写</strong>（保机密性）</li>
+  </ul>
+  <p class="meta"><strong>多级安全 BLP 规则</strong>：能往下看，不能往上偷；能往上记，不能往下泄。</p>
+
+  <h2>四、OS 五级（GB/T 20272）</h2>
+  <p>用户自主 → 系统审计 → 安全标记 → 结构化 → 访问验证</p>
+  <p class="meta"><strong>OS 五级</strong>：自己审计，标完结构，才能访问。标准号：GB/T 20272。</p>
+
+  <h2>五、加固共性流程</h2>
+  <ol>
+    <li>定目标 → 最小化安装</li>
+    <li>打补丁 → 关多余服务/端口</li>
+    <li>账户口令与权限收紧</li>
+    <li>文件系统 / 共享 / 网络过滤</li>
+    <li>审计与第三方防护 → 检测回改 → 上线</li>
+  </ol>
+  <p class="meta"><strong>OS 安全加固流程</strong>：目标定好先装少，补丁打完再关口，账号权限严收紧，测完合格才上线。</p>
+
+  <h2>六、Windows / Linux 关键词</h2>
+  <ul>
+    <li>Windows：LSA / SAM / SRM；组策略；关默认共享与多余服务</li>
+    <li>Linux：passwd / shadow；9bit/ACL；SSH；SELinux；tcp_wrappers；Tripwire</li>
+    <li><strong>安全基线</strong>：最低安全配置模板，持续核查</li>
+  </ul>
+
+  <h2>七、下午卷模板</h2>
+  <p>主机加固写：<strong>最小安装 + 补丁 + 关服务 + 账号最小权限 + 审计/基线</strong>；点明 DAC/MAC/RBAC 选型理由（若题干问模型）。</p>
+
+  <h2>八、英文速记</h2>
+  <table>
+    <tr><th>中文</th><th>英文</th></tr>
+    <tr><td>最小特权</td><td>Least Privilege</td></tr>
+    <tr><td>自主访问控制</td><td>DAC</td></tr>
+    <tr><td>强制访问控制</td><td>MAC</td></tr>
+    <tr><td>基于角色访问控制</td><td>RBAC</td></tr>
+    <tr><td>安全基线</td><td>Security Baseline</td></tr>
+    <tr><td>可信路径</td><td>Trusted Path</td></tr>
+  </table>
+
+  <footer>
+    配套课程：<a href="../lessons/0014-os-security.html">第 14 课</a> ·
+    <a href="./mnemonics.html#lesson-14">口诀</a> ·
+    <a href="./textbook/ch19.html">教材第 19 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

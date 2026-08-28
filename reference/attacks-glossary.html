@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 网络攻击手法词汇表</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>网络攻击手法词汇表</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 2 章 · 中英对照 · 上午卷英文题也考这些词</p>
+  </header>
+
+  <h2>一、攻击一般过程（八步，核心考点）</h2>
+  <table>
+    <tr><th>步骤</th><th>内容</th><th>典型方法</th></tr>
+    <tr><td>1 隐藏攻击源</td><td>隐藏黑客主机位置</td><td>跳板机、代理、伪造 IP、假冒账号</td></tr>
+    <tr><td>2 收集目标信息</td><td>摸清目标资产</td><td>IP/DNS/OS/端口扫描、查用户信息</td></tr>
+    <tr><td>3 挖掘漏洞信息</td><td>找出可利用漏洞</td><td>漏洞扫描器、系统/协议/信任关系漏洞</td></tr>
+    <tr><td>4 获取访问权限</td><td>拿到普通/特权账户</td><td>口令破解、缓冲区溢出、欺骗运行木马</td></tr>
+    <tr><td>5 隐蔽攻击行为</td><td>隐藏自己的操作</td><td>修改日志、伪造连接、进程/文件隐藏</td></tr>
+    <tr><td>6 实施攻击</td><td>执行破坏或以此为跳板</td><td>删改数据、窃听、停止服务、下载数据</td></tr>
+    <tr><td>7 开辟后门</td><td>为下次入侵留门</td><td>放宽许可、开放不安全服务、植入木马</td></tr>
+    <tr><td>8 清除攻击痕迹</td><td>销毁证据</td><td>篡改日志、改系统时间、停审计服务</td></tr>
+  </table>
+  <p class="meta">记忆：门外四步「藏身 → 摸底 → 找洞 → 进门」；门里四步「隐迹 → 动手 → 留门 → 抹痕」。</p>
+
+  <h2>二、常见攻击手法（中英对照）</h2>
+  <table>
+    <tr><th>手法</th><th>英文</th><th>一句话原理</th><th>典型特征/工具</th><th>防御</th></tr>
+    <tr><td><strong>端口扫描</strong></td><td>Port Scanning</td><td>探测目标开放端口与服务</td><td>Nmap；SYN 半连接扫描最隐蔽</td><td>关闭无关端口、防火墙过滤</td></tr>
+    <tr><td><strong>口令破解</strong></td><td>Password Cracking</td><td>暴力 / 字典 / 撞库试出口令</td><td>Hydra、John the Ripper</td><td>强口令、多因子认证、限制尝试次数</td></tr>
+    <tr><td><strong>缓冲区溢出</strong></td><td>Buffer Overflow</td><td>超长数据覆盖返回地址，跳转执行恶意代码</td><td>获得系统控制权</td><td>NX、ASLR、栈保护 Canary、安全编码</td></tr>
+    <tr><td><strong>SQL 注入</strong></td><td>SQL Injection</td><td>恶意 SQL 拼入查询语句骗过数据库</td><td><code>' OR '1'='1</code> 绕过登录</td><td>参数化查询、输入过滤转义</td></tr>
+    <tr><td><strong>跨站脚本</strong></td><td>XSS</td><td>向网页注入脚本，窃取 Cookie/会话</td><td><code>&lt;script&gt;</code> 标签</td><td>输出转义、CSP 策略</td></tr>
+    <tr><td><strong>恶意代码</strong></td><td>Malware</td><td>病毒（感染宿主）/ 蠕虫（自传播）/ 木马（伪装）/ 勒索（加密要赎金）</td><td>蠕虫无需宿主可自我复制</td><td>防病毒软件、补丁、最小权限</td></tr>
+    <tr><td><strong>拒绝服务</strong></td><td>DoS / DDoS</td><td>耗尽资源使服务瘫痪（分布式 = 控制大量肉鸡）</td><td>SYN Flood、UDP Flood、Smurf、Ping of Death</td><td>抗 DDoS、限流、冗余备份</td></tr>
+    <tr><td><strong>网络钓鱼</strong></td><td>Phishing</td><td>假冒可信方（银行/客服）骗取敏感信息</td><td>钓鱼邮件、仿冒网站</td><td>安全意识培训、多因子认证</td></tr>
+    <tr><td><strong>网络窃听</strong></td><td>Sniffing / MITM</td><td>网卡设混杂模式截获数据包，中间人还可篡改</td><td>Wireshark、DSniff</td><td>加密通信（TLS、VPN）</td></tr>
+    <tr><td><strong>会话劫持</strong></td><td>Session Hijacking</td><td>窃取会话标识（Cookie）冒充合法用户</td><td>偷 Cookie 直接顶号</td><td>HTTPS、会话绑定 IP、定期过期</td></tr>
+    <tr><td><strong>社交工程</strong></td><td>Social Engineering</td><td>利用人性弱点（冒充、恐吓、利诱）获取信息</td><td>冒充 IT 支持要密码</td><td>制度规范 + 安全意识培训</td></tr>
+  </table>
+
+  <h2>三、攻击危害四类型（对应安全属性）</h2>
+  <table>
+    <tr><th>危害类型</th><th>威胁的属性</th><th>例</th></tr>
+    <tr><td>信息泄露攻击</td><td>机密性</td><td>窃听、越权读取</td></tr>
+    <tr><td>完整性破坏攻击</td><td>完整性</td><td>篡改数据、注入</td></tr>
+    <tr><td>拒绝服务攻击</td><td>可用性</td><td>DDoS、恶意关机</td></tr>
+    <tr><td>非法使用攻击</td><td>可用性 + 可控性</td><td>盗用账号、资源滥用</td></tr>
+  </table>
+
+  <h2>四、攻击分类（按目的）</h2>
+  <p><strong>探测类</strong>（准备阶段：Ping、Traceroute、扫描）· <strong>权限类</strong>（口令破解、漏洞利用、会话劫持）· <strong>操作攻击</strong>（窃取/破坏数据）· <strong>拒绝服务攻击</strong>（使服务不可用）</p>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》第 2 章「网络攻击原理与常用方法」；
+    备考笔记：<a href="https://zhuanlan.zhihu.com/p/400674531">知乎《信息安全工程师》2.网络攻击原理</a>、
+    <a href="https://www.cnblogs.com/devdog/p/15533215.html">博客园备考笔记第二章</a>。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

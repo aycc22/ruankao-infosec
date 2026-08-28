@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 2023–2025 机考考点分布</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 机考后三年</div>
+    <h1>2023–2025 考点分布（非官方成套真题）</h1>
+    <p class="meta">用于校准「课会不会太浅」· 2026-08-24 整理 · 不替代 2018–2022 官方试题分析</p>
+  </header>
+
+  <div class="callout warn">
+    <strong>先看这一条：</strong>清华社指定用书《信息安全工程师 2018 至 2022 年试题分析与解答》（ISBN 9787302671176，2024-08）是目前<strong>唯一官方成套解析</strong>，目录只到 2022 下半年。
+    <br>2023 年起全面<strong>机考抽题</strong>：不同批次题目不完全相同，官方<strong>不公布完整卷</strong>。下面内容来自信管网等培训站点的公开题干/考点帖，一律标成<strong>机考回忆 / 二手来源</strong>。用来看「还考什么、下午怎么出」，<strong>不算标准答案、不拿来估官方通过率</strong>。
+  </div>
+
+  <h2>一、机考后对备考意味着什么</h2>
+  <table>
+    <tr><th></th><th>2018–2022（纸笔 / 官方成套）</th><th>2023–2025（机考）</th></tr>
+    <tr><td>能不能刷「整套原卷」</td><td>可以，以清华社试题分析为准</td><td>没有官方整卷；题库抽题，死记某套回忆卷收益有限</td></tr>
+    <tr><td>题型有没有变</td><td>上午 75 单选 + 下午 4–5 案例</td><td>题型没变；英文题仍约 5 道，近年阅读更长</td></tr>
+    <tr><td>大纲</td><td>2020 审定版</td><td>仍是 2020 审定版，教程仍是第 2 版 26 章</td></tr>
+    <tr><td>课该不该加厚</td><td>—</td><td>不必把课写成大学讲义；要补的是<strong>国密参数、网闸、等保流程、iptables 命令、案例模板</strong></td></tr>
+  </table>
+
+  <h2>二、上午卷：这三年在考什么</h2>
+  <p>和 2018–2022 比，<strong>骨架没换</strong>（密码、防护、系统、管理），但机考后更爱考「教材原句 + 标准条款 + 国密数字」。</p>
+  <table>
+    <tr><th>知识块</th><th>机考后仍高频</th><th>对你已学 / 未学的含义</th></tr>
+    <tr>
+      <td>等保 / 法律</td>
+      <td>等级保护工作环节（定级 / 备案 / <strong>等级测评</strong> / 运维）；《网安法》第 21 条「国家实行等级保护」</td>
+      <td>第 1–10 课几乎没覆盖 → <strong>后续课必须上</strong></td>
+    </tr>
+    <tr>
+      <td>国密</td>
+      <td>SM1/SM2/SM3/SM4/SM9/ZUC 的「对称还是杂凑」；SM1 分组与密钥长度（公开回忆题给的是 128/128）</td>
+      <td>第 3 课只点了名字 → 密码课要补<strong>一张参数表</strong>，不必推数学</td>
+    </tr>
+    <tr>
+      <td>协议</td>
+      <td>SSH 子协议（传输层负责算法协商与密钥交换）；Kerberos 的 KDC = AS + TGS</td>
+      <td>第 4 课偏证书/HTTPS → 后续补安全协议对照</td>
+    </tr>
+    <tr>
+      <td>防护设备</td>
+      <td>防火墙 vs <strong>网闸</strong>（物理隔离强度、是否对外开端口）；蜜罐四种配置（2023 公开考点）</td>
+      <td>网闸在教材第 11 章，课还没上；蜜罐已在第 10 课</td>
+    </tr>
+    <tr>
+      <td>访问控制 / 标准</td>
+      <td>访问控制操作辨析；GB 17859 哪一级开始要审计；等保「可信验证」</td>
+      <td>访问控制、测评标准都在后半程</td>
+    </tr>
+    <tr>
+      <td>恶意代码</td>
+      <td>宏病毒载体（如 Melissa 与 Word）——仍是「关键词对应」题</td>
+      <td>第 9 课风格一致，课不浅，是题就这样</td>
+    </tr>
+    <tr>
+      <td>英文题</td>
+      <td>2025 公开回忆为较长生物特征认证（biometric）阅读填空，不只有 firewall/VPN 单词</td>
+      <td>继续积累术语；临考练一篇长英文比多背单词表更值</td>
+    </tr>
+  </table>
+  <p class="meta">上午公开题干来源示例：
+    <a href="https://www.cnitpm.com/pm1/179799rht2l9gca8.html">信管网 · 2025 综合知识（更新中）</a> ·
+    <a href="https://www.cnitpm.com/pm1/145881fohgmzo948.html">信管网 · 2023 蜜罐四种配置</a>
+  </p>
+
+  <h2>三、下午卷：过线关键，课里必须加「写法」</h2>
+  <p>机考后下午仍然是「给拓扑 / 给日志 / 给命令，填设备名、模型名、一条 Linux 命令」。和上午的「认概念」比，这才是你觉得课太浅时真正缺的东西。</p>
+  <table>
+    <tr><th>案例套路</th><th>反复出现的得分点</th></tr>
+    <tr>
+      <td>等保 + DMZ + 边界</td>
+      <td>网闸（近物理隔离）、屏蔽子网、防火墙第几道防线、网站在 DMZ / 库在内网</td>
+    </tr>
+    <tr>
+      <td>Linux 防火墙</td>
+      <td>iptables 的 filter 表；默认 ACCEPT = 黑名单思路；<code>iptables -P INPUT DROP</code>；放行 22/80/443</td>
+    </tr>
+    <tr>
+      <td>IDS/IPS</td>
+      <td>主动/被动、P2DR 四要素、误用 vs 异常、Snort 三种模式（嗅探 / 记录 / 网关）</td>
+    </tr>
+    <tr>
+      <td>密码应用</td>
+      <td>DES 分组填充、S 盒查表、异或与流密码——考「会填」，不考证明</td>
+    </tr>
+    <tr>
+      <td>主机 / Web / 移动</td>
+      <td>Web 木马文件、Linux 哈希工具、Android 四大组件与签名目录（考生回忆，批次间差异大）</td>
+    </tr>
+  </table>
+  <div class="callout info">
+    <strong>和你已学内容的关系：</strong>第 5–6 课的屏蔽子网、IDS/IPS 辨析，下午会原样再考一遍，但会要求你<strong>写出设备名和命令</strong>。不是课讲错了，是还没练「答题格式」。
+  </div>
+  <p class="meta">下午来源需交叉看：信管网部分「2023 演练」与 2022 官方下午题高度相似，可能是旧题当模拟。以清华社 2022 下午卷练手型，再用回忆帖补网闸/安卓等新面孔。</p>
+
+  <h2>四、这三年分析之后，课程怎么改（已定）</h2>
+  <ol>
+    <li><strong>计分用官方 2018–2022 整卷</strong>：能对答案、能算 45 分线。这是「能不能过」的唯一可靠尺子。</li>
+    <li><strong>2023–2025 只进「考点清单 + 课内 1 道原句风格题」</strong>：不整卷抄进 HTML（无官方原文，且版权/对错都无法保证）。</li>
+    <li><strong>从第 11 课起优先补这张表里标红的缺口</strong>：风险评估、等保流程、应急、网闸、国密参数表、iptables 模板。</li>
+    <li><strong>考前 2 周</strong>：用软考官网机考模拟练习熟悉界面（只练环境，题量/分值以正式系统为准）。</li>
+  </ol>
+
+  <h2>五、来源（可核对）</h2>
+  <ul>
+    <li>官方成套：<a href="https://www.tup.tsinghua.edu.cn/booksCenter/book_10316801.html">清华社《2018 至 2022 年试题分析与解答》</a></li>
+    <li>官方机考模拟通告：<a href="https://www.ruankao.org.cn/">中国计算机技术职业资格网</a>（如 2025-10-23、2026-05-07 模拟练习通告）</li>
+    <li>二手考点：<a href="https://www.cnitpm.com/class/19/e6_1.html">信管网试题栏目</a>（2023–2025 多为考后更新/回忆）</li>
+  </ul>
+
+  <footer>
+    本页不收录完整试卷。与大纲、教程、国家标准冲突时，以官方原文为准。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

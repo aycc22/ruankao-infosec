@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 18 课 · 第一阶段总结</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 18 · 约 20 分钟 · 里程碑</div>
+    <h1>第一阶段总结：把 17 课串成一张地图</h1>
+    <p class="meta">本课目标：看清已学知识在考试中的位置；秒判设备分工与密钥方向；混练跨课真题；明确后半程还要学什么。</p>
+  </header>
+
+  <h2>开场：你已经走完大半条「防护链」</h2>
+  <p>
+    从 <a href="./0001-exam-overview-and-cia.html">第 1 课 CIA</a> 到
+    <a href="./0017-website-security.html">第 17 课网站安全</a>，你覆盖了教程 <strong>26 章中的约 15 章核心内容</strong>。
+    本课不做新知识，而是把散落的考点<strong>串成地图</strong>——上午卷靠「认概念 + 判属性」，下午卷靠「写流程 + 威胁对策成对」。
+    学完本课，再进入 <strong>云计算、工控、物联网、物理安全、法律法规</strong> 等后半程专题。
+  </p>
+
+  <div class="callout ok">
+    结业测成绩回顾（对话逐题）：17 课平均约 <strong>6.9/7</strong>；历史易错点「私钥签名、公钥验签」近几课已稳定答对。
+    本课重点复习：<strong>密钥方向、CRL 术语、DMZ 部署、木马英文关键词、设备分工</strong>。
+  </div>
+
+  <h2>一、六块知识地图（点链接可回课复习）</h2>
+  <table>
+    <tr><th>模块</th><th>对应课程</th><th>上午卷考什么</th><th>下午卷考什么</th></tr>
+    <tr>
+      <td><strong>① 基础与攻击</strong></td>
+      <td><a href="./0001-exam-overview-and-cia.html">L1</a> · <a href="./0002-network-attacks.html">L2</a></td>
+      <td>CIA 判属性；攻击八步；DDoS→可用性</td>
+      <td>事件类型 + 破坏属性 + 建议</td>
+    </tr>
+    <tr>
+      <td><strong>② 密码与证书</strong></td>
+      <td><a href="./0003-crypto-basics.html">L3</a> · <a href="./0004-pki-https.html">L4</a></td>
+      <td>对称/非对称；哈希不可逆；CRL/OCSP；HTTPS 443</td>
+      <td>SSL 握手思路；证书验签流程</td>
+    </tr>
+    <tr>
+      <td><strong>③ 边界与监测</strong></td>
+      <td><a href="./0005-firewall-vpn.html">L5</a> · <a href="./0006-ids-ips.html">L6</a> · <a href="./0007-security-audit-siem.html">L7</a></td>
+      <td>防火墙三类；DMZ；VPN 三种；IDS 旁路 / IPS 串联</td>
+      <td>拓扑里标设备位置；VPN 选型</td>
+    </tr>
+    <tr>
+      <td><strong>④ 威胁与主动防御</strong></td>
+      <td><a href="./0008-vulnerability-patch.html">L8</a> · <a href="./0009-malware-defense.html">L9</a> · <a href="./0010-active-defense-honeypot.html">L10</a></td>
+      <td>零日定义；病毒/蠕虫/木马；蜜罐四种配置</td>
+      <td>补丁流程；恶意代码处置</td>
+    </tr>
+    <tr>
+      <td><strong>⑤ 管理与合规</strong></td>
+      <td><a href="./0011-network-risk-assessment.html">L11</a> · <a href="./0012-classified-protection.html">L12</a> · <a href="./0013-incident-response.html">L13</a></td>
+      <td>风险七步；等保五环节；应急六阶段 PDCERF</td>
+      <td>风险评估写法；等保流程；事件处置顺序</td>
+    </tr>
+    <tr>
+      <td><strong>⑥ 系统与应用</strong></td>
+      <td><a href="./0014-os-security.html">L14</a> · <a href="./0015-database-security.html">L15</a> · <a href="./0016-network-device-security.html">L16</a> · <a href="./0017-website-security.html">L17</a></td>
+      <td>DAC/MAC/RBAC；SQL 注入；SSH 管设备；XSS/CSRF</td>
+      <td>加固清单；Web 威胁对策成对写</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>第一阶段知识地图</strong>）：<strong>基础攻击打地基，密码证书保通信，边界监测守网络，漏洞恶意加蜜罐，风险等保应应急，系统网站全加固</strong>（六字对六模块）。
+  </div>
+
+  <h2>二、跨课必背：安全设备「谁干什么」</h2>
+  <p>上午卷最爱混：防火墙、IDS、IPS、WAF、审计、SIEM、蜜罐——先判「管访问 / 管检测 / 管应用 / 管日志」。</p>
+  <table>
+    <tr><th>设备/机制</th><th>核心职责</th><th>部署/特点</th><th>不能替代什么</th></tr>
+    <tr><td><strong>防火墙</strong></td><td>访问控制、隔离内外网</td><td>串联边界；包过滤→状态→代理</td><td>不防 SQL 注入、不杀毒</td></tr>
+    <tr><td><strong>IDS</strong></td><td>检测 + 告警</td><td><strong>旁路</strong>，不阻断流量</td><td>不做内外网隔离</td></tr>
+    <tr><td><strong>IPS</strong></td><td>检测 + <strong>阻断</strong></td><td><strong>串联</strong>在线路中</td><td>误拦可能影响业务</td></tr>
+    <tr><td><strong>WAF</strong></td><td>拦 Web 攻击（注入/XSS）</td><td>串联 <strong>Web 入口</strong></td><td>≠ 普通防火墙</td></tr>
+    <tr><td><strong>审计 / 日志</strong></td><td>留痕、追溯五问</td><td>采集→规范→存储→关联→告警</td><td>≠ IPS 直接阻断</td></tr>
+    <tr><td><strong>SIEM</strong></td><td>多源日志集中关联告警</td><td>跨设备需<strong>时间同步</strong></td><td>≠ 单点 IDS</td></tr>
+    <tr><td><strong>蜜罐</strong></td><td>诱捕、取证、威胁情报</td><td>必须<strong>隔离</strong>，无真实业务</td><td>≠ 防火墙 / 补丁</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>安全设备分工</strong>）：<strong>防火墙管访问，IDS 旁路只告警，IPS 串联能阻断，WAF 守 Web 入口，审计留痕 SIEM 关联，蜜罐诱捕要隔离</strong>。
+  </div>
+
+  <h2>三、流程类考点：四个「步骤题」别混</h2>
+  <table>
+    <tr><th>流程</th><th>步数 / 口诀</th><th>易混点</th></tr>
+    <tr><td><strong>风险评估</strong>（L11）</td><td>七步：准资威脆措析处</td><td>≠ 等保测评；忽略 ≠ 接受风险</td></tr>
+    <tr><td><strong>等保工作</strong>（L12）</td><td>五环节：定备建测监</td><td>测评找<strong>有资质第三方</strong>；备案找公安</td></tr>
+    <tr><td><strong>应急响应</strong>（L13）</td><td>六阶段：备检抑根恢总（PDCERF）</td><td><strong>先抑制后根除</strong>；未隔离就清杀易扩散</td></tr>
+    <tr><td><strong>网站安全工程</strong>（L17）</td><td>五阶段：分设实测评运</td><td>威胁 + 对策<strong>成对写</strong></td></tr>
+  </table>
+
+  <h2>四、历史易错点速刷（考前再过一遍）</h2>
+  <table>
+    <tr><th>易错点</th><th>正确口径</th><th>来源课</th></tr>
+    <tr><td>非对称密钥方向</td><td><strong>公钥加密→私钥解</strong>；<strong>私钥签名→公钥验</strong></td><td>L3–4</td></tr>
+    <tr><td>证书作废</td><td><strong>吊销 CRL / OCSP</strong> ≠ 自然过期</td><td>L4</td></tr>
+    <tr><td>DMZ 部署</td><td>对外服务放 DMZ；内网数据库不放 DMZ；<strong>只有屏蔽子网才有 DMZ</strong></td><td>L5</td></tr>
+    <tr><td>木马英文题</td><td>disguise + remote control + <strong>no replication</strong> → 木马</td><td>L9</td></tr>
+    <tr><td>零日漏洞</td><td><strong>零补丁</strong>（厂商尚无补丁），不是零危害</td><td>L8</td></tr>
+    <tr><td>XSS vs CSRF</td><td>XSS 能读 Cookie；CSRF 只借 Cookie 发请求</td><td>L17</td></tr>
+    <tr><td>隐藏报错</td><td>≠ 防 SQL 注入；<strong>参数化查询</strong>才可靠</td><td>L15–17</td></tr>
+  </table>
+
+  <h2>五、混练测验（跨 1–17 课 · 点击选项立刻反馈）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 某电商遭 DDoS 后用户无法下单。主要破坏的信息安全属性是？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性</button>
+      <button class="opt">B. 完整性</button>
+      <button class="opt" data-correct="true">C. 可用性</button>
+      <button class="opt">D. 不可否认性</button>
+    </div>
+    <div class="explain">答案 C。DDoS 导致服务瘫痪 → 可用性（L1–2）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 发送方用私钥对报文做数字签名，接收方验签应使用？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点，L3–4）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 对外提供服务的 Web 服务器，在屏蔽子网架构中应部署在？</div>
+    <div class="opts">
+      <button class="opt">A. 纯内网核心区</button>
+      <button class="opt" data-correct="true">B. DMZ 非军事区</button>
+      <button class="opt">C. 外网路由器上</button>
+      <button class="opt">D. 与管理终端同网段</button>
+    </div>
+    <div class="explain">答案 B。对外开门放 DMZ；OA/数据库放内网（L5）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 需要在检测到攻击时自动阻断流量，应选用并串联部署？</div>
+    <div class="opts">
+      <button class="opt">A. 防火墙包过滤</button>
+      <button class="opt">B. IDS 旁路监测</button>
+      <button class="opt" data-correct="true">C. IPS 在线阻断</button>
+      <button class="opt">D. SIEM 日志关联</button>
+    </div>
+    <div class="explain">答案 C。IPS 串联能阻断；IDS 旁路只告警；SIEM 做关联不直接拦包（L6–7）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · Malware disguises as useful software, allows remote control, without self-replication. It is a?</div>
+    <div class="opts">
+      <button class="opt">A. Computer virus</button>
+      <button class="opt" data-correct="true">B. Trojan horse</button>
+      <button class="opt">C. Network worm</button>
+      <button class="opt">D. Logic bomb</button>
+    </div>
+    <div class="explain">答案 B。伪装 + 远控 + 不自传 = 木马 Trojan（L9 英文易错点）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 等保 2.0 中，定级备案后的第三方有资质测评，与下列哪项不是同一概念？</div>
+    <div class="opts">
+      <button class="opt">A. 等级测评</button>
+      <button class="opt">B. GB/T 28448 测评要求</button>
+      <button class="opt" data-correct="true">C. 网络安全风险评估</button>
+      <button class="opt">D. 建设整改后测评</button>
+    </div>
+    <div class="explain">答案 C。等保测评 ≠ 风险评估；前者合规达标，后者算 R=f(Ep,Ev)（L11–12）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · 攻击者在受害网站页面注入脚本窃取 Cookie，属于？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. XSS 跨站脚本</button>
+      <button class="opt">B. CSRF 跨站伪造</button>
+      <button class="opt">C. SQL 注入攻击</button>
+      <button class="opt">D. 会话固定攻击</button>
+    </div>
+    <div class="explain">答案 A。页面跑脚本偷 Cookie = XSS；CSRF 是借 Cookie 发请求不能读响应（L17）。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷综合）· 点击展开参考写法</summary>
+    <p>某单位 Web 系统遭 SQL 注入与 DDoS，日志显示攻击源 IP 已确认。请写出：① 事件破坏的属性；② 应急响应前四步；③ 三条 Web 加固措施。</p>
+    <div class="ans">
+      ① <strong>属性</strong>：SQL 注入 → 机密性/完整性；DDoS → 可用性。<br>
+      ② <strong>应急</strong>（PDCERF 前段）：<strong>准备</strong>（预案/团队）→ <strong>检测</strong>（确认事件）→ <strong>抑制</strong>（限流/封 IP/ WAF 规则）→ <strong>根除</strong>（修漏洞/清 Webshell）——<strong>先抑制后根除</strong>。<br>
+      ③ <strong>Web 加固</strong>：参数化查询防注入；部署 WAF 于 Web 入口；全站 HTTPS + HttpOnly Cookie；后台改弱口令 + 审计（任写三条即可，威胁对策成对）。<br>
+      得分技巧：每点一行，<strong>原因 + 措施</strong>配对写，别只列名词。
+    </div>
+  </details>
+
+  <h2>六、后半程还要学什么</h2>
+  <p>对照 <a href="../reference/textbook-index.html">教材 26 章目录</a> 与 <a href="../reference/exam-2023-2025.html">2023–2025 机考考点</a>，你已覆盖前半程主干；后半程重点包括：</p>
+  <ol>
+    <li><strong>云计算安全</strong>（教材第 23 章）——下一课正式开讲</li>
+    <li><strong>工控 / 物联网 / 移动互联网 / 大数据</strong>（第 24–26 章及专题）</li>
+    <li><strong>物理与环境安全、法律法规</strong>（网安法、数据安全法等）</li>
+    <li><strong>国密参数表、网闸、访问控制细节</strong>——机考后爱考的原句与数字</li>
+    <li><strong>下午卷写法专项</strong>——iptables 命令、拓扑填设备、案例模板多练</li>
+  </ol>
+
+  <h2>七、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>口诀总复习（15 分钟）</strong>：通读 <a href="../reference/mnemonics.html">口诀速查卡</a>，重点过 L3 密钥方向、L5 DMZ、L6 IDS/IPS、L11–13 三个流程、L17 XSS/CSRF。</li>
+    <li><strong>设备分工口述（10 分钟）</strong>：闭眼说：防火墙 / IDS / IPS / WAF / 蜜罐 各干什么、怎么部署。</li>
+    <li><strong>薄弱章精读（10 分钟）</strong>：回看你结业测曾扣分的课——若第 9 课英文题曾错，重读 <a href="../reference/malware-cheatsheet.html">恶意代码速查</a> 木马三关键词。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：① 六模块地图口诀；② 设备分工口诀；③ 私钥签名公钥验签；④ 等保五环节定备建测监；⑤ 应急六阶段备检抑根恢总。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>第 1–17 课内容与 <a href="../reference/mnemonics.html">口诀速查汇总</a></li>
+    <li>《信息安全工程师教程（第 2 版）》第 1–22 章（已学部分）</li>
+    <li>机考考点校准：<a href="../reference/exam-2023-2025.html">2023–2025 考点分布</a></li>
+    <li>学习记录：<a href="../learning-records/0003-key-direction-misconception.md">密钥方向</a> · <a href="../learning-records/0009-lesson9-quiz-malware-defense.md">木马英文题</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「某两个流程怎么分」「下午卷某类题怎么写」都可以针对性拆讲。</p>
+    <p>学完后在对话里说「<strong>第 18 课学完了</strong>」，我会进行<strong>综合结业测</strong>（跨 1–17 课混练，约 7 题）。</p>
+    <p>下一课预告：<strong>第 19 课 · 云计算安全需求分析与安全保护工程</strong>（教材第 23 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

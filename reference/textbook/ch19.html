@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教材精读 · 第 19 章 操作系统安全保护</title>
+<link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Textbook · 第 19 章 · 约 15 分钟</div>
+    <h1>操作系统安全保护</h1>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 14 课 ·
+      <a href="../textbook-index.html">教材目录</a></p>
+  </header>
+
+  <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
+    · <a href="../textbook-index.html">相关课程</a></p>
+
+  <h2>19.1 概述与访问控制</h2>
+  <ul>
+    <li>机制：标识鉴别、访问控制、最小特权、审计、可信路径。</li>
+    <li>DAC 主人定 / MAC 标签系统定 / RBAC 角色转。</li>
+    <li>BLP：禁止上读下写（保机密性）。</li>
+    <li>GB/T 20272 五级：自审标结访。</li>
+  </ul>
+  <h2>19.2–19.4 加固</h2>
+  <ul>
+    <li>共性：最小安装→补丁→关服务→账户权限→审计/基线。</li>
+    <li>Windows：LSA/SAM/SRM、组策略。</li>
+    <li>Linux：passwd/shadow、SSH、SELinux、tcp_wrappers。</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>易错陷阱：</strong>
+    <br>属主可转授=DAC不是MAC；BLP主保机密性。
+  </div>
+
+  <h2>章末自测（1 题）</h2>
+  <div class="quiz">
+    <div class="q">Q · 「按岗位赋角色再授权」属于？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. RBAC</button>
+      <button class="opt">B. DAC</button>
+      <button class="opt">C. MAC</button>
+      <button class="opt">D. 仅防火墙</button>
+    </div>
+    <div class="explain">答案 A。详见上文必背考点。</div>
+  </div>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》第 19 章 · 2020 年审定大纲。
+    本页为考点提炼，供无教材考生复习使用。
+  </footer>
+</main>
+<script src="../../assets/quiz.js"></script>
+<script src="../../assets/course-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 14 课 · 操作系统安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 14 · 约 18 分钟</div>
+    <h1>守住主机：操作系统安全保护</h1>
+    <p class="meta">本课目标：分清 DAC / MAC / RBAC；背住最小权限与「禁止上读下写」；掌握 Windows/Linux 加固共性步骤与安全基线；能答 OS 五级名称与英文关键词。</p>
+  </header>
+
+  <h2>开场：网络防住了，主机还要「关好门」</h2>
+  <p>
+    前面学了边界防护、检测、应急；本课落到<strong>主机层</strong>——操作系统安全。
+    OS 管进程、文件、账号、权限，是信息系统的底座；底座不牢，防火墙再厚也挡不住「本地提权」。
+    教材对应<strong>第 19 章</strong>；上午常考访问控制模型与加固措施，下午案例常写「主机加固清单」。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 「断开受害主机网络，防止横向传播」主要属于应急响应哪一阶段？</div>
+    <div class="opts">
+      <button class="opt">A. 准备</button>
+      <button class="opt">B. 检测</button>
+      <button class="opt" data-correct="true">C. 抑制</button>
+      <button class="opt">D. 根除</button>
+    </div>
+    <div class="explain">答案 C。限制扩散 = 抑制；清除木马/补丁才是根除。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 用发送方私钥生成数字签名，验签时用谁的密钥？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点复习）。</div>
+  </div>
+
+  <h2>一、OS 安全要防什么、靠什么</h2>
+  <p>
+    安全操作系统除了管资源，还要保证资源的<strong>机密性、完整性、可用性</strong>（CIA）。
+  </p>
+  <ul>
+    <li><strong>核心机制（必背几条）</strong>：标识与鉴别、访问控制、<strong>最小特权</strong>、安全审计、可信路径、系统安全增强</li>
+    <li><strong>安全需求</strong>还常考：系统资源保护、网络安全、抗攻击、自身安全与可信恢复</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>OS 安全四机制</strong>）：<strong>先认人，再控权，特权要最小，事事留审计</strong>（字头：认控特审）。
+  </div>
+
+  <h2>二、访问控制三模型（上午高频）</h2>
+  <table>
+    <tr><th>模型</th><th>谁决定权限</th><th>一句话特征</th><th>典型场景</th></tr>
+    <tr>
+      <td><strong>DAC</strong><br>自主访问控制</td>
+      <td>客体<strong>属主</strong>自己定</td>
+      <td>灵活；权限可转授；易扩散</td>
+      <td>Linux 文件权限 / ACL</td>
+    </tr>
+    <tr>
+      <td><strong>MAC</strong><br>强制访问控制</td>
+      <td><strong>系统</strong>按安全标签强制执行</td>
+      <td>用户不能自行改密级；偏军事/涉密</td>
+      <td>多级安全、SELinux 策略</td>
+    </tr>
+    <tr>
+      <td><strong>RBAC</strong><br>基于角色</td>
+      <td>权限绑<strong>角色</strong>，用户绑角色</td>
+      <td>好管、可最小权限、可职责分离</td>
+      <td>企业 OA / ERP / 云平台</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>访问控制三模型</strong>）：<strong>DAC 主人自己定，MAC 标签系统定，RBAC 角色中间转</strong>。
+    <br>题干「属主可授权给别人」→ DAC；「密级标签、用户改不了」→ MAC；「按岗位赋角色」→ RBAC。
+  </div>
+
+  <h2>三、最小权限 + 多级安全（BLP 考点）</h2>
+  <p>
+    <strong>最小特权（Least Privilege）</strong>：每个主体只给完成任务<strong>必需的最少权限</strong>，降低误用与被攻破后的损失。
+  </p>
+  <p>
+    多级安全常考 <strong>BLP</strong>（Bell-LaPadula）机密性模型，核心规则可记作：
+  </p>
+  <ul>
+    <li><strong>禁止上读</strong>：低密级主体不能读高密级客体（机密不向下漏）</li>
+    <li><strong>禁止下写</strong>：高密级主体不能写低密级客体（机密不通过「写低」外泄）</li>
+  </ul>
+  <div class="callout warn">
+    国产 OS 安全增强常写：多级安全即<strong>禁止上读下写</strong>。
+    <br>口诀（<strong>多级安全 BLP 规则</strong>）：<strong>能往下看，不能往上偷；能往上记，不能往下泄</strong>（合称：禁止上读下写）。
+  </div>
+
+  <h2>四、OS 安全等级（与等保五级同名）</h2>
+  <p>
+    《信息安全技术 操作系统安全技术要求》<strong>GB/T 20272</strong> 将 OS 分成五级
+    （名称与 GB 17859 一致，第 12 课已背过）：
+  </p>
+  <ol>
+    <li>用户自主保护级</li>
+    <li>系统审计保护级</li>
+    <li>安全标记保护级</li>
+    <li>结构化保护级</li>
+    <li>访问验证保护级</li>
+  </ol>
+  <p class="meta">口诀（<strong>OS 五级</strong>）：<strong>自己审计，标完结构，才能访问</strong>（字头：自审标结访）。本课多记一个标准号：OS 技术要求 = <strong>GB/T 20272</strong>。</p>
+
+  <h2>五、加固共性：Windows 与 Linux 同一套路</h2>
+  <p>无论 Windows 还是 UNIX/Linux，教材里的<strong>安全增强流程</strong>高度同构：</p>
+  <ol>
+    <li>明确安全目标与业务用途</li>
+    <li><strong>最小化安装</strong>操作系统</li>
+    <li>安装<strong>最新补丁</strong></li>
+    <li>关闭不必要服务/端口；配安全策略</li>
+    <li>账户与口令加固（禁 Guest/默认账号、强口令）</li>
+    <li>文件系统权限与共享加固</li>
+    <li>网络过滤 / 主机防火墙；必要时装第三方防护</li>
+    <li>用工具检测，再回调整策略</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>OS 安全加固流程</strong>）：<strong>目标定好先装少，补丁打完再关口，账号权限严收紧，测完合格才上线</strong>（字头：目少补关账测）。
+  </div>
+
+  <h2>六、平台对照（抓关键词即可）</h2>
+  <table>
+    <tr><th>点</th><th>Windows</th><th>Linux / UNIX</th></tr>
+    <tr><td>身份与策略</td><td>LSA / SAM / SRM；组策略</td><td>口令+PAM；hosts.equiv 等需慎用</td></tr>
+    <tr><td>访问控制</td><td>ACL、NTFS 权限</td><td>9bit 权限 / ACL；SELinux（MAC 增强）</td></tr>
+    <tr><td>敏感文件</td><td>注册表、默认共享</td><td><code>/etc/passwd</code>、<code>/etc/shadow</code></td></tr>
+    <tr><td>远程管理</td><td>关掉不必要远程与共享</td><td>用 <strong>SSH</strong> 替换 Telnet；tcp_wrappers</td></tr>
+    <tr><td>完整性</td><td>第三方防护/审计</td><td>Tripwire、MD5Sum 等</td></tr>
+  </table>
+  <div class="callout info">
+    <strong>安全基线</strong>：按策略与规范固化下来的「最低安全配置模板」（账户、服务、补丁、审计等）。
+    加固 = 把系统拉到基线上并持续核查。英文：<strong>security baseline</strong>。
+  </div>
+
+  <h2>七、可信路径（了解级）</h2>
+  <p>
+    <strong>可信路径（Trusted Path）</strong>：用户能绕过不可信应用层，直接与可信计算基（TCB）通信的机制，防假登录框等欺骗。
+    看到「可信路径 / Trusted Path」选「用户与安全核心之间的可信通道」即可。
+  </p>
+
+  <h2>八、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 「文件属主可自行把读权限授给同事」属于哪种访问控制？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. DAC 自主访问控制</button>
+      <button class="opt">B. MAC 强制访问控制</button>
+      <button class="opt">C. RBAC 基于角色访问控制</button>
+      <button class="opt">D. 基于属性的访问控制 ABAC</button>
+    </div>
+    <div class="explain">答案 A。属主自主授权 = DAC。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 军事系统按密级标签强制控制读写，用户不能自行改密级，主要是？</div>
+    <div class="opts">
+      <button class="opt">A. DAC</button>
+      <button class="opt" data-correct="true">B. MAC</button>
+      <button class="opt">C. 仅靠口令认证</button>
+      <button class="opt">D. 仅靠主机防火墙</button>
+    </div>
+    <div class="explain">答案 B。标签 + 系统强制 = MAC。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 「按岗位设角色，用户通过角色获得权限」最符合？</div>
+    <div class="opts">
+      <button class="opt">A. DAC</button>
+      <button class="opt">B. MAC</button>
+      <button class="opt" data-correct="true">C. RBAC</button>
+      <button class="opt">D. 隐蔽信道控制</button>
+    </div>
+    <div class="explain">答案 C。角色居中 = RBAC；利于最小权限与职责分离。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 最小特权原则的核心要求是？</div>
+    <div class="opts">
+      <button class="opt">A. 所有用户都应拥有管理员权限</button>
+      <button class="opt" data-correct="true">B. 主体只获得完成任务所需的最少权限</button>
+      <button class="opt">C. 关闭全部网络服务</button>
+      <button class="opt">D. 禁止一切远程登录</button>
+    </div>
+    <div class="explain">答案 B。最少必需权限，降低事故与入侵损失。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · BLP / 多级安全中「禁止上读下写」主要保护？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 机密性</button>
+      <button class="opt">B. 可用性</button>
+      <button class="opt">C. 不可否认性</button>
+      <button class="opt">D. 抗抵赖以外的计费属性</button>
+    </div>
+    <div class="explain">答案 A。BLP 面向机密性；防低读高、高写低导致泄密。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 下列哪项最符合操作系统安全加固的合理顺序起点？</div>
+    <div class="opts">
+      <button class="opt">A. 先装大量第三方工具，再考虑补丁</button>
+      <button class="opt" data-correct="true">B. 明确目标后最小化安装，再打补丁并关多余服务</button>
+      <button class="opt">C. 先开放全部端口便于运维，事后再收紧</button>
+      <button class="opt">D. 只改主机名，不必管账户与权限</button>
+    </div>
+    <div class="explain">答案 B。目标 → 最小安装 → 补丁 → 关服务/管账号，是教材共性流程。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Principle that grants only the minimum rights needed for a task is called?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Separation of duties only</button>
+      <button class="opt" data-correct="true">B. Least privilege</button>
+      <button class="opt">C. Open design</button>
+      <button class="opt">D. Security through obscurity</button>
+    </div>
+    <div class="explain">答案 B。Least privilege = 最小特权/最小权限。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位 Linux 业务服务器上线前，请列出主机安全加固的主要措施（不少于 5 点）。</p>
+    <div class="ans">
+      ① 明确业务与安全目标，<strong>最小化安装</strong>系统与软件包。<br>
+      ② 及时安装<strong>安全补丁</strong>，建立补丁跟踪机制。<br>
+      ③ 关闭不必要服务与端口；限制远程管理，用 <strong>SSH</strong> 替代 Telnet。<br>
+      ④ 账户与口令策略：禁默认/无用账号；强口令；按<strong>最小权限</strong>授权；慎用 SUID。<br>
+      ⑤ 文件权限收紧（尤其 <code>/etc/shadow</code> 等）；必要时启用 <strong>SELinux</strong> 等 MAC。<br>
+      ⑥ 开启审计日志；部署主机防火墙 / tcp_wrappers；完整性检测（如 Tripwire）。<br>
+      ⑦ 对照<strong>安全基线</strong>核查，不合规整改后再上线。<br>
+      答题模板：<strong>最小安装 + 补丁 + 关服务 + 账号权限 + 审计/基线</strong>，点到即可得分。
+    </div>
+  </details>
+
+  <h2>九、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 19 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch19.html">第 19 章 操作系统安全保护</a>，对照<a href="../reference/os-security-cheatsheet.html">OS 安全速查卡</a>背三模型与加固口诀。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出 DAC/MAC/RBAC 各一句；「禁止上读下写」保护什么；加固流程前四步。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 访问控制三模型：主人自己定、标签系统定、角色中间转；② 多级安全 BLP 规则：禁止上读下写；③ OS 安全加固流程：目少补关账测；④ Least privilege = 最小特权。</li>
+  </ol>
+
+  <h2>十、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 19 章 操作系统安全保护（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>备考笔记（辅助）：<a href="https://www.cnblogs.com/R-bear/p/17840587.html">博客园 · 第 19 章</a> · <a href="https://www.educity.cn/rk/2330152.html">希赛 · 操作系统安全知识点</a></li>
+    <li>访问控制对照（辅助）：<a href="https://rk.51cto.com/article/599317.html">51CTO · DAC/MAC/RBAC</a></li>
+    <li>速查：<a href="../reference/os-security-cheatsheet.html">OS 安全速查</a> · <a href="../reference/mnemonics.html#lesson-14">第 14 课口诀</a> · <a href="./0013-incident-response.html">第 13 课 应急响应</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「上读下写怎么记」「DAC 和 RBAC 场景怎么秒判」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 14 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：数据库安全（教材第 20 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

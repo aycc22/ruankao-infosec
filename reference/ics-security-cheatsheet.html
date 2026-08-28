@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 工控安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>工控安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 24 章 · 打印用</p>
+  </header>
+
+  <h2>一、总原则</h2>
+  <p>工控 ICS 直接管物理过程：停机代价大 → <strong>可用性 &gt; 完整性 &gt; 机密性</strong>（与传统 IT 相反）。</p>
+  <p class="meta"><strong>工控安全需求优先序</strong>：先保能用再保完整，机密性排在最后。</p>
+
+  <h2>二、核心组件</h2>
+  <table>
+    <tr><th>组件</th><th>秒判</th></tr>
+    <tr><td><strong>SCADA</strong></td><td>远程分布：数据采集与监视控制（MTU + RTU）</td></tr>
+    <tr><td><strong>DCS</strong></td><td>厂内：分布控制、集中管理</td></tr>
+    <tr><td><strong>PLC</strong></td><td>基础单元：运算、顺序、定时，控装备动作</td></tr>
+    <tr><td><strong>RTU / MTU</strong></td><td>现场采集上传 / 调度中心监测指挥</td></tr>
+    <tr><td><strong>HMI</strong></td><td>人机界面</td></tr>
+    <tr><td><strong>PCS</strong></td><td>过程参数闭环调节</td></tr>
+  </table>
+  <p class="meta"><strong>工控核心组件分工</strong>：远看 SCADA 采监视，近控 DCS 分布管，PLC 做动作，RTU 采现场。</p>
+  <p>协议常考：Modbus、OPC、DNP3；多明文、缺认证。</p>
+
+  <h2>三、威胁与隐患</h2>
+  <ul>
+    <li>标志案例：<strong>Stuxnet（震网）</strong> → 破坏物理过程</li>
+    <li>五类威胁：自然灾害 · 内部误操作 · 功能安全故障 · 恶意代码 · 网络攻击</li>
+    <li>特有隐患：协议无安全设计、产品/固件漏洞、开放接入、供应链</li>
+  </ul>
+  <p class="meta"><strong>工控特有安全隐患</strong>：协议明文缺认证，开放接入供应链。</p>
+
+  <h2>四、保护机制速查</h2>
+  <ul>
+    <li><strong>物理</strong>：核心区域门禁监控；封多余 USB/光驱</li>
+    <li><strong>边界</strong>：分区；工业防火墙 / 网闸 / 单向隔离</li>
+    <li><strong>身份</strong>：多因素、最小特权、改默认口令</li>
+    <li><strong>远程</strong>：禁公网高危服务；确需 VPN + 限时 + 日志</li>
+    <li><strong>主机</strong>：离线验证杀软或程序白名单</li>
+    <li><strong>运维</strong>：监测、应急演练、冗余（电源/设备/网络）</li>
+  </ul>
+  <p class="meta"><strong>工控边界防护设备</strong>：工业防火墙能解析，网闸单向隔内外。</p>
+  <p class="meta"><strong>工控远程访问原则</strong>：公网高危服务先关掉，确需远程走 VPN。</p>
+
+  <h2>五、电力十六字方针</h2>
+  <ol>
+    <li><strong>安全分区</strong>：生产控制大区 / 管理信息大区</li>
+    <li><strong>网络专用</strong>：控制业务专用网</li>
+    <li><strong>横向隔离</strong>：控制与管理大区间单向隔离装置</li>
+    <li><strong>纵向认证</strong>：上下级边界认证加密访问控制</li>
+  </ol>
+  <p class="meta"><strong>电力监控安全十六字方针</strong>：安全分区网络专，横向隔离纵向认（字头：分专横纵）。</p>
+
+  <h2>六、等保工控扩展</h2>
+  <ul>
+    <li>工控对象 = <strong>安全通用要求</strong> + <strong>工业控制安全扩展要求</strong></li>
+    <li>技术五类 + 管理五类（与等保框架一致）</li>
+    <li>认名：GB/T 22239；IEC 62443（国际）</li>
+  </ul>
+  <p class="meta"><strong>等保工控扩展要求</strong>：通用不够再加工控，分区隔离要到位。</p>
+
+  <h2>七、易错陷阱</h2>
+  <ul>
+    <li>工控优先序 ≠ 传统 IT 的「机密优先」</li>
+    <li>SCADA ≠ DCS（远程监视调度 vs 厂内分布控制）</li>
+    <li>功能安全故障 ≠ 信息安全入侵</li>
+    <li>传统防火墙 ≠ 能解析工控协议的工业防火墙</li>
+    <li>等保测评 ≠ 风险评估（第 18 课）</li>
+  </ul>
+
+  <h2>八、下午卷模板</h2>
+  <p>先点<strong>可用优先</strong> → 再写<strong>分区 + 隔离装置/工业防火墙</strong> → <strong>身份/远程 VPN/白名单/监测冗余</strong> → 点名<strong>等保工控扩展</strong>；电力场景套<strong>十六字方针</strong>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0020-ics-security.html">第 20 课</a> ·
+    <a href="./mnemonics.html#lesson-20">口诀</a> ·
+    <a href="./classified-protection-cheatsheet.html">等保速查</a> ·
+    <a href="./textbook/ch24.html">教材精读第 24 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

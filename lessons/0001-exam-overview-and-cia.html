@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 课 · 考试地图与 CIA 三元组</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 01 · 约 15 分钟</div>
+    <h1>考试地图与第一性原理：CIA 三元组</h1>
+    <p class="meta">本课目标：能说出这场考试的完整结构；能对任意安全场景，判断它对应机密性 / 完整性 / 可用性中的哪一个。</p>
+  </header>
+
+  <h2>开场：我们为什么从这开始</h2>
+  <p>
+    你是一位零基础考生，距离 <strong>2026 年 10 月 24-27 日</strong>的软考信息安全工程师考试只有约两个月。
+    这门考试不考实战，考的是<strong>「知道什么是对的」</strong>——所以我们的打法很明确：
+    <strong>每个考点学一小块 + 立刻做真题风格的题 + 隔天复习</strong>。
+    今天先拿到两样东西：考试全貌（你知道要往哪走），和全科目最重要的一块基石（CIA 三元组）。
+  </p>
+
+  <h2>一、这场考试怎么考</h2>
+  <table>
+    <tr><th></th><th>科目一：基础知识（上午）</th><th>科目二：应用技术（下午）</th></tr>
+    <tr><td><strong>题型</strong></td><td>75 道单选题（含 5 道英文题）</td><td>4-5 道案例分析大题</td></tr>
+    <tr><td><strong>满分 / 及格</strong></td><td>75 分 / 45 分</td><td>75 分 / 45 分</td></tr>
+    <tr><td><strong>时间</strong></td><td colspan="2">机考，两科连考共 240 分钟</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <strong>⚠ 第一优先事项：报名。</strong>考试实际在 <strong>10 月 24-27 日</strong>（不是 11 月！），
+    各省报名窗口集中在 8 月中至 9 月中，部分省份已截止。今天内去
+    <a href="https://www.ruankao.org.cn">中国计算机技术职业资格网</a> 或本省人事考试网确认并报名，逾期无法补报。
+    各身份省份的时间表见 <a href="../reference/exam-overview.html">考试全貌速查</a>。
+  </div>
+
+  <p>科目一覆盖六大知识域，也就是我们未来两个月的课程地图：</p>
+  <ol>
+    <li><strong>基础与模型</strong> —— 安全属性、安全体系、物理安全（今天从这里起步）</li>
+    <li><strong>网络攻击</strong> —— 端口扫描、口令破解、SQL 注入、恶意代码、拒绝服务……</li>
+    <li><strong>密码学</strong> —— AES、RSA、哈希、数字签名、PKI、国产算法</li>
+    <li><strong>防护技术</strong> —— 防火墙、VPN、入侵检测、安全审计、漏洞防护</li>
+    <li><strong>系统与数据安全</strong> —— 操作系统、数据库、网络设备加固</li>
+    <li><strong>管理与合规</strong> —— 风险评估、应急响应、等级保护 2.0、三部法律</li>
+  </ol>
+  <p>
+    科目二则围绕「安全工程」出案例题：风险评估、方案设计、设备部署、网站 / 云计算 / 工控安全等。
+    它考的是<strong>把科目一的知识用成流程</strong>——所以先吃透科目一。
+  </p>
+
+  <h2>二、第一性原理：CIA 三元组</h2>
+  <p>
+    信息安全的一切讨论都从三个属性出发。它们如此基本，以至于教材第一章就把它们放在最前面
+    （<a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_10980501.html">《信息安全工程师教程（第 2 版）》</a>第 1 章）。
+    记住一句话：<strong>任何安全事件，都可以归因到「偷看、篡改、瘫痪」三者之一（或组合）</strong>。
+  </p>
+  <table>
+    <tr><th>属性</th><th>英文</th><th>含义</th><th>典型手段</th><th>反例（考试最爱考）</th></tr>
+    <tr>
+      <td><strong>机密性</strong></td><td>Confidentiality</td>
+      <td>只有授权者能查看</td><td>加密、访问控制</td><td>数据泄露、越权查看</td>
+    </tr>
+    <tr>
+      <td><strong>完整性</strong></td><td>Integrity</td>
+      <td>数据未经授权不可改</td><td>哈希校验、数字签名</td><td>数据被篡改</td>
+    </tr>
+    <tr>
+      <td><strong>可用性</strong></td><td>Availability</td>
+      <td>需要时系统可用</td><td>冗余、备份、抗 DDoS</td><td>服务瘫痪、被删数据</td>
+    </tr>
+  </table>
+  <p class="meta">口诀（<strong>CIA 三属性记忆</strong>）：<strong>机密性防「偷看」，完整性防「篡改」，可用性防「瘫痪」</strong>。</p>
+
+  <p>
+    考试还会考三个<strong>扩展属性</strong>，先把名字和一句话记住，细节后面会用到：
+    <strong>真实性</strong>（身份可验证，防冒充）、<strong>不可否认性 / 抗抵赖性</strong>（行为无法抵赖，靠数字签名）、
+    <strong>可控性</strong>（信息传播范围可控）。完整对照表见
+    <a href="../reference/exam-overview.html">考试全貌速查</a>。
+  </p>
+
+  <h2>三、动手练一练（点击选项，立刻看对错）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 财务系统要求登录时必须输入账号和密码才能查看报表。这主要体现了信息安全的哪个属性？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 机密性</button>
+      <button class="opt">B. 完整性</button>
+      <button class="opt">C. 可用性</button>
+      <button class="opt">D. 真实性</button>
+    </div>
+    <div class="explain">答案 A。「只能授权者查看」= 机密性。口令、权限、加密都是它的典型手段。B、C、D 都是干扰项。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 电商网站遭 DDoS 攻击后瘫痪，用户无法下单。被破坏的属性是？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性</button>
+      <button class="opt">B. 完整性</button>
+      <button class="opt" data-correct="true">C. 可用性</button>
+      <button class="opt">D. 真实性</button>
+    </div>
+    <div class="explain">答案 C。DDoS（拒绝服务攻击）的目标就是让系统「瘫痪」，即不可用。防 DDoS 的冗余、限流都是可用性手段。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 黑客篡改了系统日志中的操作记录。被破坏的属性是？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性</button>
+      <button class="opt" data-correct="true">B. 完整性</button>
+      <button class="opt">C. 可用性</button>
+      <button class="opt">D. 真实性</button>
+    </div>
+    <div class="explain">答案 B。「篡改」直接对应完整性。防篡改的手段：哈希校验（内容一变，校验值就对不上）、数字签名。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 下列哪项措施最能体现「完整性」保护？</div>
+    <div class="opts">
+      <button class="opt">A. 对文件进行加密</button>
+      <button class="opt" data-correct="true">B. 对文件计算哈希</button>
+      <button class="opt">C. 对系统进行备份</button>
+      <button class="opt">D. 对身份进行认证</button>
+    </div>
+    <div class="explain">答案 B。哈希 = 内容的「指纹」，文件被改任何一个字节，指纹就对不上——这是完整性的标准手段。加密防泄露（机密性），备份防丢失（可用性），认证防冒充（真实性）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · Which attribute ensures that data can only be read by authorized users?（提前练英文题）</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. Confidentiality</button>
+      <button class="opt">B. Integrity</button>
+      <button class="opt">C. Availability</button>
+      <button class="opt">D. Authenticity</button>
+    </div>
+    <div class="explain">答案 A。Confidentiality = 机密性（「only be read」= 只能被读）。上午卷有 5 道英文题，术语英文从现在开始积累：CIA 三兄弟 + Authenticity（真实性）、Non-repudiation（不可否认性）。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>顾客用微信转账后，商家声称「我没收到这笔钱」。此时需要哪个安全属性来证明交易确实发生？</p>
+    <div class="ans">
+      不可否认性（抗抵赖性，Non-repudiation）。数字签名是它的核心手段：用私钥签名的转账记录，任何人都无法否认是自己签的。
+      注意与「完整性」区分：完整性防的是内容被改，不可否认性防的是「做过的事不认账」。
+    </div>
+  </details>
+
+  <h2>四、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>核实报名（5 分钟，今天必做）</strong>：打开 <a href="https://www.ruankao.org.cn">ruankao.org.cn</a> 或本省人事考试网，确认报名窗口并完成报名、缴费。</li>
+    <li><strong>精读第 1 章（30 分钟）</strong>：<a href="../reference/textbook/ch01.html">教材精读 · 第 1 章 网络信息安全概述</a>，重点看安全属性与安全目标；找出课里没讲的一个细节。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① CIA 三属性记忆：机密性防偷看、完整性防篡改、可用性防瘫痪；② 默写三属性英文名。想不起来的明天回来看本课。</li>
+  </ol>
+
+  <h2>五、本课知识从哪来</h2>
+  <ul>
+    <li>官方教材《信息安全工程师教程（第 2 版）》（清华大学出版社，ISBN 9787302559344）——本课依据：第 1 章。</li>
+    <li>《信息安全工程师考试大纲》（2020 年审定通过版）——命题依据，发布在 <a href="https://www.ruankao.org.cn">软考官网</a>。</li>
+    <li>2026 年下半年考试时间与报名安排——各省人事考试机构报考通知（如<a href="https://www.hbsme.com.cn/kpgg/38475.jhtml">湖北考区报考须知</a>）。</li>
+    <li>速查卡：<a href="../reference/exam-overview.html">考试全貌与安全属性速查</a>（可打印）。</li>
+  </ul>
+
+  <footer>
+    <p><strong>有任何不清楚的地方，随时问你的老师（我）。</strong>我会用更小的步子重讲，或者换一种说法。</p>
+    <p>下一课预告：网络攻击的常见手法（端口扫描、口令破解、SQL 注入……）——科目一第二大知识域，也是上午卷的分值大户。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

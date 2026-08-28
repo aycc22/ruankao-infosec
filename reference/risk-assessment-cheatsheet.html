@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 网络安全风险评估</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>网络安全风险评估速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 16 章 · 打印用</p>
+  </header>
+
+  <h2>一、核心概念</h2>
+  <ul>
+    <li><strong>定义</strong>：评估威胁者利用网络资产<strong>脆弱性</strong>，造成资产损失的严重程度</li>
+    <li><strong>公式</strong>：风险值 R = 安全事件<strong>可能性</strong> × 安全事件<strong>损失</strong>（R = f(Ep, Ev)）</li>
+    <li>例：被攻击概率 0.8 × 损失 2 万元 = 风险值 1.6 万元</li>
+  </ul>
+  <p class="meta"><strong>风险计算公式</strong>：风险等于可能乘损失。</p>
+
+  <h2>二、五要素</h2>
+  <table>
+    <tr><th>要素</th><th>一句话</th></tr>
+    <tr><td><strong>资产</strong></td><td>需要保护的对象（设备、主机、应用、数据、文档等）</td></tr>
+    <tr><td><strong>威胁</strong></td><td>可能对资产造成损害的潜在事件（自然/人为）</td></tr>
+    <tr><td><strong>脆弱性</strong></td><td>资产可被威胁利用的弱点（漏洞、管理缺陷）</td></tr>
+    <tr><td><strong>安全措施</strong></td><td>保护资产、修补脆弱性、抵御威胁的手段</td></tr>
+    <tr><td><strong>风险</strong></td><td>威胁利用脆弱性造成损害的可能性与影响</td></tr>
+  </table>
+  <p class="meta">逻辑链：资产有价值 → 有脆弱性 → 威胁可利用 → 安全措施降低风险。</p>
+
+  <h2>三、三种评估模式</h2>
+  <table>
+    <tr><th>模式</th><th>谁发起</th><th>关键词</th></tr>
+    <tr><td><strong>自评估</strong></td><td>系统拥有者自己</td><td>依靠自身力量</td></tr>
+    <tr><td><strong>检查评估</strong></td><td>主管机关</td><td>依据法规/标准/管理规定</td></tr>
+    <tr><td><strong>委托评估</strong></td><td>使用单位委托专业机构</td><td>第三方评估机构</td></tr>
+  </table>
+
+  <h2>四、评估流程（七步 · 下午卷必写顺序）</h2>
+  <ol>
+    <li><strong>准备</strong>：确定对象与范围（拓扑、协议、设备、业务、已有防护等）</li>
+    <li><strong>资产识别</strong>：鉴定清单 + 价值估算（基于 CIA 三属性，1–5 级）</li>
+    <li><strong>威胁识别</strong>：来源、途径、效果、意图、频率</li>
+    <li><strong>脆弱性识别</strong>：技术 + 管理；扫描/检查/问卷/访谈/渗透测试</li>
+    <li><strong>已有安全措施确认</strong>：现有措施能否防利用、能否抵御威胁</li>
+    <li><strong>风险分析</strong>：赋值 → 算可能性 → 算损失 → 得风险值与等级</li>
+    <li><strong>风险处置与管理</strong>：对不可接受风险制定处理计划 + 再评估残余风险</li>
+  </ol>
+  <p class="meta"><strong>风险评估七步</strong>：准资威脆措析处（准备→资产→威胁→脆弱性→已有措施→分析→处置，七字对七步）。</p>
+
+  <h2>五、资产价值估算</h2>
+  <ul>
+    <li>不是物理经济价值，是<strong>相对价值</strong></li>
+    <li>基于<strong>保密性 C、完整性 I、可用性 A</strong> 三属性，各 1–5 级</li>
+    <li>六类常见资产：网络设备、主机、服务器、应用、数据、文档</li>
+  </ul>
+
+  <h2>六、威胁识别要点</h2>
+  <table>
+    <tr><th>维度</th><th>内容</th></tr>
+    <tr><td>来源</td><td>自然（雷电、洪水）/ 人为（盗窃、网络攻击）</td></tr>
+    <tr><td>途径</td><td>病毒、木马、蠕虫、漏洞利用、嗅探等组合</td></tr>
+    <tr><td>效果</td><td><strong>非法访问、欺骗、拒绝服务</strong>（三类抽象）</td></tr>
+    <tr><td>意图</td><td>挑战、情报获取、恐怖主义、经济利益、报复</td></tr>
+    <tr><td>频率</td><td>历史事件、行业报告、监测数据</td></tr>
+  </table>
+
+  <h2>七、脆弱性识别</h2>
+  <table>
+    <tr><th>类型</th><th>例子</th></tr>
+    <tr><td><strong>技术脆弱性</strong></td><td>OS/应用漏洞、弱口令、配置不当、架构缺陷</td></tr>
+    <tr><td><strong>管理脆弱性</strong></td><td>制度缺失、职责不清、培训不足、应急不完善</td></tr>
+  </table>
+  <p>识别方法：<strong>漏洞扫描、人工检查、问卷调查、安全访谈、渗透测试</strong></p>
+  <p class="meta"><strong>脆弱性识别五法</strong>：扫问访渗人（扫描、问卷、访谈、渗透、人工检查）。</p>
+
+  <h2>八、风险计算</h2>
+  <table>
+    <tr><th>方法</th><th>特点</th><th>输出</th></tr>
+    <tr><td>定性</td><td>主观赋值（很高/高/中/低/很低）</td><td>无关紧要、可接受、待观察、不可接受</td></tr>
+    <tr><td>定量</td><td>量化为数据</td><td>风险数值（如万元）</td></tr>
+    <tr><td>综合</td><td>定性 + 定量</td><td>数值 + 定性结论</td></tr>
+  </table>
+  <p>计算方式：<strong>相乘法</strong>（可能性 × 损失）或 <strong>矩阵法</strong>（二维矩阵）</p>
+
+  <h2>九、风险处置四策略</h2>
+  <table>
+    <tr><th>策略</th><th>干什么</th><th>例子</th></tr>
+    <tr><td><strong>降低</strong></td><td>采取措施减概率或减影响</td><td>部署防火墙、打补丁、加密</td></tr>
+    <tr><td><strong>转移</strong></td><td>把部分后果转给第三方</td><td>购买保险、外包</td></tr>
+    <tr><td><strong>接受</strong></td><td>承认残余风险，书面确认</td><td>成本高于损失时、管理层批准</td></tr>
+    <tr><td><strong>规避</strong></td><td>取消/改变高风险活动</td><td>放弃高风险业务、不用不成熟技术</td></tr>
+  </table>
+  <p class="meta"><strong>风险处置四策略</strong>：降转接避（降低、转移、接受、规避）。<strong>忽略而不记录 ≠ 接受</strong>。</p>
+
+  <h2>十、常用工具（与第 8 课衔接）</h2>
+  <table>
+    <tr><th>用途</th><th>工具</th></tr>
+    <tr><td>拓扑发现</td><td>ping、traceroute、网管平台</td></tr>
+    <tr><td>端口/漏洞扫描</td><td>Nmap、Nessus、X-Scan、绿盟极光</td></tr>
+    <tr><td>渗透测试</td><td>Metasploit、BackTrack（获授权后）</td></tr>
+    <tr><td>威胁识别</td><td>Snort/Suricata（IDS）、Wireshark、审计分析</td></tr>
+  </table>
+
+  <h2>十一、与其他概念区分</h2>
+  <table>
+    <tr><th>概念</th><th>区别</th></tr>
+    <tr><td>风险评估 vs 等保测评</td><td>风险评估找风险定处置；等保测评对照等级要求做符合性检查（有关联但不同）</td></tr>
+    <tr><td>漏洞扫描 vs 渗透测试</td><td>扫描发现已知缺陷；渗透在授权下模拟攻击验证利用（第 8 课口诀）</td></tr>
+    <tr><td>残余风险</td><td>采取措施后仍存在的风险 → 需再评估，仍不可接受则继续处理或接受</td></tr>
+  </table>
+
+  <h2>十二、下午卷答题模板</h2>
+  <ol>
+    <li>按<strong>七步流程</strong>写，不跳步（准备→资产→威胁→脆弱性→措施→分析→处置）</li>
+    <li>处置题看题干动作：买保险→转移；打补丁/防火墙→降低；取消业务→规避；书面确认→接受</li>
+    <li>结尾写<strong>再评估残余风险</strong>，体现闭环</li>
+  </ol>
+
+  <footer>
+    配套：<a href="../lessons/0011-network-risk-assessment.html">第 11 课</a> ·
+    <a href="./mnemonics.html#lesson-11">口诀</a> ·
+    <a href="./textbook/ch16.html">教材第 16 章精读</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

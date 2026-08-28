@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · IDS 与 IPS</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>IDS 与 IPS 速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 10 章 · 打印用</p>
+  </header>
+
+  <h2>一、IDS vs IPS（最高频）</h2>
+  <table>
+    <tr><th></th><th>IDS</th><th>IPS</th></tr>
+    <tr><td>英文</td><td>Intrusion Detection System</td><td>Intrusion Prevention System</td></tr>
+    <tr><td>中文</td><td>入侵<strong>检测</strong>系统</td><td>入侵<strong>防御</strong>系统</td></tr>
+    <tr><td>动作</td><td>监测 + <strong>告警</strong></td><td>监测 + <strong>阻断</strong></td></tr>
+    <tr><td>部署</td><td><strong>旁路</strong></td><td><strong>串联 inline</strong></td></tr>
+  </table>
+  <p class="meta"><strong>IDS vs IPS 部署</strong>：IDS 只告警，IPS 能阻断。</p>
+
+  <h2>二、与防火墙的分工</h2>
+  <ul>
+    <li><strong>防火墙</strong>：访问控制（按策略放行/拒绝），不管「是不是攻击行为」的精细分析</li>
+    <li><strong>IDS/IPS</strong>：分析流量/日志，识别入侵；IDS 不替代防火墙，也不杀毒</li>
+  </ul>
+
+  <h2>三、HIDS vs NIDS</h2>
+  <table>
+    <tr><th>类型</th><th>监测对象</th><th>场景</th></tr>
+    <tr><td><strong>HIDS</strong> 主机型</td><td>单机日志、进程、文件</td><td>服务器被控、主机异常</td></tr>
+    <tr><td><strong>NIDS</strong> 网络型</td><td>网络流量</td><td>网段扫描、恶意载荷</td></tr>
+  </table>
+
+  <h2>四、误用检测 vs 异常检测</h2>
+  <table>
+    <tr><th>方法</th><th>原理</th><th>优点</th><th>缺点</th></tr>
+    <tr><td><strong>误用检测</strong></td><td>匹配<strong>已知特征库/签名</strong></td><td>已知攻击准确、误报低</td><td>难检零日，库需更新</td></tr>
+    <tr><td><strong>异常检测</strong></td><td>偏离<strong>正常行为基线</strong></td><td>可能发现未知攻击</td><td><strong>误报率高</strong></td></tr>
+  </table>
+  <p class="meta">关键词：特征库/签名 → 误用；基线/轮廓/统计偏离 → 异常。另有 <strong>Hybrid 混合检测</strong>。</p>
+
+  <h2>五、误报 / 漏报</h2>
+  <ul>
+    <li><strong>误报</strong>：正常当攻击 → IPS 可能误伤业务</li>
+    <li><strong>漏报</strong>：攻击未检出 → 更危险</li>
+  </ul>
+
+  <h2>六、陷阱题</h2>
+  <p>IDS 实现内外网隔离 ✗（防火墙/网闸）· IDS 消除病毒 ✗（杀毒软件）· IDS 串联阻断 ✗（IPS）· 异常检测误报低 ✗（通常更高）</p>
+
+  <h2>英文词汇</h2>
+  <p>IDS · IPS · HIDS · NIDS · False Positive（误报）· False Negative（漏报）· Signature（签名）· Anomaly（异常）· Inline（串联）· Alert（告警）</p>
+
+  <footer>
+    配套：<a href="../lessons/0006-ids-ips.html">第 6 课</a> ·
+    <a href="./textbook/ch10.html">教材第 10 章</a> ·
+    <a href="./mnemonics.html#lesson-06">口诀速查</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 课 · 防火墙与 VPN</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 05 · 约 20 分钟</div>
+    <h1>防护技术第一弹：防火墙与 VPN</h1>
+    <p class="meta">本课目标：分清三类防火墙；说出 IPSec 里 AH 和 ESP 的分工；根据场景选对 VPN 类型与接入方式。</p>
+  </header>
+
+  <h2>开场：HTTPS 守住了「单条通道」，那整栋大楼呢？</h2>
+  <p>
+    第 4 课学了 HTTPS——浏览器和服务器之间走 <strong>443 端口</strong>的加密通道。
+    但企业网络不是只有一条通道：总部、分部、出差员工、合作方……都要连进内网。
+    今天学两道「边界防护」：<strong>防火墙</strong>（门口的保安）和 <strong>VPN</strong>（在公网上开私路）。
+  </p>
+
+  <h2>零、先复习再开新（你踩过的坑）</h2>
+  <p>下面两题来自第 1–4 课测验，先选答案再看解析——别偷看选项里的提示。</p>
+
+  <div class="quiz">
+    <div class="q">R1 · 甲用乙的公钥加密消息发给乙，谁能解密？</div>
+    <div class="opts">
+      <button class="opt">A. 甲的私钥</button>
+      <button class="opt" data-correct="true">B. 乙的私钥</button>
+      <button class="opt">C. 乙的公钥</button>
+      <button class="opt">D. 甲的公钥</button>
+    </div>
+    <div class="explain">答案 B。公钥加密 → 私钥解密。加密用的是<strong>接收方</strong>的公钥，解密的钥匙是接收方的私钥。选 C 是把「解密工具」和「解密者」搞混了。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 证书未到期但私钥泄露，CA 应通过什么机制作废？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 发布吊销列表</button>
+      <button class="opt">B. 等待自然过期</button>
+      <button class="opt">C. 删除本地缓存</button>
+      <button class="opt">D. 更换域名解析</button>
+    </div>
+    <div class="explain">答案 A。提前作废叫<strong>吊销</strong>（CRL / OCSP），不是等过期。B 是「到期作废」，私钥都泄露了不能等。</div>
+  </div>
+
+  <h2>一、防火墙：按「检查多深」分三档</h2>
+  <p>规律一句话：<strong>层次越高 → 查得越多 → 越安全 → 越慢</strong>。</p>
+  <table>
+    <tr><th>类型</th><th>工作层</th><th>检查什么</th><th>口诀</th></tr>
+    <tr><td><strong>包过滤</strong></td><td>网络层</td><td>IP 头：源/目的 IP、端口；<strong>无状态</strong></td><td>只看快递单，不拆包裹</td></tr>
+    <tr><td><strong>状态检测</strong></td><td>网络/传输层</td><td>维护<strong>会话表</strong>，跟踪连接，动态放行应答</td><td>记住「谁给谁寄过」</td></tr>
+    <tr><td><strong>代理 / 应用网关</strong></td><td>应用层</td><td>代用户转发，深度解析协议内容</td><td>拆包逐字查，最慢最安全</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <strong>三个必记陷阱：</strong>
+    <br>① 问「维护连接状态表」→ <strong>状态检测</strong>，不是包过滤；
+    <br>② 防火墙<strong>防外不防内</strong>——内鬼从内部拷数据，它管不着；
+    <br>③ 不检查应用层内容 → 防不了 <strong>SQL 注入</strong>等攻击，也不负责杀毒。
+  </div>
+
+  <h2>二、防火墙怎么摆：三种体系结构</h2>
+  <p>从简单到标准，记住「堡垒主机」和「DMZ」两个词——但<strong>先别混</strong>：一个是机器，一个是区域。</p>
+
+  <h3>2.1 堡垒主机 vs DMZ：一句话分清</h3>
+  <table>
+    <tr><th>词</th><th>它是什么</th><th>生活类比</th></tr>
+    <tr><td><strong>堡垒主机</strong></td><td>一台<strong>加固过的专用服务器</strong></td><td>公司大门口的<strong>保安亭</strong>——扛第一波攻击、对外提供服务</td></tr>
+    <tr><td><strong>DMZ</strong></td><td>一段<strong>独立的网络区域</strong></td><td>大楼里的<strong>访客接待区</strong>——外人能进来，但进不了内部办公区</td></tr>
+  </table>
+  <p class="meta">
+    <strong>DMZ 名词解释：</strong>英文全称 <strong>Demilitarized Zone</strong>，直译<strong>非军事区</strong>；中文教材与工程文档里也常叫<strong>隔离区</strong>。
+    名字借自军事上的「非军事区」——在内外网之间留出一块缓冲区，对外服务放这里，外网不能直接进内网。
+  </p>
+  <div class="callout ok">
+    <strong>核心区别：</strong>堡垒主机 = <strong>一台机器</strong>；DMZ = <strong>一片网段</strong>。
+    堡垒主机<strong>可以放在</strong> DMZ 里，但 DMZ <strong>不等于</strong> 堡垒主机——DMZ 里还可以放 Web、邮件等其他对外服务器。
+  </div>
+
+  <h3>2.2 三种结构（从简到标准）</h3>
+  <ul>
+    <li><strong>双重宿主主机</strong>：一台双网卡主机做<strong>唯一</strong>关卡，内外网不直连；
+      <br><span class="meta">外网 → [ 双网卡主机 ] → 内网 · 无单独 DMZ，也不单独叫「堡垒主机架构」</span></li>
+    <li><strong>屏蔽主机</strong>：包过滤路由器 + <strong>堡垒主机</strong>（对外服务的专用跳板）；
+      <br><span class="meta">外网 → [ 路由器 ] → [ 堡垒主机 ] → 内网 · 有堡垒主机，<strong>仍无 DMZ</strong></span></li>
+    <li><strong>屏蔽子网</strong>：两个包过滤路由器，中间形成 <strong>DMZ（隔离区）</strong>——外网只能进 DMZ，<strong>不能直入内网</strong>；大中型企业标准摆法。
+      <br><span class="meta">外网 → [ 外路由器 ] → [ DMZ ] → [ 内路由器 ] → 内网 · <strong>DMZ 只出现在这一种</strong></span></li>
+  </ul>
+
+  <h3>2.3 什么放 DMZ，什么放内网？</h3>
+  <p>做题先问一句：<strong>「这个服务是对公网开放，还是只给内部用？」</strong></p>
+  <table>
+    <tr><th>服务</th><th>谁访问</th><th>部署位置</th></tr>
+    <tr><td>公司官网、邮件、DNS</td><td>外网公众</td><td><strong>DMZ</strong></td></tr>
+    <tr><td>内部 OA、数据库、考勤系统</td><td>仅内部员工</td><td><strong>内网</strong></td></tr>
+  </table>
+  <div class="callout info">
+    口诀（<strong>资产部署位置</strong>）：<strong>对外开门放 DMZ，内部自用放内网</strong>。
+    <br><strong>DMZ 速记：</strong>屏蔽子网 = 外路由 → DMZ → 内路由 → 内网。真题问「DMZ 出现在哪种结构」→ <strong>屏蔽子网</strong>。
+    <br><strong>易错：</strong>官网虽属公司资产，但必须对公众开放 → 放 <strong>DMZ</strong>，不是内网。即使官网被攻破，黑客通常仍卡在 DMZ，进不了内网——这正是 DMZ 的设计目的。
+  </div>
+
+  <h2>三、VPN：在公网上开一条「私路」</h2>
+  <p>
+    VPN（Virtual Private Network，虚拟专用网）在公共网络上建立私有信道，靠五大技术：
+    <strong>隧道、加解密、密钥管理、身份认证、访问控制</strong>（其中隧道是基础）。
+  </p>
+  <table>
+    <tr><th>类型</th><th>谁连谁</th><th>典型场景</th><th>口诀</th></tr>
+    <tr><td><strong>Intranet VPN</strong></td><td>内网 ↔ 内网</td><td>总部 ↔ 分部互联</td><td>内内</td></tr>
+    <tr><td><strong>Access VPN</strong></td><td>人 → 内网</td><td>出差员工远程接入</td><td>人内</td></tr>
+    <tr><td><strong>Extranet VPN</strong></td><td>外单位 → 内网</td><td>与合作方 B2B 对接</td><td>外内</td></tr>
+  </table>
+  <p class="meta">下午卷选型套路：<strong>先判断「谁连谁」，再套三种类型</strong>。</p>
+
+  <h2>四、IPSec：三层隧道的核心协议组</h2>
+  <p>IPSec 工作在 IP 层，是 VPN 里考得最多的协议组。两个子协议的分工是送分题：</p>
+  <ul>
+    <li><strong>AH</strong>（Authentication Header，认证头）：<strong>完整性 + 身份认证</strong>，<strong>不加密</strong>；</li>
+    <li><strong>ESP</strong>（Encapsulating Security Payload）：负责<strong>机密性（加密）</strong>，也能带认证。</li>
+  </ul>
+  <p>
+    密钥由 <strong>IKE</strong>（Internet Key Exchange）协议协商；常用端口 <strong>UDP 500</strong>（IKE）和 <strong>UDP 4500</strong>（NAT 穿越场景）。
+    两种运行模式：
+  </p>
+  <ul>
+    <li><strong>隧道模式</strong>：加密整个 IP 包 → <strong>站点到站点 VPN</strong>常用；</li>
+    <li><strong>传输模式</strong>：只加密数据载荷 → 主机到主机通信常用。</li>
+  </ul>
+  <div class="callout ok">
+    <strong>IPSec 一句话：</strong>AH 认证不加密，ESP 加密；IKE 管密钥；VPN 场景多用隧道模式。
+  </div>
+
+  <h2>五、SSL VPN vs IPSec VPN：远程接入怎么选</h2>
+  <table>
+    <tr><th></th><th>IPSec VPN</th><th>SSL VPN</th></tr>
+    <tr><td>客户端</td><td>需安装专用客户端</td><td>浏览器即可，<strong>免安装</strong></td></tr>
+    <tr><td>流量范围</td><td>可承载<strong>全部 IP 流量</strong></td><td>主要面向 Web / 指定应用</td></tr>
+    <tr><td>端口</td><td>UDP 500 / 4500</td><td>TCP <strong>443</strong>（同 HTTPS）</td></tr>
+    <tr><td>典型场景</td><td>长期、全流量远程接入</td><td>临时、浏览器访问内网</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>远程 VPN 选型</strong>）：<strong>临时 Web 用 SSL；长期全流量用 IPSec</strong>。看到「手机浏览器」「免客户端」→ SSL VPN。</p>
+
+  <h2>六、动手练一练（点击选项，立刻看对错）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 哪种防火墙维护连接状态表，动态放行应答流量？</div>
+    <div class="opts">
+      <button class="opt">A. 包过滤型防火墙</button>
+      <button class="opt" data-correct="true">B. 状态检测型防火墙</button>
+      <button class="opt">C. 应用代理型防火墙</button>
+      <button class="opt">D. 电路级网关防火墙</button>
+    </div>
+    <div class="explain">答案 B。「维护连接状态表」「会话跟踪」是状态检测的标志词。包过滤无状态，代理是拆包检查应用内容。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · DMZ（隔离区）通常出现在哪种防火墙体系结构中？</div>
+    <div class="opts">
+      <button class="opt">A. 双重宿主主机模式</button>
+      <button class="opt" data-correct="true">B. 屏蔽子网模式</button>
+      <button class="opt">C. 透明桥接部署模式</button>
+      <button class="opt">D. 单臂路由部署模式</button>
+    </div>
+    <div class="explain">答案 B。屏蔽子网 = 两个包过滤路由器 + 堡垒主机，中间就是 DMZ。外网只能进 DMZ，不能直入内网。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 公司对外官网应部署在哪个网络区域？</div>
+    <div class="opts">
+      <button class="opt">A. 内网办公网段</button>
+      <button class="opt" data-correct="true">B. DMZ 隔离网段</button>
+      <button class="opt">C. 外网公共网段</button>
+      <button class="opt">D. 包过滤路由器</button>
+    </div>
+    <div class="explain">答案 B。官网对公众开放 → 放 DMZ，不放内网。内网放 OA、数据库等仅内部使用的系统。口诀：对外开门放 DMZ，内部自用放内网。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 下列哪项是防火墙无法有效防御的威胁？</div>
+    <div class="opts">
+      <button class="opt">A. 外部端口扫描行为</button>
+      <button class="opt" data-correct="true">B. 内部人员主动泄密</button>
+      <button class="opt">C. 外网恶意流量过滤</button>
+      <button class="opt">D. 非法外连端口阻断</button>
+    </div>
+    <div class="explain">答案 B。「防外不防内」——内鬼从内部把数据拷走，防火墙管不着。过滤外网恶意流量和端口扫描是它的本职工作。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · IPSec 中负责提供机密性（加密）的协议是？</div>
+    <div class="opts">
+      <button class="opt">A. AH 认证头协议</button>
+      <button class="opt" data-correct="true">B. ESP 安全载荷协议</button>
+      <button class="opt">C. IKE 密钥交换协议</button>
+      <button class="opt">D. GRE 通用路由封装</button>
+    </div>
+    <div class="explain">答案 B。ESP 负责加密（机密性）；AH 只管完整性和认证，不加密；IKE 管密钥协商；GRE 是通用封装，本身不提供 IPSec 级安全。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 总部与上海分部长期互联，应优先选用哪种 VPN？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. Intranet VPN</button>
+      <button class="opt">B. Access VPN</button>
+      <button class="opt">C. Extranet VPN</button>
+      <button class="opt">D. SSL VPN 浏览器接入</button>
+    </div>
+    <div class="explain">答案 A。总部 ↔ 分部 = 内网对内网 = Intranet VPN。Access 是「人进内网」，Extranet 是「合作方进内网」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · 出差员工用手机浏览器免装客户端接入内网，最适合？</div>
+    <div class="opts">
+      <button class="opt">A. IPSec VPN 客户端</button>
+      <button class="opt" data-correct="true">B. SSL VPN 浏览器接入</button>
+      <button class="opt">C. PPTP 二层隧道协议</button>
+      <button class="opt">D. L2TP 二层隧道协议</button>
+    </div>
+    <div class="explain">答案 B。「浏览器」「免安装」= SSL VPN（443 端口）。IPSec 要装客户端；PPTP/L2TP 是二层隧道，本身不带强加密。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q8 · Which IPSec protocol provides encryption?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. AH protocol</button>
+      <button class="opt" data-correct="true">B. ESP protocol</button>
+      <button class="opt">C. IKE protocol</button>
+      <button class="opt">D. GRE protocol</button>
+    </div>
+    <div class="explain">答案 B。英文题考的还是同一知识点：ESP = encryption。把「AH 认证、ESP 加密」记牢，中英文通吃。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某公司总部在北京、上海有分部；员工经常出差；并与合作企业交换订单数据。请为三种需求选择 VPN 类型及接入方式。</p>
+    <div class="ans">
+      ① 总部 ↔ 分部长期互联 → <strong>Intranet VPN</strong>（常用 IPSec 隧道模式）；<br>
+      ② 出差员工远程接入 → <strong>Access VPN</strong>（临时 Web 访问可配 <strong>SSL VPN</strong>）；<br>
+      ③ 与合作企业 B2B 交换数据 → <strong>Extranet VPN</strong>。<br>
+      答题模板：<strong>需求 → 类型 → 理由</strong>，每条一行。
+    </div>
+  </details>
+
+  <h2>七、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 8–9 章（30 分钟）</strong>：<a href="../reference/textbook/ch08.html">第 8 章 防火墙</a> + <a href="../reference/textbook/ch09.html">第 9 章 VPN</a>，对照<a href="../reference/firewall-vpn-cheatsheet.html">速查卡</a>过一遍三类防火墙、DMZ、IPSec AH/ESP。</li>
+    <li><strong>填空自测（5 分钟）</strong>：用<a href="https://www.educity.cn/rk/5082720.html">希赛防火墙知识点填空检测</a>把三类防火墙和三种体系结构过一遍。</li>
+    <li><strong>睡前默写（5 分钟）</strong>：按考点背——① 资产部署位置：对外开门放 DMZ，内部自用放内网；② 远程 VPN 选型：临时 Web 用 SSL，长期全流量用 IPSec；③ VPN 三种类型：内内 / 人内 / 外内；④ IPSec：AH 认证不加密，ESP 加密。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》防火墙技术原理与应用、VPN 技术原理与应用章节（<a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_10980501.html">清华大学出版社</a>）</li>
+    <li>备考笔记：<a href="https://rk.51cto.com/article/638395.html">51CTO·防火墙安全网关考点</a>、<a href="https://rk.51cto.com/article/310662.html">51CTO·VPN 技术应用解析</a></li>
+    <li>速查：<a href="../reference/firewall-vpn-cheatsheet.html">防火墙与 VPN 速查</a> · <a href="../reference/mnemonics.html#lesson-05">口诀速查卡</a> · <a href="./0004-pki-https.html">第 4 课：PKI/HTTPS</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有任何不清楚的地方，随时问你的老师（我）。</strong>「状态检测和包过滤到底差在哪」「IPSec 传输模式什么时候用」都是好问题。</p>
+    <p>下一课预告：IDS/IPS 与安全审计——保安挡不住所有坏人，还得有「监控」和「录像」。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

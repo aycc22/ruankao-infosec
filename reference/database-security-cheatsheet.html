@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 数据库系统安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>数据库系统安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 20 章 · 打印用</p>
+  </header>
+
+  <h2>一、保什么</h2>
+  <ul>
+    <li>CIA：机密性、完整性、可用性；范围含管理 / 数据 / 应用 / 运行</li>
+    <li>职责分离：<strong>管库的不管审计，应用账号只用最小权</strong></li>
+  </ul>
+
+  <h2>二、八类威胁</h2>
+  <table>
+    <tr><th>威胁</th><th>秒判</th></tr>
+    <tr><td>授权误用</td><td>合法用户越权、乱授权</td></tr>
+    <tr><td>逻辑推断和汇聚</td><td>低敏数据拼出高敏信息</td></tr>
+    <tr><td>伪装</td><td>假冒身份进库</td></tr>
+    <tr><td>旁路控制</td><td>后门绕过认证与访问控制</td></tr>
+    <tr><td>隐蔽信道</td><td>共享内存、临时文件等非正常通道</td></tr>
+    <tr><td>SQL 注入</td><td>拼接恶意 SQL</td></tr>
+    <tr><td>口令破解</td><td>字典 / 暴力 / 撞库</td></tr>
+    <tr><td>硬件及介质</td><td>物理破坏、偷盘、废弃介质恢复</td></tr>
+  </table>
+  <p class="meta"><strong>数据库八类威胁</strong>：授权乱用会推断，伪装旁路藏信道；注入撞库破口令，硬盘介质也要防。</p>
+
+  <h2>三、八项机制</h2>
+  <p>标识鉴别 → 访问控制 → 安全审计 → 备份恢复 → 加密 → 资源限制 → 安全加固 → 安全管理</p>
+  <p class="meta"><strong>数据库八项机制</strong>：先认人，再控权，审计备份加加密，限资源再加固，管理贯穿全过程。</p>
+
+  <h2>四、SQL 注入</h2>
+  <ul>
+    <li>首选：<strong>参数化查询</strong>（输入当数据，不当代码）</li>
+    <li>辅：白名单、应用账号最小权限、库防火墙 / WAF</li>
+    <li>陷阱：隐藏报错、过滤单引号 ≠ 有效防御</li>
+  </ul>
+  <p class="meta"><strong>SQL 注入防护</strong>：简单过滤挡不住注入，参数化查询才可靠。</p>
+
+  <h2>五、加密 / 脱敏 / 库防火墙</h2>
+  <table>
+    <tr><th>技术</th><th>要点</th></tr>
+    <tr><td>传输加密</td><td>SSL / TLS</td></tr>
+    <tr><td>库内加密</td><td>DBMS 内核；可细到字段；占库 CPU</td></tr>
+    <tr><td>库外加密</td><td>网关/硬件；粒度粗；不占库 CPU</td></tr>
+    <tr><td>TDE</td><td>Transparent Data Encryption，透明存储加密</td></tr>
+    <tr><td>脱敏</td><td>屏蔽、变形、替换、随机、加密（测开环境）</td></tr>
+    <tr><td>库防火墙</td><td>SQL 协议分析；虚拟补丁；拦无 WHERE 删除等</td></tr>
+  </table>
+  <p class="meta">网上传输走 SSL，落地存储分库内库外；透明加密简称 TDE。<br>
+  普通防火墙不看 SQL，数据库防火墙才拦注入。</p>
+
+  <h2>六、备份</h2>
+  <ul>
+    <li>完全：一份即可恢复</li>
+    <li>差异：相对<strong>上次全备</strong> → 全备 + 最后一份差异</li>
+    <li>增量：相对<strong>上一次任意备份</strong> → 全备 + 之后每一份增量</li>
+    <li>SQL Server 四种方案：文件/文件组、事务日志、完全、差异；恢复模型：简单 / 完全 / 批量日志</li>
+  </ul>
+
+  <h2>七、平台关键词</h2>
+  <ul>
+    <li>SQL Server 默认 <strong>1433</strong>；关危险扩展存储过程；传输 SSL</li>
+    <li>MySQL 默认 <strong>3306</strong>；授权表 user / db / host / tables_priv / columns_priv</li>
+    <li>Oracle：TDE、数据屏蔽；Database Vault = <strong>安全域 + 命令规则</strong></li>
+    <li>国产：达梦、人大金仓、神舟等</li>
+  </ul>
+
+  <h2>八、下午卷模板</h2>
+  <p>库加固写：<strong>分权最小权 + 参数化 + SSL + 脱敏/加密 + 审计备份</strong>；点明改默认口令/端口、打补丁、限制来源 IP。</p>
+
+  <h2>九、英文速记</h2>
+  <table>
+    <tr><th>中文</th><th>英文</th></tr>
+    <tr><td>SQL 注入</td><td>SQL Injection</td></tr>
+    <tr><td>参数化查询</td><td>Parameterized Query / Prepared Statement</td></tr>
+    <tr><td>透明数据加密</td><td>TDE / Transparent Data Encryption</td></tr>
+    <tr><td>数据库保险库</td><td>Database Vault</td></tr>
+    <tr><td>数据脱敏 / 屏蔽</td><td>Data Masking</td></tr>
+    <tr><td>最小特权</td><td>Least Privilege</td></tr>
+  </table>
+
+  <footer>
+    配套课程：<a href="../lessons/0015-database-security.html">第 15 课</a> ·
+    <a href="./mnemonics.html#lesson-15">口诀</a> ·
+    <a href="./textbook/ch20.html">教材第 20 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

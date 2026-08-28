@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 数字证书 / PKI / HTTPS</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>数字证书 / PKI / HTTPS 速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》认证技术部分 · 打印用</p>
+  </header>
+
+  <h2>一、数字证书（X.509 标准）</h2>
+  <p>证书 = <strong>身份信息 + 公钥 + CA 的签名</strong>，是网络世界的「电子身份证」，证明「这个公钥属于这个人」。</p>
+  <p>证书内容：版本、序列号、签名算法、颁发者（CA）、有效期、证书所有人、<strong>所有人的公钥</strong>、CA 对证书的签名。</p>
+  <div class="callout warn"><strong>陷阱：证书里存的是公钥，绝对没有私钥！</strong>CA 用自己的私钥给证书签名，防止证书被篡改。</div>
+
+  <h2>二、PKI 组成（公钥基础设施）</h2>
+  <table>
+    <tr><th>组成</th><th>职责</th><th>考点</th></tr>
+    <tr><td><strong>CA</strong> 认证中心</td><td>签发、管理、吊销证书（PKI 核心与信任根）</td><td>证书是 CA 签的，不是 RA</td></tr>
+    <tr><td><strong>RA</strong> 注册机构</td><td>受理申请、审核身份</td><td>RA 只审核<strong>不签发</strong>证书</td></tr>
+    <tr><td><strong>证书库</strong></td><td>存放证书和吊销列表（通常 LDAP 目录）</td><td>公共布告栏</td></tr>
+    <tr><td>密钥恢复系统</td><td>密钥丢失时恢复</td><td>—</td></tr>
+    <tr><td>终端实体 / 应用系统</td><td>证书持有者、PKI 使用者</td><td>—</td></tr>
+  </table>
+  <p>PKI 是<strong>硬件 + 软件 + 人员 + 策略 + 过程</strong>的集合（不能只说硬件）。管理对象是密钥、证书、CRL（不是 ID/口令）。</p>
+
+  <h2>三、证书签发流程（排序题）</h2>
+  <p>用户申请 → <strong>RA 审核</strong>身份 → <strong>CA 签发</strong>（用自己的私钥签名）→ 发布到证书库 → 交给用户</p>
+
+  <h2>四、证书作废</h2>
+  <p>证书过期自然作废；私钥泄露但证书未到期 → CA 发布 <strong>CRL</strong>（证书吊销列表，离线、有延迟）或
+  <strong>OCSP</strong>（在线证书状态协议，实时查询）。验证证书 = 验有效期 + 查 CRL/OCSP + 验 CA 签名。</p>
+
+  <h2>五、HTTPS（SSL over HTTP）</h2>
+  <ul>
+    <li><strong>端口：TCP 443</strong>（HTTP 是 80）——经典真题</li>
+    <li>SSL/TLS 位于 TCP 与应用层之间；含记录协议（封装压缩加密）和握手协议（身份认证）</li>
+    <li>SSL 握手五步：
+      <ol>
+        <li>客户端发算法列表 →</li>
+        <li>服务器选定算法并发出<strong>证书</strong> →</li>
+        <li>客户端用 CA 公钥<strong>验证证书</strong>，提取服务器公钥 →</li>
+        <li>客户端生成<strong>对称密钥</strong>，用服务器公钥加密传回 →</li>
+        <li>服务器用私钥解密，双方用对称密钥通信</li>
+      </ol>
+    </li>
+  </ul>
+  <p class="meta"><strong>HTTPS 传输思路</strong>：先非对称握手验证身份，后对称加密传输数据——这就是第 3 课「非对称解决密钥分发」的实战。</p>
+
+  <h2>六、PKI 五大安全服务</h2>
+  <p class="meta"><strong>PKI 五大服务</strong>：认整签会恢。</p>
+  <p><strong>认</strong>（身份认证）· <strong>整</strong>（完整性保护）· <strong>签</strong>（数字签名防抵赖）· <strong>会</strong>（会话加密管理）· <strong>恢</strong>（密钥恢复）</p>
+
+  <h2>七、英文词汇</h2>
+  <p>Certificate（证书）· Certificate Authority / CA（认证中心）· Registration Authority / RA（注册机构）·
+  Public Key Infrastructure / PKI（公钥基础设施）· CRL 吊销列表 · OCSP 在线状态协议 · SSL/TLS · HTTPS · Handshake（握手）</p>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》认证技术原理与应用章节；
+    备考笔记：<a href="https://rk.51cto.com/article/524660.html">51CTO·数字证书 RA/CA 职责与签名验证</a>。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

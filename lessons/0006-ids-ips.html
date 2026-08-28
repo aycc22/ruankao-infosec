@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 课 · IDS 与 IPS</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 06 · 约 18 分钟</div>
+    <h1>防护技术第二弹：IDS 与 IPS</h1>
+    <p class="meta">本课目标：分清 IDS 与 IPS 的部署与职责；区分 HIDS / NIDS；掌握误用检测与异常检测的口诀。</p>
+  </header>
+
+  <h2>开场：防火墙是保安，IDS/IPS 是监控</h2>
+  <p>
+    第 5 课学了<strong>防火墙</strong>——按规则决定「让不让过」（访问控制）。
+    但已放行的流量里可能藏着攻击：SQL 注入、端口扫描、暴力破解……防火墙未必看得出来。
+    今天学<strong>第二道屏障</strong>：
+    <strong>IDS</strong>（Intrusion Detection System，入侵<strong>检测</strong>系统）像<strong>监控摄像头</strong>——发现异常<strong>报警</strong>；
+    <strong>IPS</strong>（Intrusion Prevention System，入侵<strong>防御</strong>系统）像<strong>带门禁的保安</strong>——发现威胁<strong>直接阻断</strong>。
+  </p>
+
+  <h2>零、先复习再开新（你踩过的坑）</h2>
+
+  <div class="quiz">
+    <div class="q">R1 · DMZ（隔离区）通常出现在哪种防火墙体系结构中？</div>
+    <div class="opts">
+      <button class="opt">A. 双重宿主主机模式</button>
+      <button class="opt">B. 屏蔽主机模式</button>
+      <button class="opt" data-correct="true">C. 屏蔽子网模式</button>
+      <button class="opt">D. 透明桥接部署模式</button>
+    </div>
+    <div class="explain">答案 C。屏蔽子网 = 外路由 → DMZ → 内路由 → 内网。屏蔽主机有堡垒主机但<strong>没有 DMZ</strong>——结业测 Q2 的坑，再记一次。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 防火墙与 IDS 的核心区别，哪句最准确？</div>
+    <div class="opts">
+      <button class="opt">A. 防火墙负责检测，IDS 负责访问控制</button>
+      <button class="opt" data-correct="true">B. 防火墙管访问控制，IDS 管行为监测与告警</button>
+      <button class="opt">C. 防火墙旁路部署，IDS 串联部署</button>
+      <button class="opt">D. 防火墙消除病毒，IDS 加密传输</button>
+    </div>
+    <div class="explain">答案 B。防火墙 = 按策略放行/阻断（访问控制）；IDS = 分析流量/日志，发现入侵<strong>告警</strong>（典型旁路，自身不阻断）。选项 C 反了：IPS 才常串联。</div>
+  </div>
+
+  <h2>一、IDS vs IPS：检测 vs 防御</h2>
+  <table>
+    <tr><th></th><th>IDS</th><th>IPS</th></tr>
+    <tr><td><strong>全称</strong></td><td>Intrusion Detection System<br>入侵<strong>检测</strong>系统</td><td>Intrusion Prevention System<br>入侵<strong>防御</strong>系统</td></tr>
+    <tr><td><strong>做什么</strong></td><td>监测 → 分析 → <strong>告警</strong></td><td>监测 → 分析 → <strong>告警 + 阻断</strong></td></tr>
+    <tr><td><strong>部署</strong></td><td><strong>旁路</strong>（镜像/分路抓流量，不挡路）</td><td><strong>串联 inline</strong>（流量必经，可丢包阻断）</td></tr>
+    <tr><td><strong>类比</strong></td><td>监控摄像头 + 报警器</td><td>带拦截能力的门禁</td></tr>
+    <tr><td><strong>联动</strong></td><td>可通知防火墙/管理员处置</td><td>自身直接处置，误报可能<strong>误伤业务</strong></td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>IDS vs IPS 部署</strong>）：<strong>IDS 只告警不阻断</strong>（旁路）；IPS <strong>能阻断</strong>（串联）。
+    <br>真题问「IDS 与 IPS 主要区别」→ 选 <strong>IPS 可主动阻断</strong>。
+  </div>
+
+  <h2>二、装在哪：HIDS vs NIDS</h2>
+  <table>
+    <tr><th>类型</th><th>英文</th><th>监测对象</th><th>典型场景</th></tr>
+    <tr><td><strong>主机型</strong></td><td>HIDS</td><td>单台主机的日志、进程、文件、系统调用</td><td>保护服务器、发现主机被控</td></tr>
+    <tr><td><strong>网络型</strong></td><td>NIDS</td><td>网络流量（交换机镜像口、Tap）</td><td>监测网段攻击、扫描、恶意载荷</td></tr>
+  </table>
+  <p class="meta">选型：关心「某台机器被没被动手脚」→ HIDS；关心「网络上有没有攻击流量」→ NIDS。</p>
+
+  <h2>三、怎么检：误用检测 vs 异常检测</h2>
+  <table>
+    <tr><th>方法</th><th>别名</th><th>原理</th><th>优点</th><th>缺点</th></tr>
+    <tr><td><strong>误用检测</strong></td><td>特征检测 / 签名匹配</td><td>拿流量/行为去<strong>匹配已知攻击特征库</strong></td><td>已知攻击<strong>准确率高</strong>，误报低</td><td><strong>不认识零日</strong>，库要常更新</td></tr>
+    <tr><td><strong>异常检测</strong></td><td>行为检测</td><td>先建<strong>正常行为基线</strong>，偏离则告警</td><td>可能发现<strong>未知攻击</strong></td><td><strong>误报率高</strong>，需调优</td></tr>
+  </table>
+  <div class="callout info">
+    <strong>关键词对号入座：</strong>
+    <br>「特征库 / 签名 / 已知模式 / 规则匹配」→ <strong>误用检测</strong>
+    <br>「行为基线 / 轮廓 / 统计偏离 / 阈值」→ <strong>异常检测</strong>
+    <br>还有 <strong>混合检测（Hybrid）</strong>：两者结合，考试知道名字即可。
+  </div>
+
+  <h2>四、误报与漏报：没有完美系统</h2>
+  <ul>
+    <li><strong>误报（False Positive）</strong>：正常行为被当成攻击 → 告警泛滥，IPS 还可能<strong>误阻断业务</strong>；</li>
+    <li><strong>漏报（False Negative）</strong>：真实攻击没被检出 → 更危险，以为安全其实被渗透。</li>
+  </ul>
+  <div class="callout warn">
+    <strong>三个必记陷阱：</strong>
+    <br>① IDS <strong>不能</strong>替代防火墙做访问控制，也<strong>不负责杀毒</strong>；
+    <br>② 选项写「IDS 实现内外网隔离」→ 错，那是防火墙/网闸的事；
+    <br>③ 异常检测能抓未知，但<strong>误报率高</strong>——下午卷案例常考「告警太多怎么办：调阈值、白名单、人机复核」。
+  </div>
+
+  <h2>五、和防火墙怎么配合？</h2>
+  <p>常见纵深防御链条：</p>
+  <p class="meta"><strong>防火墙</strong>（边界访问控制）→ <strong>IPS</strong>（串联阻断已知攻击）→ <strong>IDS</strong>（旁路审计监测）→ <strong>安全审计</strong>（事后查日志）——下一课讲审计与 SIEM。</p>
+
+  <h2>六、动手练一练（点击选项，立刻看对错）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · IDS 与 IPS 的主要区别是？</div>
+    <div class="opts">
+      <button class="opt">A. IDS 部署必须串联 inline</button>
+      <button class="opt" data-correct="true">B. IPS 检测到威胁可主动阻断</button>
+      <button class="opt">C. IPS 只负责告警不阻断流量</button>
+      <button class="opt">D. IDS 主要功能是消除病毒</button>
+    </div>
+    <div class="explain">答案 B。IPS = 检测 + 阻断（串联）；IDS = 检测 + 告警（旁路）。D 是杀毒软件的事。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 通过匹配已知攻击特征库来识别入侵，属于哪种检测方法？</div>
+    <div class="opts">
+      <button class="opt">A. 异常检测方法</button>
+      <button class="opt" data-correct="true">B. 误用检测方法</button>
+      <button class="opt">C. 物理隔离检测方法</button>
+      <button class="opt">D. 状态检测方法</button>
+    </div>
+    <div class="explain">答案 B。误用检测 = 特征/签名匹配已知攻击。异常检测是「偏离行为基线」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 监测单台服务器日志与进程异常，应部署哪种 IDS？</div>
+    <div class="opts">
+      <button class="opt">A. NIDS 网络型 IDS</button>
+      <button class="opt" data-correct="true">B. HIDS 主机型 IDS</button>
+      <button class="opt">C. IPS 串联防御系统</button>
+      <button class="opt">D. WAF 应用防火墙</button>
+    </div>
+    <div class="explain">答案 B。HIDS 看单机；NIDS 看网络流量。WAF 专防 Web 应用层攻击，是另一类设备。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 下列关于异常检测的描述，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 依赖特征库，无法发现零日攻击</button>
+      <button class="opt">B. 误报率通常低于误用检测</button>
+      <button class="opt" data-correct="true">C. 通过行为基线偏离发现可疑活动</button>
+      <button class="opt">D. 只能部署在网络边界</button>
+    </div>
+    <div class="explain">答案 C。异常检测 = 基线 + 偏离。A 是误用检测的缺点；B 反了，异常检测误报通常更高。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 下列哪项最可能是 IDS 的职责，而非防火墙？</div>
+    <div class="opts">
+      <button class="opt">A. 按 ACL 规则阻断非法端口</button>
+      <button class="opt">B. 实现内外网逻辑隔离访问控制</button>
+      <button class="opt" data-correct="true">C. 分析流量并生成入侵告警日志</button>
+      <button class="opt">D. 对传输数据进行加密保护</button>
+    </div>
+    <div class="explain">答案 C。IDS 核心是监测与告警。A/B 是防火墙；D 是 VPN/加密协议。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · Which system blocks attacks inline?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. IDS system</button>
+      <button class="opt" data-correct="true">B. IPS system</button>
+      <button class="opt">C. DNS server</button>
+      <button class="opt">D. CA authority</button>
+    </div>
+    <div class="explain">答案 B。IPS = Intrusion Prevention，inline blocking。IDS 只 detect &amp; alert。CA = 证书签发机构。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某公司 IPS 误报频繁，正常业务偶被阻断。请给出两条可落地的优化措施。</p>
+    <div class="ans">
+      ① <strong>调优规则/阈值</strong>：收紧或禁用高误报规则，对可信业务做白名单；<br>
+      ② <strong>更新与分级响应</strong>：定期更新特征库减少漏报；高危规则阻断、低危规则仅告警（或改由 IDS 旁路监测 + 人工复核）。<br>
+      答题模板：<strong>现象 → 原因（误报）→ 措施</strong>，写具体动作别空泛。
+    </div>
+  </details>
+
+  <h2>七、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 10 章（20 分钟）</strong>：<a href="../reference/textbook/ch10.html">第 10 章 入侵检测</a>，对照<a href="../reference/ids-ips-cheatsheet.html">速查卡</a>过一遍 IDS/IPS、HIDS/NIDS、误用/异常检测。</li>
+    <li><strong>对比表自测（10 分钟）</strong>：默写「IDS 旁路告警 vs IPS 串联阻断」+「误用 vs 异常」各写一行优缺点。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① IDS vs IPS 部署：IDS 旁路只告警，IPS 串联能阻断；② 异常检测：能抓未知但误报高。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 10 章 入侵检测技术原理与应用（<a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_10980501.html">清华大学出版社</a>）</li>
+    <li>备考笔记：<a href="https://rk.51cto.com/article/636616.html">51CTO·IPS 与 IDS 核心区别</a>、<a href="https://rk.51cto.com/article/377908.html">51CTO·误用检测与异常检测</a></li>
+    <li>速查：<a href="../reference/ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="../reference/mnemonics.html#lesson-06">口诀速查卡</a> · <a href="./0005-firewall-vpn.html">第 5 课：防火墙与 VPN</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有任何不清楚的地方，随时问你的老师（我）。</strong>「IDS 旁路具体怎么接」「误报和漏报哪个更坑」都是好问题。</p>
+    <p>学完后在对话里说「第 6 课学完了」，我会按 <code>POST-LESSON-QUIZ.md</code> 逐题考你。</p>
+    <p>下一课预告：安全审计与 SIEM——攻击发生了，日志里怎么查、怎么留证。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

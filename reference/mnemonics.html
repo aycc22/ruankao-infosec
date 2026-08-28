@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>口诀速查 · 第 1-20 课汇总</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 记忆卡</div>
+    <h1>一句话口诀速查（第 1-20 课汇总）</h1>
+    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-08-28</p>
+  </header>
+
+  <div class="callout ok">
+    <strong>口诀格式：</strong>每条 = <strong>对应考点</strong> + 口诀正文 +（可选字头）。
+    例：<strong>网站安全工程五阶段</strong>：先分析后设计，实施测评再运维（字头：分设实测评运）。
+    背的时候先想「这条是记什么的」，再背句子。
+  </div>
+
+  <h2 id="lesson-01">第 1 课 · CIA 三元组</h2>
+  <ul>
+    <li><strong>CIA 三属性记忆</strong>：机密性防「偷看」，完整性防「篡改」，可用性防「瘫痪」</li>
+    <li><strong>CIA 定义速记</strong>：机密性 = 只有授权者能查看；完整性 = 未经授权不可改；可用性 = 需要时能用</li>
+    <li><strong>扩展三属性</strong>：真实性（防冒充）· 不可否认性（防抵赖，靠签名）· 可控性（传播范围可控）</li>
+    <li><strong>攻击破坏属性</strong>：信息泄露→机密性；篡改→完整性；拒绝服务→可用性；非法使用→可用性+可控性</li>
+  </ul>
+
+  <h2 id="lesson-02">第 2 课 · 攻击八步</h2>
+  <ul>
+    <li><strong>攻击八步·门外</strong>：藏身 → 摸底 → 找洞 → 进门（隐藏攻击源 → 收集信息 → 挖掘漏洞 → 获取权限）</li>
+    <li><strong>攻击八步·门里</strong>：隐迹 → 动手 → 留门 → 抹痕（隐蔽行为 → 实施攻击 → 开辟后门 → 清除痕迹）</li>
+    <li><strong>清除痕迹识别</strong>：改日志、删审计记录 = 第 8 步清除攻击痕迹</li>
+    <li><strong>社交工程定义</strong>：不攻系统，专攻人心（利用人性弱点）</li>
+    <li><strong>DDoS 破坏属性</strong>：肉鸡、洪泛、瘫痪 → 破坏可用性</li>
+  </ul>
+
+  <h2 id="lesson-03">第 3 课 · 密码学</h2>
+  <ul>
+    <li><strong>对称 vs 非对称</strong>：对称快、非对称慢；对称加密数据，非对称传密钥（数字信封思路）</li>
+    <li><strong>非对称密钥方向</strong> ⚠️：公钥加密 → 私钥解（保密）；私钥签名 → 公钥验（认证+防抵赖）</li>
+    <li><strong>公钥私钥保管</strong>：公钥可以公开满天飞，私钥打死不外借</li>
+    <li><strong>哈希 vs 加密</strong>：哈希不是加密——加密可逆，哈希不可逆（单向）</li>
+    <li><strong>哈希三特性</strong>：单向不可逆 · 相同输入必相同输出 · 雪崩效应（改一比特面目全非）</li>
+    <li><strong>算法淘汰与标准</strong>：淘汰 DES / MD5 / SHA-1；现代 AES / SHA-256；国产 SM2（加密/签名）· SM3（哈希）· SM4（对称）</li>
+    <li><strong>算法记法</strong>：对称「A 系」+ SM4；非对称「R 系」（RSA、ECC、SM2）</li>
+    <li><strong>数字签名作用</strong>：私钥盖章，公钥验章——只防篡改靠哈希；防篡改+防抵赖靠签名</li>
+  </ul>
+
+  <h2 id="lesson-04">第 4 课 · 证书 / PKI / HTTPS</h2>
+  <ul>
+    <li><strong>数字证书组成</strong>：身份信息 + 公钥 + CA 签名（X.509 标准）</li>
+    <li><strong>证书易错陷阱</strong>：证书里是公钥不是私钥；证书由 CA 签发，RA 只审核不签发</li>
+    <li><strong>PKI 定义</strong>：硬件 + 软件 + 人员 + 策略 + 过程的集合（选项只说硬件就错）</li>
+    <li><strong>PKI 五大服务</strong>：认整签会恢（身份认证、完整性、数字签名、会话加密管理、密钥恢复）</li>
+    <li><strong>证书作废 vs 过期</strong> ⚠️：吊销（CRL，提前作废）≠ 过期（自然到期）；OCSP 是在线实时版</li>
+    <li><strong>常用端口</strong>：HTTPS = 443，HTTP = 80，DNS = 53</li>
+    <li><strong>SSL/TLS 握手五步</strong>：算法协商 → 发证书 → 验证提取公钥 → 公钥加密传对称密钥 → 对称通信</li>
+    <li><strong>HTTPS 传输思路</strong>：先非对称握手（验身份传钥匙），后对称传输</li>
+  </ul>
+
+  <h2 id="lesson-05">第 5 课 · 防火墙与 VPN</h2>
+  <ul>
+    <li><strong>防火墙层次规律</strong>：层次越高 → 查得越多 → 越安全 → 越慢</li>
+    <li><strong>防火墙三类</strong>：包过滤只看快递单（无状态，易被 IP 欺骗）· 状态检测记住会话 · 代理拆包逐字查（最安全最慢）</li>
+    <li><strong>防火墙局限</strong>：防外不防内、不查内容（防不了 SQL 注入）、不杀毒</li>
+    <li><strong>DMZ 全称</strong>：Demilitarized Zone（非军事区 / 隔离区）——内外网之间的缓冲网段</li>
+    <li><strong>堡垒主机 vs DMZ</strong>：堡垒主机 = 一台加固机器；DMZ = 一片隔离网段（堡垒主机可放 DMZ 里，但 DMZ ≠ 堡垒主机）</li>
+    <li><strong>资产部署位置</strong>：对外开门放 DMZ，内部自用放内网（官网→DMZ；OA/数据库→内网）</li>
+    <li><strong>屏蔽子网结构</strong>：外路由 → DMZ → 内路由 → 内网（外网只能进 DMZ；DMZ 只出现在屏蔽子网）</li>
+    <li><strong>VPN 三种类型</strong>：内内 Intranet / 人内 Access / 外内 Extranet（先判「谁连谁」）</li>
+    <li><strong>IPSec 协议</strong>：AH 认证不加密，ESP 加密；IKE 管密钥；UDP 500（IKE）/ 4500（NAT 穿越）</li>
+    <li><strong>IPSec 两种模式</strong>：隧道模式（整个 IP 包加密，站点 VPN）vs 传输模式（只加密载荷，主机到主机）</li>
+    <li><strong>远程 VPN 选型</strong>：临时 Web 用 SSL VPN（免客户端，443），长期全流量用 IPSec</li>
+  </ul>
+
+  <h2 id="lesson-06">第 6 课 · IDS 与 IPS</h2>
+  <ul>
+    <li><strong>安全设备分工</strong>：防火墙 = 访问控制；IDS = 监测告警；IPS = 监测 + 阻断</li>
+    <li><strong>IDS vs IPS 部署</strong>：IDS 旁路只告警，IPS 串联能阻断</li>
+    <li><strong>IDS 部署位置</strong>：HIDS 看单机，NIDS 看网络</li>
+    <li><strong>误用检测（签名）</strong>：特征库 / 签名匹配 → 已知攻击准、误报低，怕零日</li>
+    <li><strong>异常检测（行为）</strong>：行为基线偏离 → 能抓未知，误报率高</li>
+    <li><strong>检测类型关键词</strong>：特征库/签名 → 误用；基线/轮廓/偏离 → 异常</li>
+    <li><strong>IDS 易错陷阱</strong>：IDS 不做内外网隔离、不杀毒、不串联阻断（那是 IPS）</li>
+  </ul>
+
+  <h2 id="lesson-07">第 7 课 · 安全审计与 SIEM</h2>
+  <ul>
+    <li><strong>审计五问</strong>：谁 · 何时 · 从哪 · 做什么 · 结果如何</li>
+    <li><strong>审计核心作用</strong>：安全活动要留痕，事件发生可追溯；可实时监测，但不等于 IPS 直接阻断</li>
+    <li><strong>日志处理链</strong>：采集 → 规范 → 存储 → 关联 → 告警</li>
+    <li><strong>SIEM 功能</strong>：日志集中收，格式统一看，事件关联判，风险及时报</li>
+    <li><strong>跨设备追溯前提</strong>：先保证时间同步，否则事件先后顺序可能排错</li>
+    <li><strong>日志保护三防</strong>：哈希/只追加防篡改；访问控制/加密防泄露；备份/冗余防丢失</li>
+    <li><strong>设备分工</strong>：IDS 发现告警，IPS 发现阻断，审计留痕追溯，SIEM 集中关联</li>
+  </ul>
+
+  <h2 id="lesson-08">第 8 课 · 漏洞与补丁管理</h2>
+  <ul>
+    <li><strong>零日漏洞定义</strong>：零日 = 零补丁（新发现且厂商尚未提供补丁），不是零危害；有补丁没打 ≠ 零日</li>
+    <li><strong>CVE 与 CVSS</strong>：CVE 对号，CVSS 打分（十分制，分越高越危险）</li>
+    <li><strong>国内漏洞库</strong>：CNNVD 是漏洞库，CNVD 是共享平台</li>
+    <li><strong>扫描器选型</strong>：不连网查本地 → 主机扫描；先连网发请求 → 网络扫描</li>
+    <li><strong>扫描工具记忆</strong>：家有警虎微，网有图老 X（COPS/Tiger/MBSA；Nmap/Nessus/X-Scan）</li>
+    <li><strong>漏扫 vs 渗透</strong>：漏扫发现已知漏洞，渗透测试验证利用</li>
+    <li><strong>补丁管理六环节</strong>：分析跟踪，验证安装，应急检查（先验证，后上生产）</li>
+    <li><strong>虚拟补丁</strong>：没补丁先顶上，虚拟补丁拦利用（IPS/WAF），官方补丁仍要补</li>
+    <li><strong>内存防护技术</strong>：ASLR 打乱地址 · DEP 数据区不能执行</li>
+  </ul>
+
+  <h2 id="lesson-09">第 9 课 · 恶意代码防范</h2>
+  <ul>
+    <li><strong>恶意代码总称</strong>：恶意大类包一切，病毒只是其中一</li>
+    <li><strong>病毒蠕虫木马三分</strong>：病毒靠宿主，蠕虫自传播，木马只会骗</li>
+    <li><strong>病毒四特性</strong>：隐传潜破（隐蔽、传染、潜伏、破坏）</li>
+    <li><strong>蠕虫四模块</strong>：探传引负（探测、传播、引擎、负载）</li>
+    <li><strong>木马反向连接</strong>：内连外，躲防火墙</li>
+    <li><strong>检测方法选型</strong>：特征码利已知、怕变形；行为/沙箱利未知</li>
+    <li><strong>Botnet 三环节</strong>：传播植入 → 组网控制 → 下发攻击</li>
+    <li><strong>其他恶意代码</strong>：逻辑炸弹条件触发不复制；陷门绕过机制不自传；细菌复制耗资源</li>
+  </ul>
+
+  <h2 id="lesson-10">第 10 课 · 主动防御与蜜罐</h2>
+  <ul>
+    <li><strong>主动 vs 被动防御</strong>：被动挡和查，主动诱和骗</li>
+    <li><strong>蜜罐本质</strong>：无真实业务，故意暴露，诱捕攻击者</li>
+    <li><strong>蜜罐四种配置</strong>：诱骗听端口，弱化留漏洞，强化能取证，用户进程跑</li>
+    <li><strong>四种配置释义</strong>：诱骗服务 = 端口侦听 + 模拟应答；弱化 = 故意留洞；强化 = 弱化 + 取证；用户模式 = 用户进程模拟 OS</li>
+    <li><strong>交互级别</strong>：低交互简单低风险易识破；高交互情报多维护贵风险大</li>
+    <li><strong>蜜网定义</strong>：多蜜罐 + 路由/防火墙/IDS 组成的陷阱网络，常配合流量牵引</li>
+    <li><strong>技术分工</strong>：蜜罐诱捕分析 · 防火墙访问控制 · IDS 检测告警 · 流量清洗抗 DDoS · 白名单管程序</li>
+    <li><strong>蜜罐部署原则</strong>：必须隔离，不能替代防火墙/补丁/终端防护</li>
+  </ul>
+
+  <h2 id="lesson-11">第 11 课 · 网络安全风险评估</h2>
+  <ul>
+    <li><strong>风险计算公式</strong>：风险等于可能乘损失（R = f(Ep, Ev)）</li>
+    <li><strong>风险评估五要素</strong>：资产、威胁、脆弱性、安全措施、风险</li>
+    <li><strong>风险评估七步</strong>：准资威脆措析处（准备→资产→威胁→脆弱性→已有措施→分析→处置，七字对七步）</li>
+    <li><strong>三种评估模式</strong>：自评自查，检查监管，委托外包</li>
+    <li><strong>资产价值赋值</strong>：基于 CIA 三属性相对赋值（1–5 级），非物理价格</li>
+    <li><strong>威胁效果三类</strong>：非欺拒（非法访问、欺骗、拒绝服务）</li>
+    <li><strong>脆弱性识别五法</strong>：扫问访渗人（扫描、问卷、访谈、渗透、人工检查）</li>
+    <li><strong>脆弱性两类</strong>：技术（漏洞/配置/弱口令）vs 管理（制度/培训/应急缺失）</li>
+    <li><strong>风险处置四策略</strong>：降转接避（降低、转移、接受、规避）</li>
+    <li><strong>风险评估易错</strong>：忽略而不记录 ≠ 接受；风险评估 ≠ 等保测评</li>
+    <li><strong>下午卷写法</strong>：七步按顺序写 + 处置策略 + 再评估残余风险</li>
+  </ul>
+
+  <h2 id="lesson-12">第 12 课 · 网络安全等级保护（等保 2.0）</h2>
+  <ul>
+    <li><strong>等保法律依据</strong>：等保是等级保护，网安法二十一开路</li>
+    <li><strong>等保五环节</strong>：先定级，再备案，建设整改后测评，最后监督检查（字头：定备建测监）</li>
+    <li><strong>GB 17859 五级</strong>：自己审计，标完结构，才能访问（字头：自审标结访）</li>
+    <li><strong>等保核心标准</strong>：基本要求 = GB/T 22239—2019；测评要求 = GB/T 28448；五级划分 = GB 17859</li>
+    <li><strong>技术五大类</strong>：物理通信管外线，边界计算管里头，管理中心总调度（字头：物通边算中）</li>
+    <li><strong>管理五大类</strong>：制度机构配人员，建设完了抓运维（字头：制机人建运）</li>
+    <li><strong>等保测评四步</strong>：先准备，编方案，到现场，写报告（字头：备方现报）</li>
+    <li><strong>等保数字点</strong>：备案通常 30 日内；三级及以上常见每年至少一测</li>
+    <li><strong>等保易错陷阱</strong>：测评 ≠ 风险评估；22239 ≠ 17859；备案找公安机关；须第三方有资质机构</li>
+  </ul>
+
+  <h2 id="lesson-13">第 13 课 · 网络安全应急响应</h2>
+  <ul>
+    <li><strong>应急响应六阶段</strong>：先准备，再检测，抑制住再根除，恢复完要总结（字头：备检抑根恢总；英文 PDCERF）</li>
+    <li><strong>抑制 vs 根除</strong>：抑制是圈住火，根除是灭火源（先抑制，后根除）</li>
+    <li><strong>事件四级分类</strong>：特别重大最要紧，重大较大一般跟（字头：特重大较一）</li>
+    <li><strong>应急响应英文</strong>：Containment = 抑制；Eradication = 根除；Incident Response = 应急响应</li>
+    <li><strong>应急组织</strong>：团队 CSIRT；国内协调常考 CNCERT/CC</li>
+    <li><strong>应急响应易错</strong>：六阶段第一个是准备；发现事件后处置从检测起；未隔离就清杀易扩散/毁证</li>
+  </ul>
+
+  <h2 id="lesson-14">第 14 课 · 操作系统安全</h2>
+  <ul>
+    <li><strong>OS 安全四机制</strong>：先认人，再控权，特权要最小，事事留审计（字头：认控特审）</li>
+    <li><strong>访问控制三模型</strong>：DAC 主人自己定，MAC 标签系统定，RBAC 角色中间转</li>
+    <li><strong>最小特权原则</strong>：只给干活必需的那点权（英文 Least Privilege）</li>
+    <li><strong>多级安全 BLP 规则</strong>：能往下看，不能往上偷；能往上记，不能往下泄（禁止上读下写；保机密性）</li>
+    <li><strong>OS 五级（GB/T 20272）</strong>：自己审计，标完结构，才能访问（与 GB 17859 同名）</li>
+    <li><strong>OS 安全加固流程</strong>：目标定好先装少，补丁打完再关口，账号权限严收紧，测完合格才上线（字头：目少补关账测）</li>
+    <li><strong>OS 安全易错</strong>：属主可转授 ≠ MAC；BLP 主保机密性；安全基线 = 最低配置模板</li>
+  </ul>
+
+  <h2 id="lesson-15">第 15 课 · 数据库系统安全</h2>
+  <ul>
+    <li><strong>数据库职责分离</strong>：管库的不管审计，应用账号只用最小权</li>
+    <li><strong>数据库八类威胁</strong>：授权乱用会推断，伪装旁路藏信道；注入撞库破口令，硬盘介质也要防（字头：权推伪旁隐注破硬）</li>
+    <li><strong>数据库八项机制</strong>：先认人，再控权，审计备份加加密，限资源再加固，管理贯穿全过程（字头：认控审备加限固管）</li>
+    <li><strong>SQL 注入防护</strong>：简单过滤挡不住注入，参数化查询才可靠</li>
+    <li><strong>数据库加密</strong>：网上传输走 SSL，落地存储分库内库外；透明加密简称 TDE</li>
+    <li><strong>数据脱敏五法</strong>：屏蔽变形替换掉，随机加密都脱敏</li>
+    <li><strong>数据库防火墙</strong>：普通防火墙不看 SQL，数据库防火墙才拦注入</li>
+    <li><strong>备份三种类型</strong>：全备最全；差异只相对上次全备；增量相对上一次任意备份</li>
+    <li><strong>数据库默认端口</strong>：SQL Server 默认一四三三，MySQL 默认三三零六</li>
+    <li><strong>Oracle Database Vault</strong>：Oracle 保险库控特权，靠的是安全域和命令规则</li>
+    <li><strong>数据库易错</strong>：隐藏报错 ≠ 防注入；TDE 是存储、SSL 是传输；1433 ≠ 3306</li>
+  </ul>
+
+  <h2 id="lesson-16">第 16 课 · 网络设备安全</h2>
+  <ul>
+    <li><strong>交换机五代</strong>：一代物理 Hub 广播，二代链路认 MAC，三层网络能路由，四代叠加防火墙（字头：物链网叠）</li>
+    <li><strong>网络设备威胁</strong>：交换 MAC 泛洪 ARP 骗，路由协议流量洪；默认口令固件洞，物理依赖都要防（字头：交路默物）</li>
+    <li><strong>网络设备六大加固</strong>：先改默认口令，ACL 管住管理口，SSH 加密 SNMP 三代，补丁日志不能少（字头：默 ACL SSH 补）</li>
+    <li><strong>远程管理加固</strong>：SSH 加密 Telnet 裸，VTY 口要配 ACL</li>
+    <li><strong>路由器特权口令</strong>：路由器特权口令要密文，Enable secret 来保存</li>
+    <li><strong>AAA 协议选型</strong>：认证授权加计费，RADIUS 接用户，TACACS+ 管设备</li>
+    <li><strong>运维审计会话类型</strong>：SSH 和 Telnet 是字符会话，RDP 和 VNC 是图形会话</li>
+    <li><strong>网络设备易错</strong>：管理首先改默认口令；二代交换机 = 数据链路层；Enable secret ≠ Encryption 命令</li>
+  </ul>
+
+  <h2 id="lesson-17">第 17 课 · 网站安全</h2>
+  <ul>
+    <li><strong>网站安全工程五阶段</strong>：先分析后设计，实施测评再运维（字头：分设实测评运）</li>
+    <li><strong>XSS 与 CSRF 区别</strong>：XSS 偷脚本盗 Cookie，CSRF 借 Cookie 发请求</li>
+    <li><strong>XSS 三种类型</strong>：存储持久反射链，DOM 改页在浏览器</li>
+    <li><strong>CSRF 防护三件套</strong>：Token 校验 Referer 查，SameSite Cookie 把关（字头：T R S）</li>
+    <li><strong>SQL 注入防护</strong>：简单过滤挡不住注入，参数化查询才可靠</li>
+    <li><strong>文件上传防护</strong>：上传目录禁执行，白名单验类型</li>
+    <li><strong>Web 会话安全</strong>：HTTPS 加 HttpOnly，Secure 过期要轮换</li>
+    <li><strong>WAF 部署要点</strong>：WAF 串联 Web 入口，规则语义拦注入</li>
+    <li><strong>下午卷 Web 题</strong>：威胁对策成对写，参数化查 SQL 注入</li>
+    <li><strong>网站安全易错</strong>：隐藏报错 ≠ 防注入；XSS 能读 Cookie，CSRF 只发请求；普通防火墙 ≠ WAF</li>
+  </ul>
+
+  <h2 id="lesson-18">第 18 课 · 第一阶段总结</h2>
+  <ul>
+    <li><strong>第一阶段知识地图</strong>：基础攻击打地基，密码证书保通信，边界监测守网络，漏洞恶意加蜜罐，风险等保应应急，系统网站全加固</li>
+    <li><strong>安全设备分工</strong>：防火墙管访问，IDS 旁路只告警，IPS 串联能阻断，WAF 守 Web 入口，审计留痕 SIEM 关联，蜜罐诱捕要隔离</li>
+    <li><strong>四个流程别混</strong>：风险七步准资威脆措析处；等保五环节定备建测监；应急六阶段备检抑根恢总；网站五阶段分设实测评运</li>
+    <li><strong>综合复习重点</strong>：密钥方向、CRL 吊销、DMZ 部署、木马三关键词、XSS/CSRF 区别、参数化防注入</li>
+  </ul>
+
+  <h2 id="lesson-19">第 19 课 · 云计算安全</h2>
+  <ul>
+    <li><strong>云安全责任共担</strong>：云上安全大家扛，厂商管底座用户管业务</li>
+    <li><strong>IaaS/PaaS/SaaS 责任边界</strong>：IaaS 你管系统和应用，PaaS 你管应用和数据，SaaS 你管账号和用法</li>
+    <li><strong>云计算四种部署模式</strong>：私有独占社区共，公有开放混合拼（字头：私社公混）</li>
+    <li><strong>云环境特有威胁</strong>：逃逸残留共漏洞，接口滥用加中断</li>
+    <li><strong>多租户隔离三层</strong>：计算存储网络三层隔，租户互访要堵住</li>
+    <li><strong>等保云扩展要求</strong>：通用不够再加云扩，镜像快照要管住</li>
+    <li><strong>云安全运维要点</strong>：评估监测加应急，认证审计再备份</li>
+    <li><strong>云计算安全易错</strong>：上云 ≠ 厂商全包；SaaS 仍管账号与数据；等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2 id="lesson-20">第 20 课 · 工控安全</h2>
+  <ul>
+    <li><strong>工控安全需求优先序</strong>：先保能用再保完整，机密性排在最后（可用 &gt; 完整 &gt; 机密）</li>
+    <li><strong>工控核心组件分工</strong>：远看 SCADA 采监视，近控 DCS 分布管，PLC 做动作，RTU 采现场</li>
+    <li><strong>工控特有安全隐患</strong>：协议明文缺认证，开放接入供应链</li>
+    <li><strong>工控边界防护设备</strong>：工业防火墙能解析，网闸单向隔内外</li>
+    <li><strong>工控远程访问原则</strong>：公网高危服务先关掉，确需远程走 VPN</li>
+    <li><strong>电力监控安全十六字方针</strong>：安全分区网络专，横向隔离纵向认（字头：分专横纵）</li>
+    <li><strong>等保工控扩展要求</strong>：通用不够再加工控，分区隔离要到位</li>
+    <li><strong>工控安全易错</strong>：工控优先序 ≠ 机密优先；SCADA ≠ DCS；功能安全 ≠ 信息安全；等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2>答题套路（下午卷通用）</h2>
+  <ul>
+    <li><strong>方案设计题写法</strong>：需求 → 技术 → 理由，每条一行，别空着</li>
+    <li><strong>案例分析题写法</strong>：原因 + 对策成对写出</li>
+    <li><strong>VPN 选型题</strong>：先判断「谁连谁」（内-内 / 人-内 / 外-内），再套类型</li>
+    <li><strong>安全事件题写法</strong>：判断类型 + 说破坏的属性 + 给建议，每答出一点都有分</li>
+  </ul>
+
+  <footer>
+    本表汇总第 1-20 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
+    <a href="./attacks-glossary.html">攻击词汇表</a> · <a href="./crypto-cheatsheet.html">密码学速查</a> ·
+    <a href="./pki-https-cheatsheet.html">PKI 速查</a> · <a href="./firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a> ·
+    <a href="./ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="./vulnerability-cheatsheet.html">漏洞补丁速查</a> ·
+    <a href="./malware-cheatsheet.html">恶意代码速查</a> · <a href="./honeypot-cheatsheet.html">蜜罐速查</a> ·
+    <a href="./risk-assessment-cheatsheet.html">风险评估速查</a> ·
+    <a href="./classified-protection-cheatsheet.html">等保速查</a> ·
+    <a href="./incident-response-cheatsheet.html">应急响应速查</a> ·
+    <a href="./os-security-cheatsheet.html">OS 安全速查</a> ·
+    <a href="./database-security-cheatsheet.html">数据库安全速查</a> ·
+    <a href="./network-device-cheatsheet.html">网络设备速查</a> ·
+    <a href="./website-security-cheatsheet.html">网站安全速查</a> ·
+    <a href="./cloud-security-cheatsheet.html">云计算安全速查</a> ·
+    <a href="./ics-security-cheatsheet.html">工控安全速查</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

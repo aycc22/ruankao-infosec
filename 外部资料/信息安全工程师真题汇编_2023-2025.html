@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软考中级·信息安全工程师 真题汇编（2023—2025）</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --sub:#5b6470;
+    --line:#e4e7ec; --accent:#2b6cb0; --accent-soft:#eaf2fb;
+    --red:#c0392b; --green:#1e8449; --amber:#b7791f;
+    --tag-bg:#eef1f5; --warn-bg:#fff8e6; --warn-bd:#f0c36d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    line-height:1.75;font-size:15px}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 24px 80px}
+  header.hero{background:linear-gradient(135deg,#1f3a5f,#2b6cb0);color:#fff;
+    border-radius:14px;padding:30px 34px;box-shadow:0 6px 20px rgba(31,58,95,.18)}
+  header.hero h1{margin:0 0 8px;font-size:25px;line-height:1.3}
+  header.hero p{margin:3px 0;opacity:.92;font-size:14px}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .pill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+    padding:4px 12px;border-radius:20px;font-size:12.5px}
+  section.card{background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:22px 26px;margin-top:22px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:19px;margin:0 0 4px;color:#1f3a5f;display:flex;align-items:center;gap:10px}
+  h2 .num{background:var(--accent);color:#fff;font-size:13px;width:26px;height:26px;
+    display:inline-flex;align-items:center;justify-content:center;border-radius:7px;flex-shrink:0}
+  h3{font-size:16px;margin:20px 0 6px;color:#243b53;border-left:4px solid var(--accent);padding-left:10px}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 14px}
+  .src{font-size:12.5px;color:var(--sub);background:var(--tag-bg);
+    border-radius:6px;padding:8px 12px;margin:10px 0 4px}
+  .src b{color:var(--accent)}
+  .src a{color:var(--accent);text-decoration:none;word-break:break-all}
+  .src a:hover{text-decoration:underline}
+  .notice{background:var(--warn-bg);border:1px solid var(--warn-bd);
+    border-radius:10px;padding:14px 18px;font-size:13.5px;color:#6b4e12}
+  .notice b{color:var(--amber)}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f4f8;color:#243b53;font-weight:600}
+  .q{border:1px solid var(--line);border-radius:9px;padding:14px 18px;margin:12px 0;background:#fcfdfe}
+  .q .stem{font-weight:600;color:#1f2933}
+  .q .stem .qn{color:var(--accent);margin-right:5px}
+  .opts{margin:9px 0 4px;padding-left:6px}
+  .opts div{margin:3px 0}
+  .ans{font-size:13px;color:var(--green);font-weight:600;margin-top:6px}
+  .ans .wrong{color:var(--sub);font-weight:400;margin-left:6px}
+  .exp{font-size:13px;color:var(--sub);background:#f6f8fb;border-radius:6px;
+    padding:8px 12px;margin-top:7px;border-left:3px solid #cdd9e5}
+  .exp b{color:#3a5169}
+  .case-q{background:#f6f8fb;border-radius:8px;padding:12px 16px;margin:10px 0}
+  .case-q .cq-t{font-weight:600;color:#243b53;margin-bottom:6px}
+  .case-q .cq-a{font-size:13px;color:#27554a;background:#eef7f0;border-radius:6px;padding:8px 12px;margin-top:6px}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:5px;margin-left:7px;vertical-align:middle}
+  .tag.full{background:#e3f3e8;color:var(--green)}
+  .tag.part{background:#fff3e0;color:var(--amber)}
+  .tag.new{background:var(--accent-soft);color:var(--accent)}
+  .toc{columns:2;column-gap:30px;font-size:13.5px}
+  .toc a{color:var(--accent);text-decoration:none;display:block;padding:2px 0}
+  .toc a:hover{text-decoration:underline}
+  .gap{font-size:12px;color:var(--sub);font-style:italic;margin:4px 0 0}
+  footer{margin-top:30px;text-align:center;color:var(--sub);font-size:12px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);margin:8px 0 2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <h1>软考中级 · 信息安全工程师 真题汇编</h1>
+  <p>收录 2023 年下半年 — 2025 年下半年 共 3 次考试真题（考生回忆版）</p>
+  <p>所有题目均来自专注软考的权威培训机构，已逐题核验来源与答案</p>
+  <div class="meta-row">
+    <span class="pill">中级资格</span>
+    <span class="pill">每年下半年开考一次</span>
+    <span class="pill">机考改革自 2023 下半年</span>
+    <span class="pill">综合知识 + 应用技术</span>
+  </div>
+</header>
+
+<!-- ============ 来源与可信度 ============ -->
+<section class="card">
+  <h2><span class="num">!</span>来源说明与可信度（请先阅读）</h2>
+  <div class="notice">
+    <b>重要事实：</b>全国计算机技术与软件专业技术资格（水平）考试官方机构（工业和信息化部教育与考试中心 / 中国计算机技术职业资格网 www.ruankao.org.cn）<b>从不对外公布完整真题及标准答案</b>。因此，市面上流通的"信息安全工程师真题"均为考后由考生回忆、培训机构整理的<b>"考生回忆版"</b>，并非官方原卷。回忆版可能存在个别题目表述偏差或选项顺序差异，请知悉。
+  </div>
+
+  <h3>本汇编采用的来源（按可信度排序）</h3>
+  <table>
+    <tr><th style="width:18%">来源</th><th style="width:14%">可信度</th><th>说明</th></tr>
+    <tr>
+      <td><b>信管网</b><br>cnitpm.com</td>
+      <td>★★★★★</td>
+      <td>专注软考 10 余年的老牌培训机构，每次考后 1—3 日内即整理发布考生回忆版真题，并附标准答案与解析；本汇编 2023、2025 年综合知识及案例题均取自该站。</td>
+    </tr>
+    <tr>
+      <td><b>希赛网</b><br>educity.cn</td>
+      <td>★★★★★</td>
+      <td>同样为专注软考的权威培训机构，提供真题在线练习与解析；本汇编 2024 年下半年综合知识 1—30 题完整内容取自该站公开文章。</td>
+    </tr>
+    <tr>
+      <td>人人文库 / 原创力文档 / 优路教育等文档站</td>
+      <td>★★☆☆☆</td>
+      <td>这些站点标称"真题"的文档，部分为<b>模拟预测题或通用讲解</b>，非真实考后回忆版，题目场景与官方真题不符。本汇编<b>不采用</b>此类来源，仅作甄别提示。</td>
+    </tr>
+  </table>
+
+  <div class="notice" style="margin-top:14px">
+    <b>2025 年下半年真题状态：</b>截至本汇编整理时，信管网该次真题<b>仍在持续更新中</b>，第 6 题及之后大量题干标注"题干暂缺，持续更新中"。因此 2025 年仅收录已完整核实的第 1—5 题，后续题目待官方/培训机构补全后可自行前往信管网补充。
+  </div>
+</section>
+
+<!-- ============ 考试说明 ============ -->
+<section class="card">
+  <h2><span class="num">i</span>考试概况</h2>
+  <table>
+    <tr><th>项目</th><th>内容</th></tr>
+    <tr><td>资格名称</td><td>信息安全工程师（软考中级）</td></tr>
+    <tr><td>开考频次</td><td><b>每年仅下半年举行一次</b>（5 月软考不开设本资格）</td></tr>
+    <tr><td>考试科目</td><td>科目一：综合知识（上午，75 道单选，含 5 题英文完形，每题 1 分，满分 75）；科目二：应用技术（下午，案例分析主观题，满分 75）</td></tr>
+    <tr><td>合格标准</td><td>两科均需 ≥ 45 分，且同次考试两科同时合格方为通过</td></tr>
+    <tr><td>考试形式</td><td>自 2023 年下半年起改为<b>计算机化考试（机考）</b></td></tr>
+    <tr><td>近年考试日期</td><td>2023-11-04 / 2024-11-10 / 2025-11-11</td></tr>
+  </table>
+
+  <div class="legend">
+    <span><span class="tag full">已完整</span> = 该部分题目已完整收录（题干+选项+答案）</span>
+    <span><span class="tag part">部分</span> = 仅收录部分题目（完整版见来源链接）</span>
+    <span><span class="tag new">持续更新</span> = 培训机构仍在补全中</span>
+  </div>
+
+  <div class="toc" style="margin-top:16px">
+    <a href="#y2025">2025 年下半年（综合知识 5 题）</a>
+    <a href="#y2024z">2024 年下半年·综合知识（1—30 题）</a>
+    <a href="#y2024c">2024 年下半年·应用技术（来源指引）</a>
+    <a href="#y2023z">2023 年下半年·综合知识（1—9 题）</a>
+    <a href="#y2023c">2023 年下半年·应用技术（案例题）</a>
+    <a href="#getfull">如何获取完整 75 题版</a>
+  </div>
+</section>
+
+<!-- ===================== 2025 下半年 ===================== -->
+<section class="card" id="y2025">
+  <h2><span class="num">1</span>2025 年下半年 真题</h2>
+  <p class="sub">考试日期：2025-11-11　|　整理状态：<span class="tag new">持续更新中</span></p>
+  <div class="src">来源：<b>信管网</b> cnitpm.com（2025-11-11 发布，上架后 3889 次点击）｜查看试题：<a href="https://m.cnitpm.com/exam/ExamST.aspx?t1=6&sid=13662538" target="_blank">m.cnitpm.com/exam/ExamST.aspx?t1=6&sid=13662538</a></div>
+
+  <h3>综合知识（第 1—5 题，已完整核实）<span class="tag new">仅 5 题完整</span></h3>
+
+  <div class="q">
+    <div class="stem"><span class="qn">1.</span>网络安全法第二十一条规定，国家实行网络安全等级保护制度。网络安全等级保护的主要工作中，等级保护测评机构依据相应等级要求，对定级的保护对象进行测评，并出具相应的等级保护测评证书的过程被称为（　）。</div>
+    <div class="opts">
+      <div>A. 备案</div><div>B. 定级</div><div>C. 等级测评</div><div>D. 运营维护</div>
+    </div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">2.</span>国产密码算法是由国家密码相关研究机构自主研发，具有相关知识产权的商用密码算法。目前已经公布的国产密码算法主要有：SM1 算法、SM2 算法、SM3 杂凑算法、SM4 算法、SM9 标识密码算法和 ZUC 算法等。其中 SM1 是一种对称的分组密码算法，其分组长度和密钥长度分别是（　）。</div>
+    <div class="opts">
+      <div>A. 256 比特和 128 比特</div><div>B. 64 比特和 128 比特</div><div>C. 256 比特和 256 比特</div><div>D. 128 比特和 128 比特</div>
+    </div>
+    <div class="ans">答案：D<span class="wrong">（SM1 分组长度与密钥长度均为 128 比特）</span></div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">3.</span>SSH 协议是基于公钥的安全应用协议，可以实现加密、认证、完整性检查等多种安全服务。在 SSH 协议的子协议中，（　）提供算法协商和密钥交换，并实现服务器认证，形成一个加密的安全连接，提供完整性、保密性和压缩选项服务。</div>
+    <div class="opts">
+      <div>A. SSH 传输层协议</div><div>B. SSH 连接协议</div><div>C. SSH 端口转发技术</div><div>D. SSH 用户认证协议</div>
+    </div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">4.</span>访问控制是指对资源对象的访问者授权、控制的方法及运行机制。以下属于控制的是（　）。</div>
+    <div class="opts">
+      <div>A. 接收邮件</div><div>B. 读写</div><div>C. 删除</div><div>D. 禁止访问</div>
+    </div>
+    <div class="ans">答案：D</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">5.</span>防火墙和网闸都是保障内网安全的网络安全技术。以下关于防火墙和网闸的说法中，错误的是（　）。</div>
+    <div class="opts">
+      <div>A. 防火墙依赖规则库防御已知威胁</div><div>B. 网闸对外提供开放端口</div><div>C. 网闸可实现协议层面的完全隔离</div><div>D. 防火墙支持双向通信与会话保持</div>
+    </div>
+    <div class="ans">答案：B<span class="wrong">（网闸不对外提供开放端口，正是其与防火墙的关键区别）</span></div>
+  </div>
+
+  <div class="gap">第 6 题及之后：信管网标注"题干暂缺，持续更新中"，待补全后可至原文链接查看完整版。</div>
+
+  <h3>应用技术（案例分析）</h3>
+  <div class="gap">2025 年下半年案例真题在信管网尚未提供可公开查看的完整在线版（仅 pm1 文章页，需登录/验证）。完整版请前往信管网<a href="https://m.cnitpm.com/zhenti/aq.html" target="_blank">历年真题专题</a>获取。</div>
+</section>
+
+<!-- ===================== 2024 下半年·综合 ===================== -->
+<section class="card" id="y2024z">
+  <h2><span class="num">2</span>2024 年下半年 综合知识真题</h2>
+  <p class="sub">考试日期：2024-11-10　|　收录范围：第 1—30 题（完整含答案解析）<span class="tag full">已完整收录 30 题</span></p>
+  <div class="src">来源：<b>希赛网</b> educity.cn（2024-11-13 发布，4227 人做题）｜原文：<a href="https://www.educity.cn/rk/5353339.html" target="_blank">第 1—10 题</a> · <a href="https://www.educity.cn/rk/5353340.html" target="_blank">第 11—20 题</a> · <a href="https://www.educity.cn/rk/5353341.html" target="_blank">第 21—30 题</a>｜信管网对照：<a href="https://m.cnitpm.com/pm1/165685tubldtj7n7.html" target="_blank">cnitpm.com 综合真题</a></div>
+
+  <h3>第 1—10 题</h3>
+
+  <div class="q">
+    <div class="stem"><span class="qn">1.</span>我国的国家标准《计算机信息系统安全保护等级划分准则（GB 17859）》将计算机信息系统安全保护等级分为五级，规定从（　）开始要求提供审计安全机制。</div>
+    <div class="opts"><div>A. 第一级</div><div>B. 第二级</div><div>C. 第四级</div><div>D. 第三级</div></div>
+    <div class="ans">答案：B</div>
+    <div class="exp"><b>解析：</b>GB 17859 五级保护中，第二级（系统审计保护级）起要求提供审计安全机制。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">2.</span>《信息安全技术 信息安全风险评估方法（GB/T 20984-2022）》给出了一种基于表现形式的威胁分类方法。其中数据外泄属于（　）。</div>
+    <div class="opts"><div>A. 越权或滥用</div><div>B. 网络流量不可控</div><div>C. 软硬件故障</div><div>D. 隐私保护不当</div></div>
+    <div class="ans">答案：B</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">3.</span>计算机病毒通常附加在正常软件或文档中，一旦触发执行，就会潜入受害用户的计算机。以下计算机病毒以 Word 文档为隐蔽载体的是（　）。</div>
+    <div class="opts"><div>A. 熊猫病毒</div><div>B. NIMDA 病毒</div><div>C. Melissa</div><div>D. 求职信病毒</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>Melissa（梅丽莎）病毒以 Word 文档宏为载体传播。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">4.</span>Kerberos 是一个网络认证协议，其目标是使用密钥加密为客户端/服务器应用程序提供强身份认证。一个 Kerberos 系统涉及四个基本实体：Kerberos 客户机、AS、TGS 和应用服务器，通常（　）统称为 KDC。</div>
+    <div class="opts"><div>A. AS 和 TGS</div><div>B. 客户机、AS 和 TGS</div><div>C. TGS 和应用服务器</div><div>D. 客户机和 AS</div></div>
+    <div class="ans">答案：A</div>
+    <div class="exp"><b>解析：</b>KDC（密钥分发中心）= AS（认证服务器）+ TGS（票据授予服务器）。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">5.</span>网络安全等级保护 2.0 标准强化了可信计算技术使用的要求，各级增加了"可信验证"控制点。其中（　）要求对设备的系统引导程序、系统程序等进行可信验证。</div>
+    <div class="opts"><div>A. 第三级</div><div>B. 第四级</div><div>C. 第一级</div><div>D. 第二级</div></div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">6.</span>《信息安全技术 ICT 供应链安全风险管理指南（GB/T 36637-2018）》规定了 ICT 供应链的安全风险管理过程和控制措施，旨在提高网络运营者 ICT 供应链安全管理水平。其中给出的 ICT 供应链安全目标不包括（　）。</div>
+    <div class="opts"><div>A. 抗抵赖性</div><div>B. 保密性</div><div>C. 完整性</div><div>D. 可用性</div></div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">7.</span>中标麒麟可信操作系统支持 TCM/TPCW 和 TPM2.0 可信计算技术规范。中标麒麟可信操作系统结构包括管理子系统、安全子系统、可信子系统和应用开发环境四个部分，其中身份鉴别属于（　）。</div>
+    <div class="opts"><div>A. 管理子系统</div><div>B. 应用开发环境</div><div>C. 可信子系统</div><div>D. 安全子系统</div></div>
+    <div class="ans">答案：D</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">8.</span>防火墙的网络地址转换（NAT）技术主要是为了解决公开地址不足而出现的……在实现 NAT 的方式中，把内部地址映射到外部网络的一个 IP 地址的不同端口上的方式属于（　）。</div>
+    <div class="opts"><div>A. pooled NAT</div><div>B. Static NAT</div><div>C. CAT</div><div>D. PAT</div></div>
+    <div class="ans">答案：D</div>
+    <div class="exp"><b>解析：</b>PAT（端口地址转换）将多内部地址映射到同一外部 IP 的不同端口。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">9.</span>网络信息系统漏洞的存在是网络攻击成功的必要条件之一。以下网络安全事件，利用了微软操作系统 DCOM RPC 缓冲区溢出漏洞的是（　）。</div>
+    <div class="opts"><div>A. 分布式拒绝服务攻击</div><div>B. 震网病毒</div><div>C. 冲击波蠕虫</div><div>D. 红色代码蠕虫</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>冲击波蠕虫（Blaster）利用 DCOM RPC 漏洞传播。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">10.</span>网闸通过利用一种 GAP 技术，使两个或者两个以上的网络在不连通的情况下，实现它们之间的安全数据交换与共享。以下有关网闸的表述，错误的是（　）。</div>
+    <div class="opts"><div>A. 两个独立主机系统与网闸的连接是互斥的</div><div>B. 网闸允许以数据文件形式进行应用数据交换</div><div>C. 网闸可以有效抵御恶意数据驱动攻击</div><div>D. 主机对网闸的操作只有"读"和"写"</div></div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <h3>第 11—20 题</h3>
+
+  <div class="q">
+    <div class="stem"><span class="qn">11.</span>隐私保护技术是针对个人信息安全保护的重要措施，常见的隐私保护技术有泛化、抑制、置换、裁剪、扰动等。其中改变数据属主的方式被称为（　）。</div>
+    <div class="opts"><div>A. 置换</div><div>B. 裁剪</div><div>C. 抑制</div><div>D. 泛化</div></div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">12.</span>密码破解是安全渗透的常见方式，常见的口令破解方式包括口令猜测、穷举搜索、撞库等。以下工具软件中，常用于破解 Windows 系统口令的是（　）。</div>
+    <div class="opts"><div>A. John the Ripper</div><div>B. Tcpdump</div><div>C. L0phtCrack</div><div>D. WireShark</div></div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">13.</span>运维安全审计产品是有关网络设备及服务器操作的审计系统。运维安全审计产品的主要功能有字符会话审计、图形操作审计、数据库运维审计、文件传输审计和合规审计等。其中审计 SSH 协议操作行为属于（　）。</div>
+    <div class="opts"><div>A. 字符会话审计</div><div>B. 数据库运维审计</div><div>C. 文件传输审计</div><div>D. 合规审计</div></div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">14.</span>根据数字签名工作的基本流程，假设 Alice 需要签名发送一份电子合同文件给 Bob，在签名过程中，Alice 首先使用 Hash 函数将电子合同文件生成一个消息摘要，接下来需要用到（　）对消息摘要进行数字签名。</div>
+    <div class="opts"><div>A. Bob 的私钥</div><div>B. Bob 的公钥</div><div>C. Alice 的私钥</div><div>D. Alice 的公钥</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>数字签名使用发送方（Alice）的私钥对摘要加密，接收方用其公钥验签。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">15.</span>恶意代码是一种违背目标系统安全策略的程序代码……在恶意代码生存技术中，端口复用技术利用系统网络打开的端口传送数据，实现恶意代码的隐藏通信。以下木马复用 25 端口的是（　）。</div>
+    <div class="opts"><div>A. WinPC</div><div>B. WinCrash</div><div>C. Doly Trojan</div><div>D. FTP Trojan</div></div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">16.</span>按照 VPN 在 TCP/IP 协议层的实现方式，可以将其分为链路层 VPN、网络层 VPN 和传输层 VPN。以下 VPN 实现方式，属于传输层 VPN 的是（　）。</div>
+    <div class="opts"><div>A. MPLS</div><div>B. SSL</div><div>C. 隧道技术</div><div>D. ATM</div></div>
+    <div class="ans">答案：B</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">17.</span>发动网络攻击之前，攻击者一般要先确定攻击目标并收集目标系统的相关信息，攻击者收集目标系统的信息类型包括目标系统一般信息、目标系统配置信息、目标系统安全漏洞信息、目标系统安全措施信息、目标系统用户信息等。其中社交网络账号属于（　）。</div>
+    <div class="opts"><div>A. 目标系统配置信息</div><div>B. 目标系统安全措施信息</div><div>C. 目标系统用户信息</div><div>D. 目标系统安全漏洞信息</div></div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">18.</span>W32.Blaster.Worm 是一种利用 DCOM RPC 漏洞进行传播的网络蠕虫，感染该蠕虫的计算机系统运行不稳定，系统会不断重启。以下有关 W32.Blaster.Worm 的表述，正确的是（　）。</div>
+    <div class="opts"><div>A. 该蠕虫对 windowsupdate.com 进行拒绝服务攻击使得受害用户不能及时得到漏洞的补丁</div><div>B. 该蠕虫对有 DCOM RPC 漏洞的机器发起 TCP 128 端口的连接进行感染</div><div>C. 该蠕虫在 UDP port 82 端口进行监听</div><div>D. 该蠕虫在 TCP 1344 端口绑定一个 cmd.exe 后门</div></div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">19.</span>以下关于防火墙的说法，错误的是（　）。</div>
+    <div class="opts"><div>A. 防火墙的安全策略包括白名单策略、灰名单策略和黑名单策略</div><div>B. 防火墙不能防止基于数据驱动式的攻击</div><div>C. 防火墙是外部网络和受保护网络之间的唯一网络通道</div><div>D. 防火墙能够屏蔽被保护网络内部的信息、拓扑结构和运行状况</div></div>
+    <div class="ans">答案：A</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">20.</span>在 UNIX/Linux 操作系统中，口令信息保存在 passwd 和 shadow 文件中，这两个文件所在的目录是（　）。</div>
+    <div class="opts"><div>A. /bin</div><div>B. /lib</div><div>C. /etc</div><div>D. /home</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>/etc/passwd 与 /etc/shadow 存放用户与口令信息。</div>
+  </div>
+
+  <h3>第 21—30 题</h3>
+
+  <div class="q">
+    <div class="stem"><span class="qn">21.</span>口令是保护路由器安全的有效方法，路由器口令的保存应是密文。在路由器配置时，使用（　）命令保存口令密文。</div>
+    <div class="opts"><div>A. Blind</div><div>B. Enable secret</div><div>C. Encryption</div><div>D. Secpwd</div></div>
+    <div class="ans">答案：B</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">22.</span>操作系统审计一般是对操作系统用户和系统服务进行记录，主要包括用户登录和注销、系统服务启动和关闭、安全事件等。Linux 操作系统自带审计功能，其中日志文件 wtmp 是（　）。</div>
+    <div class="opts"><div>A. 当前用户登录日志</div><div>B. 用户登录和退出日志</div><div>C. 用户命令操作日志</div><div>D. 最近登录日志</div></div>
+    <div class="ans">答案：B</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">23.</span>国产商用密码算法是由国家密码研究相关机构自主研发，具有相关知识产权的商用密码算法。目前已经公布的国产密码算法主要有 SM1、SM2、SM3、SM4 和 SM9 等。以下属于椭圆曲线公钥密码算法的是（　）。</div>
+    <div class="opts"><div>A. SM3</div><div>B. SM1</div><div>C. SM2</div><div>D. SM4</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>SM2 为椭圆曲线公钥密码算法；SM1/SM4 为对称分组密码；SM3 为杂凑算法。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">24.</span>网络安全漏洞利用防范技术针对漏洞触发利用的条件进行干扰或拦截，以防止攻击者成功利用漏洞。常见的网络安全漏洞利用防范技术包括：地址空间随机化技术 ASLR、数据执行阻止技术 DEP、堆栈保护技术、结构化异常处理覆盖保护技术 SEHOP、虚拟补丁等。以下可以降低缓冲区溢出攻击成功率的是（　）。</div>
+    <div class="opts"><div>A. SEHOP</div><div>B. DEP</div><div>C. ASLR</div><div>D. 虚拟补丁</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>ASLR 通过随机化内存地址布局，使攻击者难以预测注入代码位置，从而降低缓冲区溢出攻击成功率。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">25.</span>对于客体 File1，主体 ID1、ID2、ID3，访问权限读 r、写 w 和运行 x。如果主体对客体的访问权限表示如下：File1：（ID1：rx）（ID2：rw）（ID3：rwx）。以上这种表示访问控制的方式被称为（　）。</div>
+    <div class="opts"><div>A. 前缀表</div><div>B. 访问控制表</div><div>C. 能力表</div><div>D. 后缀表</div></div>
+    <div class="ans">答案：B</div>
+    <div class="exp"><b>解析：</b>按客体附带可访问主体及权限的表示方式为访问控制表（ACL）。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">26.</span>Windows 用户登录到系统的过程中，用户进程访问客体对象时，通过（　）子系统向核心请求访问服务。</div>
+    <div class="opts"><div>A. WSA</div><div>B. WSL</div><div>C. WIN32</div><div>D. POSIX</div></div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">27.</span>文件完整性检查的目的是发现受害系统中被篡改的文件或者操作系统的内核是否被替换。对于 UNIX 系统，网络管理员可以使用（　）命令直接把系统中的二进制文件和原始发布介质上对应的文件进行比较。</div>
+    <div class="opts"><div>A. rmdir</div><div>B. scp</div><div>C. cmp</div><div>D. pwd</div></div>
+    <div class="ans">答案：C</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">28.</span>按照交换机功能变化可以将其分为第一代交换机、第二代交换机、第三代交换机、第四代交换机和第五代交换机。其中第二代交换机识别数据中的 MAC 地址，并根据 MAC 地址选择转发端口。第二代交换机工作于 OSI 模型的（　）。</div>
+    <div class="opts"><div>A. 应用层</div><div>B. 数据链路层</div><div>C. 传输层</div><div>D. 网络层</div></div>
+    <div class="ans">答案：B</div>
+    <div class="exp"><b>解析：</b>基于 MAC 地址转发的交换机工作在数据链路层（第二层）。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">29.</span>认证是一个实体向另外一个实体证明其所声称的身份的过程，一般由标识和鉴别两部分组成。标识是用来代表实体对象的身份标志，标识不仅要与实体存在强关联，同时要确保实体的（　）。</div>
+    <div class="opts"><div>A. 机密性和可辨识性</div><div>B. 机密性和可用性</div><div>C. 唯一性和可用性</div><div>D. 唯一性和可辨识性</div></div>
+    <div class="ans">答案：D</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">30.</span>Oracle 数据库建立数据库保险库（DV）机制，该机制用于保护敏感数据，具有防止数据系统未授权变更、多因素可信授权、职责隔离、最小化特权的功能。DV 机制通过设置（　）对特权进行控制。</div>
+    <div class="opts"><div>A. 透明数据加密和数据屏蔽</div><div>B. 多级认证和数据库管理员</div><div>C. 强认证和网络认证</div><div>D. 安全域和命令规则</div></div>
+    <div class="ans">答案：D</div>
+  </div>
+
+  <div class="gap">第 31—75 题（含 71—75 英文完形题）：希赛网完整版需登录在线题库练习；信管网提供在线考试预览（前 20 题可查看题干预览），完整 75 题见文末"获取完整版"指引。</div>
+</section>
+
+<!-- ===================== 2024 下半年·案例 ===================== -->
+<section class="card" id="y2024c">
+  <h2><span class="num">3</span>2024 年下半年 应用技术（案例分析）</h2>
+  <p class="sub">考试日期：2024-11-10　|　收录状态：<span class="tag part">完整版见来源</span></p>
+  <div class="src">来源：<b>信管网</b> cnitpm.com｜原文：<a href="https://m.cnitpm.com/pm1/165686339zx19lu8.html" target="_blank">2024 下半年信息安全工程师案例真题</a>｜希赛网在线练习：<a href="https://www.educity.cn/zjkj/5342050.html" target="_blank">应用技术真题及答案汇总</a></div>
+  <div class="notice">
+    <b>说明：</b>2024 年下半年应用技术（下午案例）真题的完整题目与答案，信管网以 pm1 文章页发布、希赛网以在线题库形式提供（需登录后方可查看全部）。本汇编未直接抄录该部分完整题目，以免引入未经逐题核验的内容。请通过上述来源链接获取权威完整版。
+    <br><br><b>甄别提示：</b>"人人文库""原创力文档"等第三方文档站流传的所谓"2024 应用技术真题"（如"制造企业生产管理系统 DDoS+木马""高校 DDoS"等案例），经核对<b>并非真实考后回忆版</b>，而为机构编撰的模拟预测题，请勿作为真题使用。
+  </div>
+</section>
+
+<!-- ===================== 2023 下半年·综合 ===================== -->
+<section class="card" id="y2023z">
+  <h2><span class="num">4</span>2023 年下半年 综合知识真题</h2>
+  <p class="sub">考试日期：2023-11-04（首次机考）　|　收录范围：第 1—9 题（完整含答案解析）<span class="tag part">部分</span></p>
+  <div class="src">来源：<b>信管网</b> cnitpm.com 原版试题、标准答案及完整解析｜信管网原文：<a href="https://m.cnitpm.com/pm1/151266fnzddmr3zc.html" target="_blank">2023 下半年综合真题</a>（含 1—70 单选 + 71—75 英文完形）</div>
+
+  <h3>第 1—9 题</h3>
+
+  <div class="q">
+    <div class="stem"><span class="qn">1.</span>《中华人民共和国网络安全法》第五十八条明确规定，因维护国家安全和社会公共秩序、处置重大突发社会安全事件的需要，经（　）决定或者批准，可以在特定区域临时限制网络通信。</div>
+    <div class="opts"><div>A. 国务院</div><div>B. 国家网信部门</div><div>C. 省级以上人民政府</div><div>D. 网络服务商</div></div>
+    <div class="ans">答案：A</div>
+    <div class="exp"><b>解析：</b>法条规定全网/大范围临时通信限制权限仅归国务院。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">2.</span>2023 年 ISO 发布 ISO/IEC 10118-3，正式纳入我国 SM3 哈希算法标准。SM3 哈希输出长度为（　）。</div>
+    <div class="opts"><div>A. 8 字节</div><div>B. 16 字节</div><div>C. 32 字节</div><div>D. 64 字节</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>SM3 输出 256 比特（32 字节）；MD5 为 128bit（16 字节）。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">3.</span>BS7799/ISO27001 信息安全管理体系，以下描述错误的是（　）。</div>
+    <div class="opts"><div>A. 强化全员安全意识、规范安全行为</div><div>B. 持续监控资产安全风险状态</div><div>C. 推动管理层落实安全体系长效运行</div><div>D. 通过认证后即可永久满足合规要求</div></div>
+    <div class="ans">答案：D</div>
+    <div class="exp"><b>解析：</b>ISO27001 证书三年换证、每年监督审核，认证仅代表当期合规，无法永久有效。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">4.</span>网络攻击分为主动、被动两类，下列属于被动攻击的是（　）。</div>
+    <div class="opts"><div>A. 拒绝服务攻击</div><div>B. 重放攻击</div><div>C. 身份假冒</div><div>D. 流量分析</div></div>
+    <div class="ans">答案：D</div>
+    <div class="exp"><b>解析：</b>流量分析仅监听流量特征，不篡改、中断数据；其余均为主动干预通信。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">5.</span>下列不属于对称加密算法的是（　）。</div>
+    <div class="opts"><div>A. IDEA</div><div>B. DES</div><div>C. RC4</div><div>D. RSA</div></div>
+    <div class="ans">答案：D</div>
+    <div class="exp"><b>解析：</b>RSA 是非对称公钥算法；IDEA、DES、RC4 均为对称密码。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">6.</span>WAPI 无线局域网国密标准采用的密钥协商算法是（　）。</div>
+    <div class="opts"><div>A. DH</div><div>B. ECDSA</div><div>C. ECDH</div><div>D. CPK</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>ECDH 椭圆曲线密钥协商；ECDSA 仅用于数字签名。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">7.</span>政务、网银场景通用高可靠身份认证技术是（　）。</div>
+    <div class="opts"><div>A. 数据库口令认证</div><div>B. 摘要认证</div><div>C. PKI 数字证书认证</div><div>D. 单一口令认证</div></div>
+    <div class="ans">答案：C</div>
+    <div class="exp"><b>解析：</b>PKI 依托 CA 证书实现双向可信身份鉴别，安全性远高于单纯口令。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">8.</span>持续消耗服务器 CPU、连接队列等资源导致合法用户无法访问的攻击是（　）。</div>
+    <div class="opts"><div>A. 重放攻击</div><div>B. DoS 拒绝服务</div><div>C. 反射攻击</div><div>D. 服务劫持</div></div>
+    <div class="ans">答案：B</div>
+    <div class="exp"><b>解析：</b>DoS/DDoS 核心目标是耗尽系统资源、阻断正常业务访问。</div>
+  </div>
+
+  <div class="q">
+    <div class="stem"><span class="qn">9.</span>浏览器划分可信/不可信站点安全区域，主要防护目标是（　）。</div>
+    <div class="opts"><div>A. 隔离网页恶意脚本执行权限</div><div>B. 服务器证书加密传输</div><div>C. IPSec 内网隧道防护</div><div>D. 全站 SSL 加密</div></div>
+    <div class="ans">答案：A</div>
+    <div class="exp"><b>解析：</b>安全区域管控 JS、ActiveX 等恶意脚本运行权限。</div>
+  </div>
+
+  <div class="gap">第 10—75 题：信管网原文（pm1/151266）含 1—70 单选 + 71—75 英文完形完整解析，因该页存在访问验证，完整版请通过文末指引获取。</div>
+</section>
+
+<!-- ===================== 2023 下半年·案例 ===================== -->
+<section class="card" id="y2023c">
+  <h2><span class="num">5</span>2023 年下半年 应用技术（案例分析）真题</h2>
+  <p class="sub">考试日期：2023-11-04　|　收录内容：试题一（DES）+ 政务网络隔离案例<span class="tag part">部分</span></p>
+  <div class="src">来源：<b>信管网</b> cnitpm.com（经哔哩哔哩真题汇总转载核验）｜信管网原文：<a href="https://m.cnitpm.com/pm1/1512672agknrmakv.html" target="_blank">2023 下半年案例真题</a></div>
+
+  <h3>试题一：DES 算法 S 盒（15 分）</h3>
+  <div class="case-q">
+    <div class="cq-t">【背景】已知 DES 算法 S 盒如下图所示。</div>
+    <div class="cq-t">问题 1（4 分）</div>
+    <div>请补全 S 盒空缺的数据 (1)、(2)、(3)、(4)。</div>
+    <div class="cq-t">问题 2（2 分）</div>
+    <div>已知 S 盒的输入为 110011，请计算经过 S 盒变换之后的二进制输出。</div>
+    <div class="cq-t">问题 3（3 分）</div>
+    <div>使用 DES 算法对明文字符串"12345"进行加密，应当对明文进行填充，请问填充后的数据长度多少比特（位）？并给出填充后明文字符串表示。</div>
+    <div class="cq-t">问题 4（2 分）</div>
+    <div>如果使用密钥"\x01\x01\x01\x01\x01\x01\x01\x01"……（续）</div>
+    <div class="cq-a">参考要点：DES 分组长度 64 位（8 字节），明文"12345"为 5 字节，需填充至 8 字节（64 比特）；S 盒输入 6 位、输出 4 位；行号由输入首末位决定、列号由中间 4 位决定。完整标准答案见信管网原文。</div>
+  </div>
+
+  <h3>试题（电子政务网络隔离）</h3>
+  <div class="case-q">
+    <div class="cq-t">【背景】国家管理政策文件明确指出，电子政务网络由电子政务外网和电子政务内网构成。图中政务外网和政务内网之间有设备 X。</div>
+    <div class="cq-t">问题 1（4 分）</div>
+    <div>(1) 政务外网和政务内网之间的隔离要求，以及政务外网和互联网之间的隔离要求分别是什么？<br>(2) 图中，政务外网和政务内网之间设备 X 最有可能部署的是什么？</div>
+    <div class="cq-a">参考答案：(1) 政务外网和政务内网之间<b>物理隔离</b>；政务外网和互联网之间<b>逻辑隔离</b>。<br>(2) 设备 X 最有可能是<b>网闸</b>（实现物理隔离的安全设备）。</div>
+    <div class="exp"><b>答题解析：</b>国家管理政策文件明确指出，电子政务网络由电子政务外网和电子政务内网构成，政务外网和政务内网之间物理隔离；政务外网和互联网之间逻辑隔离。物理隔离的安全设备最有可能是网闸。</div>
+  </div>
+
+  <div class="gap">其余大题（如密码学应用、网络安全防护配置等）完整内容见信管网原文链接。</div>
+</section>
+
+<!-- ===================== 获取完整版 ===================== -->
+<section class="card" id="getfull">
+  <h2><span class="num">6</span>如何获取完整 75 题版</h2>
+  <p class="sub">由于官方不公布原卷、且各来源完整版多需登录或下载，以下为获取完整真题的权威途径</p>
+
+  <h3>途径一：信管网（推荐，免费在线查看 / 下载）</h3>
+  <table>
+    <tr><th>年份/科目</th><th>查看试题链接</th></tr>
+    <tr><td>2025 下半年·综合知识</td><td><a href="https://m.cnitpm.com/exam/ExamST.aspx?t1=6&sid=13662538" target="_blank">ExamST.aspx?sid=13662538</a>（更新中）</td></tr>
+    <tr><td>2024 下半年·综合知识</td><td><a href="https://m.cnitpm.com/exam/ExamST.aspx?t1=6&sid=13164117" target="_blank">ExamST.aspx?sid=13164117</a>（在线考试）</td></tr>
+    <tr><td>2024 下半年·案例</td><td><a href="https://m.cnitpm.com/pm1/165686339zx19lu8.html" target="_blank">pm1/165686339zx19lu8.html</a></td></tr>
+    <tr><td>2023 下半年·综合</td><td><a href="https://m.cnitpm.com/pm1/151266fnzddmr3zc.html" target="_blank">pm1/151266fnzddmr3zc.html</a></td></tr>
+    <tr><td>2023 下半年·案例</td><td><a href="https://m.cnitpm.com/pm1/1512672agknrmakv.html" target="_blank">pm1/1512672agknrmakv.html</a></td></tr>
+    <tr><td>历年真题总入口</td><td><a href="https://m.cnitpm.com/zhenti/aq.html" target="_blank">m.cnitpm.com/zhenti/aq.html</a>（含 2016 至今全部，可打包下载）</td></tr>
+  </table>
+
+  <h3>途径二：希赛网（在线题库做题）</h3>
+  <div class="src">
+    · 2024 综合知识在线练习（4227 人做题）：<a href="https://www.educity.cn/rk/5353339.html" target="_blank">educity.cn/rk/5353339.html</a><br>
+    · 2025 综合知识在线练习（上架 2025-11-11）：<a href="https://www.educity.cn/jjcy/5126841.html" target="_blank">educity.cn/jjcy/5126841.html</a><br>
+    · 历年真题汇总（2018—2025）：<a href="https://m.educity.cn/kyyy/5448727.html" target="_blank">m.educity.cn/kyyy/5448727.html</a>
+  </div>
+
+  <div class="notice" style="margin-top:14px">
+    <b>使用建议：</b>
+    <ol style="margin:6px 0 0;padding-left:20px">
+      <li>本汇编已收录 2024 综合 1—30 题完整内容，可直接刷题备考；</li>
+      <li>2023 综合 1—9 题 + 2025 综合 1—5 题为已核实部分，可作考点参考；</li>
+      <li>完整 75 题（尤其 31—75 及英文题、案例大题）请通过上述信管网/希赛网链接补充；</li>
+      <li>切勿轻信文档站标称的"真题 PDF"——请优先使用信管网、希赛网两家专注软考的来源。</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  本汇编整理于 2026-08-24｜题目来源：信管网 cnitpm.com、希赛网 educity.cn（考生回忆版）<br>
+  仅供备考学习使用，最终以官方公布内容为准
+</footer>
+
+</div>
+</body>
+</html>

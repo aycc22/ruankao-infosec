@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 7 课 · 安全审计与 SIEM</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 07 · 约 18 分钟</div>
+    <h1>让攻击留下脚印：安全审计与 SIEM</h1>
+    <p class="meta">本课目标：说清安全审计的作用；掌握日志处理链；理解 SIEM 的集中采集与关联分析；会写日志保护和事件追溯措施。</p>
+  </header>
+
+  <h2>开场：报警之后，怎样回答“谁干的”？</h2>
+  <p>
+    IDS 发出“服务器疑似被攻击”的告警后，管理员还要回答：
+    <strong>谁</strong>在<strong>什么时间</strong>，从<strong>哪里</strong>登录，执行了<strong>什么操作</strong>，结果怎样？
+    这些答案主要来自<strong>审计日志（audit log）</strong>。安全审计就是对安全相关活动进行
+    <strong>采集、记录、存储、分析和利用</strong>，让事件可发现、可追溯、可问责。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 某系统依据“正常登录行为基线”发现深夜异地登录，这属于哪种检测？</div>
+    <div class="opts">
+      <button class="opt">A. 误用检测</button>
+      <button class="opt" data-correct="true">B. 异常检测</button>
+      <button class="opt">C. 包过滤检测</button>
+      <button class="opt">D. 代理服务检测</button>
+    </div>
+    <div class="explain">答案 B。基线、轮廓、偏离都指向异常检测；特征库、签名匹配才是误用检测。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 要让一台设备直接阻断经过它的恶意流量，最合适的是？</div>
+    <div class="opts">
+      <button class="opt">A. 旁路部署 IDS</button>
+      <button class="opt" data-correct="true">B. 串联部署 IPS</button>
+      <button class="opt">C. 集中部署 SIEM</button>
+      <button class="opt">D. 离线日志归档</button>
+    </div>
+    <div class="explain">答案 B。IPS 串联在流量路径上，才能直接丢包阻断；IDS 和 SIEM 通常侧重监测、分析与告警。</div>
+  </div>
+
+  <h2>一、安全审计：记录什么、为了什么</h2>
+  <table>
+    <tr><th>审计对象</th><th>典型记录</th><th>能回答的问题</th></tr>
+    <tr><td><strong>用户行为</strong></td><td>登录、退出、增删改查、权限变更</td><td>谁在何时做了什么</td></tr>
+    <tr><td><strong>系统与应用</strong></td><td>启动停止、配置修改、错误与异常</td><td>系统何时发生了什么变化</td></tr>
+    <tr><td><strong>网络与安全设备</strong></td><td>连接、访问控制、IDS/IPS 与防火墙告警</td><td>攻击来自哪里、经过哪里</td></tr>
+    <tr><td><strong>数据库与运维</strong></td><td>SQL 操作、敏感数据访问、运维命令</td><td>数据和关键主机被怎样操作</td></tr>
+  </table>
+  <div class="callout ok">
+    <strong>审计五问：</strong>谁（Who）· 何时（When）· 从哪（Where）· 做什么（What）· 结果如何（Result）。
+    <br><strong>主要作用：</strong>监测告警、事后追溯、责任认定、电子取证与合规证明。
+  </div>
+  <p class="meta">易错点：不要把审计绝对化成“只能事后”。审计系统也可以实时分析和告警，但其核心考点是<strong>留痕与追溯</strong>，不是像 IPS 那样直接阻断流量。</p>
+
+  <h2>二、日志处理链：从碎片到证据</h2>
+  <ol>
+    <li><strong>采集</strong>：从主机、应用、数据库、网络设备和安全设备收集日志或流量；</li>
+    <li><strong>集中与规范化</strong>：统一字段、时间与格式，解决不同设备“各说各话”；</li>
+    <li><strong>存储与保护</strong>：按策略留存、备份，并防止未授权查看、修改或删除；</li>
+    <li><strong>分析与关联</strong>：搜索、统计、规则匹配，把多个低风险事件串成攻击链；</li>
+    <li><strong>告警与处置</strong>：通知人员或联动其他设备，事件结束后归档、复盘。</li>
+  </ol>
+  <div class="callout info">
+    口诀（<strong>日志处理链</strong>）：<strong>采集 → 规范 → 存储 → 关联 → 告警</strong>。
+    <br>日志来自多台设备时，必须做好<strong>时间同步</strong>；否则各设备时间不一致，事件先后顺序就可能排错。
+  </div>
+
+  <h2>三、SIEM：把分散日志“集中 + 串联”</h2>
+  <p>
+    <strong>SIEM</strong> = Security Information and Event Management，安全信息与事件管理。
+    它集中接收多种日志，把分散事件转换成可操作的信息，核心能力是
+    <strong>集中采集、规范化、关联分析、告警和报表</strong>。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>SIEM 功能</strong>）：<strong>日志集中收，格式统一看，事件关联判，风险及时报</strong>。
+  </div>
+  <p><strong>关联分析示例：</strong></p>
+  <ol>
+    <li>防火墙：同一外部 IP 在扫描多个端口；</li>
+    <li>服务器：该 IP 连续登录失败，随后登录成功；</li>
+    <li>数据库：登录成功后大量导出敏感数据；</li>
+    <li>SIEM 将三类日志按<strong>时间、源 IP、账号和资产</strong>关联，判断为高风险事件。</li>
+  </ol>
+  <p class="meta">单条日志可能只是普通异常；多源关联后，才能看到完整攻击链。SIEM 也不是“自动安全万能机”，规则、资产信息和时间若不准，仍会误报或漏报。</p>
+
+  <h2>四、日志为什么必须保护</h2>
+  <table>
+    <tr><th>风险</th><th>保护措施</th><th>目的</th></tr>
+    <tr><td>攻击者删改日志</td><td>集中远程保存、哈希校验、只追加/WORM</td><td>保护<strong>完整性</strong></td></tr>
+    <tr><td>日志泄露账号与隐私</td><td>访问控制、分权管理、传输与存储加密</td><td>保护<strong>机密性</strong></td></tr>
+    <tr><td>设备故障导致日志丢失</td><td>备份、冗余、容量监测与归档策略</td><td>保障<strong>可用性</strong></td></tr>
+    <tr><td>多设备时间线混乱</td><td>统一可靠时间源并监测时钟偏差</td><td>保证<strong>可追溯性</strong></td></tr>
+  </table>
+  <div class="callout warn">
+    <strong>三个必记陷阱：</strong>
+    <br>① 日志集中存储 ≠ 不用保护，集中后反而更需要权限控制和防篡改；
+    <br>② 哈希可发现日志是否被改，但<strong>不能阻止泄露</strong>，机密性仍靠访问控制和加密；
+    <br>③ 日志不是越多越好：应围绕安全目标记录必要字段，并按制度设定留存周期。
+  </div>
+
+  <h2>五、审计、IDS/IPS、SIEM 怎么分工</h2>
+  <table>
+    <tr><th>技术</th><th>核心任务</th><th>典型关键词</th></tr>
+    <tr><td><strong>IDS</strong></td><td>发现入侵并告警</td><td>旁路、检测、告警</td></tr>
+    <tr><td><strong>IPS</strong></td><td>发现入侵并阻断</td><td>串联、检测、阻断</td></tr>
+    <tr><td><strong>安全审计</strong></td><td>记录活动并追溯问责</td><td>留痕、追溯、取证</td></tr>
+    <tr><td><strong>SIEM</strong></td><td>集中多源日志并关联分析</td><td>集中、规范、关联、告警</td></tr>
+  </table>
+
+  <h2>六、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 下列哪项最能体现安全审计的核心价值？</div>
+    <div class="opts">
+      <button class="opt">A. 加密所有网络通信</button>
+      <button class="opt" data-correct="true">B. 留存活动记录供追溯</button>
+      <button class="opt">C. 串联设备阻断攻击</button>
+      <button class="opt">D. 签发用户数字证书</button>
+    </div>
+    <div class="explain">答案 B。安全审计的核心是对安全相关活动留痕，以支持分析、追溯、问责和取证。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · SIEM 相比单台设备查看日志，最突出的能力是？</div>
+    <div class="opts">
+      <button class="opt">A. 生成非对称密钥</button>
+      <button class="opt">B. 直接加密业务流量</button>
+      <button class="opt" data-correct="true">C. 集中日志并关联分析</button>
+      <button class="opt">D. 替代防火墙做隔离</button>
+    </div>
+    <div class="explain">答案 C。SIEM 的核心是集中多源日志，规范化后进行关联分析、告警与报表。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 为了发现归档日志是否被篡改，最合适的措施是？</div>
+    <div class="opts">
+      <button class="opt">A. 提高网络传输带宽</button>
+      <button class="opt" data-correct="true">B. 计算并安全保存摘要</button>
+      <button class="opt">C. 增加登录失败次数</button>
+      <button class="opt">D. 关闭日志访问控制</button>
+    </div>
+    <div class="explain">答案 B。对日志计算哈希摘要并安全保存，之后重新计算比较，可发现内容是否改变。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 多台设备日志的时间先后无法对齐，应优先改进哪项？</div>
+    <div class="opts">
+      <button class="opt">A. 防火墙端口策略</button>
+      <button class="opt">B. 数据传输加密算法</button>
+      <button class="opt" data-correct="true">C. 统一设备时间同步</button>
+      <button class="opt">D. 用户口令复杂程度</button>
+    </div>
+    <div class="explain">答案 C。可靠且统一的时间是跨设备还原事件顺序、开展关联分析和取证的基础。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 下列关于安全审计的描述，哪项正确？</div>
+    <div class="opts">
+      <button class="opt">A. 审计系统只能事后使用</button>
+      <button class="opt">B. 审计日志无需权限保护</button>
+      <button class="opt" data-correct="true">C. 审计可支持监测与追溯</button>
+      <button class="opt">D. 审计可以替代全部防护</button>
+    </div>
+    <div class="explain">答案 C。审计既可支持持续监测和告警，也可用于事后追溯；但不能替代防火墙、IPS 等防护技术。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · What is SIEM mainly used for?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Encrypting every packet</button>
+      <button class="opt" data-correct="true">B. Correlating security logs</button>
+      <button class="opt">C. Issuing digital certificates</button>
+      <button class="opt">D. Filtering physical access</button>
+    </div>
+    <div class="explain">答案 B。correlating security logs = 关联分析安全日志，是 SIEM 的核心用途之一。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某公司服务器被入侵后，发现本机日志已被删除，且各设备时间不一致。请给出三条改进措施。</p>
+    <div class="ans">
+      ① <strong>集中远程收集</strong>：将主机和安全设备日志实时或近实时发送到独立日志平台/SIEM；<br>
+      ② <strong>保护审计数据</strong>：实施最小权限、分权管理、哈希校验或只追加存储，并做好备份；<br>
+      ③ <strong>统一时间</strong>：使用可靠时间源同步各设备，监测并纠正时钟偏差。<br>
+      答题模板：<strong>问题 → 对应措施 → 目的</strong>，例如“本机日志易删 → 远程集中保存 → 保留证据”。
+    </div>
+  </details>
+
+  <h2>七、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 12 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch12.html">第 12 章 网络安全审计技术原理与应用</a>。</li>
+    <li><strong>口述案例（10 分钟）</strong>：不看答案，说出“服务器日志被删、设备时间混乱”的三条改进措施。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 审计五问：谁·何时·从哪·做什么·结果如何；② 日志处理链：采集→规范→存储→关联→告警；③ SIEM 功能：集中、规范、关联、告警。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 12 章 网络安全审计技术原理与应用（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li><a href="https://csrc.nist.gov/pubs/sp/800/92/final">NIST SP 800-92：Guide to Computer Security Log Management</a>（日志采集、存储、分析、处置与完整性保护）</li>
+    <li><a href="https://csrc.nist.gov/glossary/term/security_information_and_event_management">NIST CSRC：SIEM 术语定义</a>（多种日志的集中记录能力）</li>
+    <li>速查：<a href="../reference/mnemonics.html#lesson-07">第 7 课口诀</a> · <a href="./0006-ids-ips.html">第 6 课 IDS/IPS</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>“审计和 IDS 到底哪里重合”“哈希怎样证明日志没被改”都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 7 课学完了」，我会逐题进行 7 题结业测。</p>
+    <p>下一课预告：漏洞与补丁管理——系统的“洞”从哪里来，发现后如何排序修复。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

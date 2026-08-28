@@ -1,0 +1,6 @@
+.DS_Store
+.cursor/
+.claude/
+*.log
+.env
+.env.*

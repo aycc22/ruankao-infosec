@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 防火墙与 VPN</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>防火墙与 VPN 速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》防火墙 / VPN 章节 · 打印用</p>
+  </header>
+
+  <h2>一、防火墙三类技术对比（高频）</h2>
+  <table>
+    <tr><th>类型</th><th>工作层</th><th>原理</th><th>优点</th><th>缺点</th></tr>
+    <tr><td><strong>包过滤</strong></td><td>网络层</td><td>查 IP 头、源/目的 IP、端口；无状态</td><td>透明、快、成本低</td><td>易受 IP 欺骗、不查内容、安全性低</td></tr>
+    <tr><td><strong>状态检测</strong></td><td>网络/传输层</td><td>维护会话表跟踪连接状态，动态放行应答流量</td><td>高效、安全性优于包过滤</td><td>检查字段有限、不查净荷</td></tr>
+    <tr><td><strong>代理 / 应用网关</strong></td><td>应用层</td><td>代用户请求，深度解析应用协议，阻断内外直连</td><td>安全性最高、日志完善</td><td>慢、对用户不透明、协议需逐个代理</td></tr>
+  </table>
+  <p class="meta">规律：层次越高 → 查得越多 → 越安全 → 越慢。「维护连接状态表」= 状态检测。</p>
+
+  <h2>二、防火墙体系结构</h2>
+  <p><strong>堡垒主机</strong> = 一台加固的专用服务器；<strong>DMZ</strong>（<strong>D</strong>emilitarized <strong>Z</strong>one，非军事区 / 隔离区）= 内外网之间的缓冲网段（可放 Web、邮件等对外服务器）。</p>
+  <ul>
+    <li><strong>双重宿主主机</strong>：一台双网卡主机当关卡（内外网不通路；无 DMZ）</li>
+    <li><strong>屏蔽主机</strong>：包过滤路由器 + 堡垒主机（有堡垒主机，<strong>无 DMZ</strong>）</li>
+    <li><strong>屏蔽子网</strong>：两个包过滤路由器 + 堡垒主机，中间是 <strong>DMZ 区</strong>（外网只能进 DMZ，不能直入内网）</li>
+  </ul>
+  <p class="meta"><strong>资产部署位置</strong>：对外开门放 DMZ，内部自用放内网。官网→DMZ；OA/数据库→内网。</p>
+
+  <h2>三、防火墙的局限（陷阱题）</h2>
+  <p><strong>防外不防内</strong>；不检查内容（防不了 SQL 注入等应用层攻击）；不负责杀毒；不防不经过它的攻击；可能带来延迟与单点失效。</p>
+
+  <h2>四、VPN 基础</h2>
+  <p>在公共网络上建立的私有「虚信道」。五大技术：<strong>隧道、加解密、密钥管理、身份认证、访问控制</strong>（隧道是基本技术）。</p>
+  <table>
+    <tr><th>分类</th><th>场景</th></tr>
+    <tr><td>Intranet VPN</td><td>总部 ↔ 分支机构</td></tr>
+    <tr><td>Access VPN</td><td>出差员工远程接入</td></tr>
+    <tr><td>Extranet VPN</td><td>与合作方 B2B 对接</td></tr>
+  </table>
+
+  <h2>五、隧道协议与 IPSec</h2>
+  <ul>
+    <li><strong>二层隧道</strong>：PPTP（端口 TCP 1723）、L2F、L2TP（PPP 帧，常配 IPSec 加密）</li>
+    <li><strong>三层隧道</strong>：GRE、IPSec</li>
+    <li><strong>IPSec 两大协议</strong>：<strong>AH</strong>（认证头 → 完整性 + 身份认证）、<strong>ESP</strong>（封装安全载荷 → 机密性/加密）。考点：<strong>加密靠 ESP</strong></li>
+    <li>密钥管理：<strong>IKE</strong> 协议；开放 UDP 500 / 4500 端口</li>
+    <li>两种模式：<strong>隧道模式</strong>（整个 IP 包加密，VPN 常用）vs <strong>传输模式</strong>（只加密载荷）</li>
+  </ul>
+
+  <h2>六、SSL VPN（免客户端远程接入）</h2>
+  <table>
+    <tr><th></th><th>IPSec VPN</th><th>SSL VPN</th></tr>
+    <tr><td>客户端</td><td>需安装</td><td>浏览器即可，免安装</td></tr>
+    <tr><td>适用</td><td>全 IP 流量</td><td>Web 应用 / 远程接入</td></tr>
+    <tr><td>端口</td><td>UDP 500/4500</td><td>TCP 443（同 HTTPS）</td></tr>
+  </table>
+
+  <h2>七、端口速记</h2>
+  <p>HTTP 80 · HTTPS/SSL-VPN 443 · DNS 53 · PPTP 1723 · IPSec 500（IKE）/ 4500</p>
+
+  <h2>八、英文词汇</h2>
+  <p>Firewall（防火墙）· Packet filtering（包过滤）· Stateful inspection（状态检测）· Proxy（代理）·
+  DMZ（非军事区/隔离区）· VPN（虚拟专用网）· Tunnel（隧道）· AH / ESP / IKE · GRE</p>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》防火墙技术、VPN 技术章节；
+    备考笔记：<a href="https://rk.51cto.com/article/638395.html">51CTO·防火墙安全网关考点</a>、
+    <a href="https://rk.51cto.com/article/310662.html">51CTO·VPN 技术应用解析</a>。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

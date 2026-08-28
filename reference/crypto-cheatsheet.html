@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 密码学速查表</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>密码学速查表</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》密码学部分 · 对称 / 非对称 / 哈希 / 数字签名</p>
+  </header>
+
+  <h2>一、三类核心工具对照</h2>
+  <table>
+    <tr><th></th><th>对称加密</th><th>非对称加密</th><th>哈希（散列）</th></tr>
+    <tr><td><strong>密钥</strong></td><td>加密解密用同一把</td><td>公钥 / 私钥成对</td><td>无密钥</td></tr>
+    <tr><td><strong>速度</strong></td><td>快</td><td>慢</td><td>快</td></tr>
+    <tr><td><strong>算法</strong></td><td>DES（56 位，已不安全）、3DES、AES（现代标准）、IDEA、国产 SM1 / SM4</td><td>RSA、ECC、国产 SM2</td><td>MD5（128 位，已不安全）、SHA-1（已不安全）、SHA-256、国产 SM3</td></tr>
+    <tr><td><strong>用途</strong></td><td>加密数据本体</td><td>加密密钥、数字签名</td><td>完整性校验、口令存储</td></tr>
+  </table>
+
+  <h2>二、铁律四条</h2>
+  <ol>
+    <li>公钥<strong>可以公开</strong>；私钥<strong>必须保密</strong>。</li>
+    <li>公钥加密 → 只有对应私钥能解：<strong>保密</strong>。</li>
+    <li>私钥签名 → 只有对应公钥能验：<strong>认证 + 不可否认</strong>。</li>
+    <li>哈希<strong>不是加密</strong>：加密可逆（有密钥能解回原文），哈希不可逆（单向）。</li>
+  </ol>
+
+  <h2>三、数字签名流程（下午卷方案题必背）</h2>
+  <ol>
+    <li>发送方对消息计算哈希；</li>
+    <li>用<strong>自己的私钥</strong>对哈希加密 → 得到「签名」；</li>
+    <li>消息 + 签名一起发给接收方；</li>
+    <li>接收方用<strong>发送方的公钥</strong>解出哈希 1；</li>
+    <li>接收方对收到的消息重算哈希 2；哈希 1 = 哈希 2 ⇒ 消息完整 + 确实是发送方所发（不可抵赖）。</li>
+  </ol>
+
+  <h2>四、算法现状</h2>
+  <p><strong>算法淘汰与标准</strong>：淘汰三兄弟 <strong>DES、MD5、SHA-1</strong>（考题说它们「已不安全/已被攻破」）。
+  现代标准：<strong>AES、SHA-256</strong>。国产三件套：<strong>SM2</strong>（加密/签名）、<strong>SM3</strong>（哈希）、<strong>SM4</strong>（对称分组）。</p>
+
+  <h2>五、用途 → 技术对照</h2>
+  <table>
+    <tr><th>要解决什么问题</th><th>用什么技术</th></tr>
+    <tr><td>传输保密</td><td>对称加密（数据）+ 非对称加密（传密钥，即数字信封）</td></tr>
+    <tr><td>防篡改（完整性）</td><td>哈希校验</td></tr>
+    <tr><td>防冒充 / 防抵赖</td><td>数字签名（私钥签、公钥验）</td></tr>
+    <tr><td>确认身份（认证）</td><td>数字证书 / PKI（下一课）</td></tr>
+  </table>
+
+  <h2>六、英文词汇（上午卷英文题）</h2>
+  <p>Symmetric encryption（对称加密）· Asymmetric / Public-key（非对称/公钥）· Hash function（哈希函数）·
+  Digital signature（数字签名）· Plaintext（明文）· Ciphertext（密文）· Key（密钥）· Certificate（证书）</p>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》密码学部分；本表为考点浓缩，算法细节以教材为准。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

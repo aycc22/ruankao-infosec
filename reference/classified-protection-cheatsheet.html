@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 网络安全等级保护（等保 2.0）</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>网络安全等级保护（等保 2.0）速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 18 章 · GB/T 22239—2019 · 打印用</p>
+  </header>
+
+  <h2>一、核心概念</h2>
+  <ul>
+    <li><strong>等保</strong>：按等级落实网络安全建设、测评与监督检查的国家基本制度</li>
+    <li><strong>法律依据</strong>：《网络安全法》第 21 条——国家实行网络安全等级保护制度</li>
+    <li><strong>等保测评 ≠ 风险评估</strong>：测评是符合性判定；风险评估是可能性 × 损失与处置</li>
+  </ul>
+
+  <h2>二、五个工作环节</h2>
+  <ol>
+    <li><strong>定级</strong>：确定对象与安全保护等级（参考 GB/T 22240）</li>
+    <li><strong>备案</strong>：向<strong>公安机关</strong>备案；确定等级后通常 <strong>30 日内</strong></li>
+    <li><strong>建设整改</strong>：按基本要求 / 设计技术要求建设与加固</li>
+    <li><strong>等级测评</strong>：有资质<strong>第三方测评机构</strong>实施（不能自测代替）</li>
+    <li><strong>监督检查</strong>：公安机关依法监督检查</li>
+  </ol>
+  <p class="meta"><strong>等保五环节</strong>：先定级，再备案，建设整改后测评，最后监督检查（字头：定备建测监）。三级及以上常见要求：每年至少一次等级测评。</p>
+
+  <h2>三、GB 17859 五级名称</h2>
+  <table>
+    <tr><th>级</th><th>名称</th></tr>
+    <tr><td>一</td><td>用户<strong>自主</strong>保护级</td></tr>
+    <tr><td>二</td><td>系统<strong>审计</strong>保护级（审计常从此级起强调）</td></tr>
+    <tr><td>三</td><td>安全<strong>标记</strong>保护级</td></tr>
+    <tr><td>四</td><td><strong>结构</strong>化保护级</td></tr>
+    <tr><td>五</td><td><strong>访问</strong>验证保护级</td></tr>
+  </table>
+  <p class="meta"><strong>GB 17859 五级</strong>：自己审计，标完结构，才能访问（字头：自审标结访）。实务常见 2–4 级。</p>
+
+  <h2>四、核心标准对照</h2>
+  <table>
+    <tr><th>标准</th><th>用途</th></tr>
+    <tr><td>GB/T <strong>22239</strong>—2019</td><td>基本要求（等保 2.0 核心）</td></tr>
+    <tr><td>GB/T <strong>28448</strong>—2019</td><td>测评要求</td></tr>
+    <tr><td>GB/T <strong>22240</strong></td><td>定级指南</td></tr>
+    <tr><td>GB/T <strong>25070</strong></td><td>安全设计技术要求</td></tr>
+    <tr><td>GB <strong>17859</strong>—1999</td><td>五级划分准则</td></tr>
+  </table>
+
+  <h2>五、十大类（技术五 + 管理五）</h2>
+  <table>
+    <tr><th>技术：物理通信管外线，边界计算管里头，管理中心总调度</th><th>管理：制度机构配人员，建设完了抓运维</th></tr>
+    <tr><td>安全物理环境</td><td>安全管理制度</td></tr>
+    <tr><td>安全通信网络</td><td>安全管理机构</td></tr>
+    <tr><td>安全区域边界</td><td>安全管理人员</td></tr>
+    <tr><td>安全计算环境</td><td>安全建设管理</td></tr>
+    <tr><td>安全管理中心</td><td>安全运维管理</td></tr>
+  </table>
+  <p>每个等级 = <strong>安全通用要求</strong> + <strong>安全扩展要求</strong>（云 / 移动 / 物联 / 工控 / 大数据等）。</p>
+
+  <h2>六、等级测评四步</h2>
+  <ol>
+    <li>测评准备</li>
+    <li>方案编制</li>
+    <li>现场测评</li>
+    <li>报告编制</li>
+  </ol>
+  <p class="meta"><strong>等保测评四步</strong>：先准备，编方案，到现场，写报告（字头：备方现报）。</p>
+
+  <h2>七、测评类型（目标分类）</h2>
+  <table>
+    <tr><th>类型</th><th>视角</th></tr>
+    <tr><td>等级测评</td><td>等保符合性（等保 2.0 标准）</td></tr>
+    <tr><td>验收测评</td><td>用户申请验收</td></tr>
+    <tr><td>风险测评</td><td>风险管理角度</td></tr>
+  </table>
+
+  <h2>八、易错对照</h2>
+  <table>
+    <tr><th>易混</th><th>记住</th></tr>
+    <tr><td>22239 vs 17859</td><td>22239=基本要求；17859=五级划分</td></tr>
+    <tr><td>等保测评 vs 风险评估</td><td>符合性 vs 可能性×损失</td></tr>
+    <tr><td>备案机关</td><td>公安机关（不是网信办单独备案）</td></tr>
+    <tr><td>谁测评</td><td>有资质第三方机构，运营单位不能自测代替</td></tr>
+  </table>
+
+  <h2>九、下午卷模板</h2>
+  <ul>
+    <li>流程题：按「先定级，再备案……」五环节顺序写全</li>
+    <li>建设题：点名技术/管理十大类相关名 + 写 GB/T 22239</li>
+    <li>差距题：测评发现问题 → 整改 → 复测闭环</li>
+  </ul>
+
+  <footer>
+    配套：<a href="../lessons/0012-classified-protection.html">第 12 课</a> ·
+    <a href="./mnemonics.html#lesson-12">口诀</a> ·
+    <a href="./risk-assessment-cheatsheet.html">风险评估速查</a> ·
+    <a href="./textbook/ch18.html">教材精读第 18 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

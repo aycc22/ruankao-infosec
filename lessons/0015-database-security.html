@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 15 课 · 数据库系统安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 15 · 约 18 分钟</div>
+    <h1>守住数据：数据库系统安全</h1>
+    <p class="meta">本课目标：能数出八类威胁与八项机制；秒判 SQL 注入该用参数化查询；分清传输加密 / 库内库外 / TDE；记住脱敏、库防火墙、备份三类与默认端口。</p>
+  </header>
+
+  <h2>开场：主机关好了，数据还在库里</h2>
+  <p>
+    第 14 课守的是<strong>操作系统</strong>；本课落到<strong>数据真正存放的地方</strong>——数据库。
+    上午常考威胁分类、加密/脱敏/库防火墙、默认端口与 Oracle 保险库；下午案例常写「库加固清单」。
+    教材对应<strong>第 20 章</strong>。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 「文件属主可自行把读权限授给同事」属于哪种访问控制？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. DAC 自主访问控制</button>
+      <button class="opt">B. MAC 强制访问控制</button>
+      <button class="opt">C. RBAC 基于角色访问控制</button>
+      <button class="opt">D. 基于属性的访问控制 ABAC</button>
+    </div>
+    <div class="explain">答案 A。属主自主授权 = DAC（第 14 课）。库里的 GRANT/REVOKE 也常按 DAC/RBAC 考。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 用发送方私钥生成数字签名，验签时用谁的密钥？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点复习）。</div>
+  </div>
+
+  <h2>一、数据库安全保什么</h2>
+  <p>
+    数据库安全 = 保障库中数据的<strong>机密性、完整性、可用性</strong>。
+    教材把它拆成四块：<strong>管理安全、数据安全、应用安全、运行安全</strong>。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>数据库职责分离</strong>）：<strong>管库的不管审计，应用账号只用最小权</strong>（职责分离：DBA / 应用 / 审计分开）。
+  </div>
+
+  <h2>二、八类威胁（上午爱对号入座）</h2>
+  <table>
+    <tr><th>威胁</th><th>一句话</th><th>题干关键词</th></tr>
+    <tr><td>授权误用</td><td>合法用户越权或乱授权</td><td>内部人、权限过大</td></tr>
+    <tr><td>逻辑推断和汇聚</td><td>低敏数据拼出高敏结论</td><td>多次查询、平均工资反推</td></tr>
+    <tr><td>伪装</td><td>假冒合法用户进库</td><td>偷口令、会话劫持</td></tr>
+    <tr><td>旁路控制</td><td>后门绕过认证与访问控制</td><td>隐藏账号、绕过审计</td></tr>
+    <tr><td>隐蔽信道</td><td>用非正常通道偷传数据</td><td>共享内存、临时文件、时间戳编码</td></tr>
+    <tr><td>SQL 注入</td><td>把恶意 SQL 拼进查询</td><td><code>' OR '1'='1</code></td></tr>
+    <tr><td>口令破解</td><td>字典/暴力/撞库猜库口令</td><td>弱口令、默认口令</td></tr>
+    <tr><td>硬件及介质</td><td>砸机器、偷硬盘、从废弃盘恢复</td><td>物理、介质</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>数据库八类威胁</strong>）：<strong>授权乱用会推断，伪装旁路藏信道；注入撞库破口令，硬盘介质也要防</strong>（字头：权推伪旁隐注破硬）。
+  </div>
+
+  <h2>三、八项机制（下午卷可直接抄）</h2>
+  <ol>
+    <li><strong>标识与鉴别</strong>：口令、证书、多因子——先认人</li>
+    <li><strong>访问控制</strong>：DAC / MAC / RBAC；最小权限；细粒度到表/行/列</li>
+    <li><strong>安全审计</strong>：谁在何时对哪张表做了什么</li>
+    <li><strong>备份与恢复</strong>：可用性最后一道防线</li>
+    <li><strong>数据加密</strong>：传输 + 存储</li>
+    <li><strong>资源限制</strong>：限制 CPU、会话、连接数，防把库拖死</li>
+    <li><strong>安全加固</strong>：补丁、关默认账号、改默认端口、关危险存储过程</li>
+    <li><strong>安全管理</strong>：分权、流程、规范</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>数据库八项机制</strong>）：<strong>先认人，再控权，审计备份加加密，限资源再加固，管理贯穿全过程</strong>（字头：认控审备加限固管）。
+  </div>
+
+  <h2>四、SQL 注入：首选参数化，不是「过滤一下」</h2>
+  <p>
+    第 2 课已见过 <code>' OR '1'='1</code>。本课把<strong>防御优先级</strong>钉死：
+  </p>
+  <ul>
+    <li><strong>首选：参数化查询</strong>（预编译 / Prepared Statement）——输入只当<strong>数据</strong>，不当 SQL 代码</li>
+    <li>辅以：输入白名单、应用账号<strong>最小权限</strong>（没有 DROP / 没有 xp_cmdshell）</li>
+    <li>库防火墙可拦恶意 SQL，但是<strong>外围补充</strong>，不能替代参数化</li>
+  </ul>
+  <div class="callout warn">
+    易错：隐藏报错、过滤单引号、缩短口令，<strong>都挡不住</strong>注入。
+    <br>口诀（<strong>SQL 注入防护</strong>）：<strong>简单过滤挡不住注入，参数化查询才可靠</strong>。
+  </div>
+
+  <h2>五、加密：网上 SSL，落地分库内库外</h2>
+  <table>
+    <tr><th>类型</th><th>保什么</th><th>考点词</th></tr>
+    <tr><td>传输加密</td><td>应用 ↔ 库 的网上数据</td><td><strong>SSL / TLS</strong>，防窃听</td></tr>
+    <tr><td>库内加密</td><td>落盘数据；DBMS 内核加密</td><td>对应用透明；可到字段级；占库 CPU</td></tr>
+    <tr><td>库外加密</td><td>网关/硬件在库外加解密</td><td>不占库 CPU；粒度较粗（文件/表）</td></tr>
+    <tr><td><strong>TDE</strong></td><td>透明数据加密（存储）</td><td>Oracle 高级安全；英文 Transparent Data Encryption</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>数据库加密</strong>）：<strong>网上传输走 SSL，落地存储分库内库外；透明加密简称 TDE</strong>。
+  </div>
+
+  <h2>六、脱敏 + 数据库防火墙</h2>
+  <p>
+    <strong>脱敏</strong>：开发/测试/分析时不给真实敏感值。教材五种方法：<strong>屏蔽、变形、替换、随机、加密</strong>。
+    例：银行卡 <code>4346 **** **** 5379</code> 是屏蔽/替换。
+  </p>
+  <p>
+    <strong>数据库防火墙</strong>夹在应用与库之间，做 <strong>SQL 协议分析</strong>：放行合法语句、阻断违规语句。
+    普通网络防火墙<strong>不看 SQL 内容</strong>（第 5 课「防不了注入」），所以拦注入要靠参数化 + 库防火墙 / WAF。
+  </p>
+  <ul>
+    <li>屏蔽直连通道；增强认证；攻击检测</li>
+    <li><strong>虚拟补丁</strong>：库还没打补丁，也能先拦住已知漏洞利用</li>
+    <li>限制无 WHERE 的 UPDATE/DELETE、DROP、TRUNCATE</li>
+    <li>防敏感数据泄露；独立审计（DBA 改不了这份日志）</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>数据脱敏五法</strong>）：<strong>屏蔽变形替换掉，随机加密都脱敏</strong>。
+    <br>口诀（<strong>数据库防火墙</strong>）：<strong>普通防火墙不看 SQL，数据库防火墙才拦注入</strong>。
+  </div>
+
+  <h2>七、备份三类（别和增量/差异搞反）</h2>
+  <table>
+    <tr><th>类型</th><th>备份什么</th><th>恢复怎么拼</th></tr>
+    <tr><td>完全备份</td><td>当时全部数据</td><td>一份就能恢复；最慢最大</td></tr>
+    <tr><td>差异备份</td><td>相对<strong>上次完全备份</strong>的变化</td><td>全备 + <strong>最后一份差异</strong></td></tr>
+    <tr><td>增量备份</td><td>相对<strong>上一次备份</strong>（全/增均可）的变化</td><td>全备 + <strong>之后每一份增量</strong></td></tr>
+  </table>
+  <p class="meta">SQL Server 还常考四种备份方案：文件/文件组、事务日志、完全、差异；三种恢复模型：简单、完全、批量日志。</p>
+  <div class="callout warn">
+    口诀（<strong>备份三种类型</strong>）：<strong>全备最全；差异只相对上次全备；增量相对上一次任意备份</strong>。
+  </div>
+
+  <h2>八、平台关键词（认端口、认保险库）</h2>
+  <table>
+    <tr><th>库</th><th>默认端口</th><th>必背词</th></tr>
+    <tr><td>SQL Server</td><td><strong>1433</strong></td><td>关危险扩展存储过程；传输用 SSL；限制来源 IP</td></tr>
+    <tr><td>MySQL</td><td><strong>3306</strong></td><td>五张授权表：user / db / host / tables_priv / columns_priv；GRANT/REVOKE</td></tr>
+    <tr><td>Oracle</td><td>常考 1521</td><td><strong>TDE</strong>、数据屏蔽；<strong>Database Vault</strong> 用<strong>安全域 + 命令规则</strong>控特权</td></tr>
+    <tr><td>国产</td><td>—</td><td>达梦、人大金仓、神舟等；风险仍是漏洞、第三方组件、错配、受 OS 牵连</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>数据库默认端口</strong>）：<strong>SQL Server 默认一四三三，MySQL 默认三三零六</strong>。
+    <br>口诀（<strong>Oracle Database Vault</strong>）：<strong>Oracle 保险库控特权，靠的是安全域和命令规则</strong>。
+  </div>
+
+  <h2>九、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 防止 SQL 注入最有效的方法是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 参数化查询绑定用户输入</button>
+      <button class="opt">B. 仅隐藏数据库报错页面</button>
+      <button class="opt">C. 缩短数据库管理员口令</button>
+      <button class="opt">D. 关闭服务器对外 443 端口</button>
+    </div>
+    <div class="explain">答案 A。参数化把输入当数据。隐藏报错、改口令、关 443 都不是防注入的正道。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 「多次查低敏数据，拼出高管薪资」属于哪种威胁？</div>
+    <div class="opts">
+      <button class="opt">A. 合法用户越权使用权限</button>
+      <button class="opt" data-correct="true">B. 低敏数据拼出高敏信息</button>
+      <button class="opt">C. 拼接语句欺骗数据库</button>
+      <button class="opt">D. 用临时文件偷偷传数据</button>
+    </div>
+    <div class="explain">答案 B。逻辑推断和汇聚。A 是授权误用，C 是 SQL 注入，D 是隐蔽信道。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 应用与数据库之间防网上窃听，优先用？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. SSL/TLS 保护传输信道</button>
+      <button class="opt">B. 只修改默认监听端口</button>
+      <button class="opt">C. 关闭全部审计日志功能</button>
+      <button class="opt">D. 给应用账号最高管理权</button>
+    </div>
+    <div class="explain">答案 A。传输加密靠 SSL/TLS。改端口是加固辅助，关审计和超级权限是反面教材。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 测试库把真实身份证换成假号码，这是？</div>
+    <div class="opts">
+      <button class="opt">A. 数据库漏洞扫描探测</button>
+      <button class="opt" data-correct="true">B. 数据库敏感数据脱敏</button>
+      <button class="opt">C. 数据库透明存储加密</button>
+      <button class="opt">D. 数据库完全备份恢复</button>
+    </div>
+    <div class="explain">答案 B。脱敏让非生产环境看不到真值；TDE 是密文存储，不是换成假号码。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 普通网络防火墙通常拦不住 SQL 注入，主要因为？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 它通常不检查应用层语句</button>
+      <button class="opt">B. 它无法过滤任何网络流量</button>
+      <button class="opt">C. 它专门用来替换数据库</button>
+      <button class="opt">D. 它只能工作在数据库内部</button>
+    </div>
+    <div class="explain">答案 A。包过滤/状态检测不解析 SQL。拦注入靠参数化 + 库防火墙 / WAF。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · Microsoft SQL Server 默认监听端口通常是？</div>
+    <div class="opts">
+      <button class="opt">A. 3306</button>
+      <button class="opt" data-correct="true">B. 1433</button>
+      <button class="opt">C. 3389</button>
+      <button class="opt">D. 1521</button>
+    </div>
+    <div class="explain">答案 B。1433 = SQL Server；3306 = MySQL；3389 = 远程桌面；1521 常与 Oracle 相关。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Transparent Data Encryption is abbreviated as?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. SSL</button>
+      <button class="opt" data-correct="true">B. TDE</button>
+      <button class="opt">C. DAC</button>
+      <button class="opt">D. VPN</button>
+    </div>
+    <div class="explain">答案 B。TDE = Transparent Data Encryption，透明数据加密（存储侧）。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位 Web 系统后台为 MySQL，存在弱口令、明文传输和 SQL 注入风险。请写出数据库安全加固的主要措施（不少于 5 点）。</p>
+    <div class="ans">
+      ① <strong>职责分离</strong>：DBA、应用账号、审计账号分开；应用账号只给业务所需的最小权限。<br>
+      ② <strong>认证加固</strong>：改默认账号与口令；强口令策略；限制来源 IP；能关远程就关 3306 对外监听。<br>
+      ③ <strong>防注入</strong>：应用使用<strong>参数化查询</strong>；禁止拼接 SQL；必要时部署数据库防火墙 / WAF。<br>
+      ④ <strong>传输与存储加密</strong>：应用↔库走 <strong>SSL/TLS</strong>；敏感字段加密或启用透明加密；测试环境<strong>脱敏</strong>。<br>
+      ⑤ <strong>审计与高危操作</strong>：开启审计；限制无 WHERE 的更新删除、DROP 等。<br>
+      ⑥ <strong>备份恢复</strong>：制定全备 + 增量/差异策略，并定期做恢复演练。<br>
+      ⑦ 打补丁、关危险功能（如导入本地文件）、对照安全基线扫描。<br>
+      答题模板：<strong>分权最小权 + 参数化 + SSL + 脱敏/加密 + 审计备份</strong>，点到即可得分。
+    </div>
+  </details>
+
+  <h2>十、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 20 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch20.html">第 20 章 数据库系统安全</a>，对照<a href="../reference/database-security-cheatsheet.html">数据库安全速查卡</a>背威胁八类与机制八项。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：防注入首选什么；SSL 与 TDE 各保哪一段；1433 和 3306 分别是谁；差异备份相对哪一次。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① SQL 注入防护：参数化查询才可靠；② 数据库加密：网上传输走 SSL，透明加密简称 TDE；③ 数据库默认端口：SQL Server 一四三三，MySQL 三三零六。</li>
+  </ol>
+
+  <h2>十一、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 20 章 数据库系统安全（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>考试大纲 20.1–20.6（<a href="https://www.cnitpm.com/pm/32326.html">信管网转载的 2020 审定大纲结构</a>）</li>
+    <li>备考笔记（辅助）：<a href="https://www.cnblogs.com/R-bear/p/17840590.html">博客园 · 第 20 章</a></li>
+    <li>参数化查询（辅助）：<a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">OWASP SQL Injection Prevention</a></li>
+    <li>速查：<a href="../reference/database-security-cheatsheet.html">数据库安全速查</a> · <a href="../reference/mnemonics.html#lesson-15">第 15 课口诀</a> · <a href="./0014-os-security.html">第 14 课 操作系统安全</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「推断和汇聚怎么考」「TDE 和 SSL 别混」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 15 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：网络设备安全（教材第 21 章）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

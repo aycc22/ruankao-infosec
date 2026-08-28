@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 13 课 · 网络安全应急响应</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 13 · 约 18 分钟</div>
+    <h1>出事怎么办：网络安全应急响应</h1>
+    <p class="meta">本课目标：背住 PDCERF 六阶段顺序与各阶段干什么；分清「抑制」与「根除」；记住事件四级名称与预案/演练要点；下午卷能按阶段写处置步骤。</p>
+  </header>
+
+  <h2>开场：等保过了，出事还要会「灭火」</h2>
+  <p>
+    第 11 课风险评估回答「多危险、先修哪」；第 12 课等保回答「按等级建到什么程度」。
+    但系统总会遇到攻击、勒索、宕机——这时要靠<strong>网络安全应急响应</strong>（Incident Response）：
+    按标准流程控制影响、恢复业务、总结改进。
+    教材对应<strong>第 17 章</strong>；下午卷案例几乎必考「按阶段写措施」。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保工作五个环节的正确顺序是？</div>
+    <div class="opts">
+      <button class="opt">A. 测评 → 定级 → 备案 → 建设 → 检查</button>
+      <button class="opt" data-correct="true">B. 定级 → 备案 → 建设整改 → 等级测评 → 监督检查</button>
+      <button class="opt">C. 备案 → 定级 → 测评 → 建设 → 检查</button>
+      <button class="opt">D. 建设 → 定级 → 测评 → 备案 → 检查</button>
+    </div>
+    <div class="explain">答案 B。口诀：先定级，再备案，建设整改后测评，最后监督检查。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 用发送方私钥生成数字签名，验签时用谁的密钥？</div>
+    <div class="opts">
+      <button class="opt">A. 发送方私钥</button>
+      <button class="opt" data-correct="true">B. 发送方公钥</button>
+      <button class="opt">C. 接收方私钥</button>
+      <button class="opt">D. 接收方公钥</button>
+    </div>
+    <div class="explain">答案 B。私钥签名 → 公钥验签（历史易错点复习）。</div>
+  </div>
+
+  <h2>一、应急响应是什么（一句话）</h2>
+  <p>
+    组织为应对网络安全意外事件，在<strong>事发前做准备</strong>，事发时/事后<strong>按流程处置</strong>，
+    目标是：控制损失、尽快恢复、防止再犯。
+  </p>
+  <div class="callout ok">
+    英文：<strong>Incident Response</strong>（常缩写 IR）。
+    <br>团队常考：<strong>CSIRT</strong>（Computer Security Incident Response Team，计算机安全事件响应组）；
+    国内协调机构常考 <strong>CNCERT/CC</strong>（国家互联网应急中心）。
+  </div>
+
+  <h2>二、六阶段模型 PDCERF（上午必背顺序）</h2>
+  <p>教材与业界常用 <strong>PDCERF</strong> 六阶段（准备—检测—抑制—根除—恢复—跟踪/总结）：</p>
+  <table>
+    <tr><th>阶段</th><th>英文</th><th>干什么（一句话）</th></tr>
+    <tr><td>1. <strong>准备</strong></td><td>Preparation</td><td>建团队、写预案、备工具、做演练、加固与备份</td></tr>
+    <tr><td>2. <strong>检测</strong></td><td>Detection</td><td>发现异常、确认是否事件、定类型与级别、上报、保全证据</td></tr>
+    <tr><td>3. <strong>抑制</strong></td><td>Containment</td><td>限制扩散与影响范围（断网、隔离主机、封账号/端口等）</td></tr>
+    <tr><td>4. <strong>根除</strong></td><td>Eradication</td><td>找根因并彻底清除（杀恶意代码、打补丁、清后门、改口令）</td></tr>
+    <tr><td>5. <strong>恢复</strong></td><td>Recovery</td><td>从可信备份恢复业务，验证正常，持续监测防二次入侵</td></tr>
+    <tr><td>6. <strong>总结</strong></td><td>Follow-up</td><td>写报告、复盘改进、修订预案与策略、必要时再做风险评估</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>应急响应六阶段</strong>）：<strong>先准备，再检测，抑制住再根除，恢复完要总结</strong>（字头：备检抑根恢总；英文 PDCERF）。
+    <br>易混：六阶段<strong>第一个是准备</strong>（平时就做）；发现疑似事件后，处置链从<strong>检测确认</strong>开始。
+  </div>
+
+  <h2>三、易错对决：抑制 vs 根除</h2>
+  <table>
+    <tr><th>对比</th><th>抑制 Containment</th><th>根除 Eradication</th></tr>
+    <tr><td>目标</td><td>先<strong>圈住火</strong>，别再烧更大</td><td>再<strong>灭火源</strong>，别留隐患</td></tr>
+    <tr><td>典型动作</td><td>断网、隔离、关服务、封 IP/账号</td><td>清木马/后门、打补丁、重置凭证</td></tr>
+    <tr><td>题干关键词</td><td>防止扩散、限制范围、临时封堵</td><td>彻底清除、根因、修复漏洞</td></tr>
+  </table>
+  <div class="callout warn">
+    <strong>先抑制，后根除。</strong>未隔离就大规模「清理/重装」，可能毁掉证据，也可能让攻击扩散到更多主机。
+    <br>口诀（<strong>抑制 vs 根除</strong>）：<strong>抑制是圈住火，根除是灭火源</strong>。
+  </div>
+
+  <h2>四、各阶段再拆一点（方便下午卷写点）</h2>
+  <ul>
+    <li><strong>准备</strong>：CSIRT 职责与联系人；应急预案与工具包；备份策略；培训与<strong>预案演练</strong></li>
+    <li><strong>检测</strong>：SIEM/IDS/日志/用户报告；判断误报还是真事件；分级；固定证据（镜像、日志封存）</li>
+    <li><strong>抑制</strong>：短期（断连、隔离）+ 必要时调整边界规则；靠近攻击源侧抑制更有效</li>
+    <li><strong>根除</strong>：分析根因 → 清恶意残留 → 修漏洞/改配置 → 验证已干净</li>
+    <li><strong>恢复</strong>：可信备份还原 → 逐步上线 → 加强监测</li>
+    <li><strong>总结</strong>：时间线与损失评估；流程改进；更新特征/规则；培训复训</li>
+  </ul>
+  <div class="callout info">
+    取证原则（常考表述）：尽可能<strong>先保全证据再深度处置</strong>；关键操作留记录、可追溯（双人、时间戳等）。
+  </div>
+
+  <h2>五、事件分级（四级名称必背）</h2>
+  <p>
+    国家层面网络安全事件通常按影响分为四级（名称从重到轻）：
+  </p>
+  <table>
+    <tr><th>级别</th><th>名称</th><th>记忆锚点</th></tr>
+    <tr><td>I 级</td><td><strong>特别重大</strong></td><td>最严重</td></tr>
+    <tr><td>II 级</td><td><strong>重大</strong></td><td>次严重</td></tr>
+    <tr><td>III 级</td><td><strong>较大</strong></td><td>中等</td></tr>
+    <tr><td>IV 级</td><td><strong>一般</strong></td><td>较轻</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>事件四级分类</strong>）：<strong>特别重大最要紧，重大较大一般跟</strong>（字头：特重大较一）。级别越高，上报与指挥层级越高、时限越紧。</p>
+  <p>
+    事件类型题干常出现：有害程序、网络攻击、信息破坏、信息内容安全、设备设施故障、灾害性事件等——
+    答题时先<strong>判类型</strong>再<strong>定级别</strong>，再套六阶段写措施。
+  </p>
+
+  <h2>六、应急预案与演练</h2>
+  <ul>
+    <li><strong>预案</strong>：组织、职责、分级标准、报告流程、处置步骤、联系人与资源清单</li>
+    <li><strong>演练</strong>：让预案「跑得起来」；发现流程缺口；不能只写在纸上</li>
+    <li>与等保衔接：运维管理类常要求应急预案、备份恢复与事件处置能力</li>
+  </ul>
+
+  <h2>七、和前几课怎么串</h2>
+  <ul>
+    <li>IDS/SIEM → 支撑<strong>检测</strong></li>
+    <li>防火墙/隔离 → 支撑<strong>抑制</strong></li>
+    <li>补丁/专杀/加固 → 支撑<strong>根除</strong></li>
+    <li>备份 → 支撑<strong>恢复</strong></li>
+    <li>风险评估 → 准备阶段识别薄弱点；总结阶段可再评估</li>
+    <li>等保 → 制度与运维要求里常含应急与备份条款</li>
+  </ul>
+
+  <h2>八、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · PDCERF 六阶段的正确顺序是？</div>
+    <div class="opts">
+      <button class="opt">A. 检测 → 准备 → 根除 → 抑制 → 恢复 → 总结</button>
+      <button class="opt" data-correct="true">B. 准备 → 检测 → 抑制 → 根除 → 恢复 → 总结</button>
+      <button class="opt">C. 准备 → 抑制 → 检测 → 恢复 → 根除 → 总结</button>
+      <button class="opt">D. 检测 → 根除 → 抑制 → 准备 → 恢复 → 总结</button>
+    </div>
+    <div class="explain">答案 B。口诀：先准备，再检测，抑制住再根除，恢复完要总结。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 「断开受害主机网络，防止木马继续横向传播」主要属于哪一阶段？</div>
+    <div class="opts">
+      <button class="opt">A. 准备</button>
+      <button class="opt">B. 检测</button>
+      <button class="opt" data-correct="true">C. 抑制</button>
+      <button class="opt">D. 恢复</button>
+    </div>
+    <div class="explain">答案 C。限制扩散 = 抑制。清除木马本体才是根除。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 「清除后门、修补漏洞、重置被盗用口令」主要属于哪一阶段？</div>
+    <div class="opts">
+      <button class="opt">A. 抑制</button>
+      <button class="opt" data-correct="true">B. 根除</button>
+      <button class="opt">C. 恢复</button>
+      <button class="opt">D. 总结</button>
+    </div>
+    <div class="explain">答案 B。找根因并彻底清除隐患 = 根除。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 网络安全事件四级中，最严重的一级名称是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 特别重大</button>
+      <button class="opt">B. 重大</button>
+      <button class="opt">C. 较大</button>
+      <button class="opt">D. 一般</button>
+    </div>
+    <div class="explain">答案 A。特别重大 → 重大 → 较大 → 一般。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 下列哪项通常属于「准备」阶段的工作？</div>
+    <div class="opts">
+      <button class="opt">A. 从备份还原业务系统</button>
+      <button class="opt" data-correct="true">B. 制定应急预案并开展演练</button>
+      <button class="opt">C. 编写事件处置总结报告</button>
+      <button class="opt">D. 隔离已被入侵的主机</button>
+    </div>
+    <div class="explain">答案 B。预案与演练在事发前；A 是恢复，C 是总结，D 是抑制。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 关于抑制与根除，下列说法正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 应先彻底清杀再考虑隔离</button>
+      <button class="opt" data-correct="true">B. 应先限制扩散，再彻底清除根因</button>
+      <button class="opt">C. 抑制与根除可以完全互换顺序</button>
+      <button class="opt">D. 根除完成后就不必再做恢复验证</button>
+    </div>
+    <div class="explain">答案 B。先抑制后根除；恢复阶段还要验证与监测。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Incident response stage that limits the spread of an attack is called?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Preparation</button>
+      <button class="opt">B. Eradication</button>
+      <button class="opt" data-correct="true">C. Containment</button>
+      <button class="opt">D. Recovery</button>
+    </div>
+    <div class="explain">答案 C。Containment = 抑制（限制扩散）。Eradication = 根除。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某电商平台多台 Web 服务器疑似被植入后门，部分用户数据可能泄露。请按应急响应主要阶段简述处置要点。</p>
+    <div class="ans">
+      ① <strong>检测</strong>：确认告警/异常是否属实；判定类型（网络攻击/有害程序等）与级别；上报；保全日志与磁盘镜像等证据。<br>
+      ② <strong>抑制</strong>：隔离受害主机或切断对外危险连接；封堵攻击源 IP；必要时下线受影响服务，防止横向扩散与继续外泄。<br>
+      ③ <strong>根除</strong>：分析入侵路径与根因；清除后门/木马；修补漏洞；重置凭证；全网排查同类隐患。<br>
+      ④ <strong>恢复</strong>：从可信备份/干净镜像恢复；验证业务与数据完整性；加强监测防二次入侵。<br>
+      ⑤ <strong>总结</strong>：写事件报告；复盘流程；修订预案与基线；必要时再做风险评估。<br>
+      （准备阶段若题干问「事前」：补写团队、预案、备份与演练。）<br>
+      答题模板：<strong>按备检抑根恢总顺序写 + 每阶段 1～2 个具体动作 + 点出先抑制后根除</strong>。
+    </div>
+  </details>
+
+  <h2>九、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 17 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch17.html">第 17 章 网络安全应急响应</a>，对照<a href="../reference/incident-response-cheatsheet.html">应急响应速查卡</a>背六阶段。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出「先准备，再检测……」；各举一个抑制动作、一个根除动作；四级名称从重到轻。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 应急响应六阶段：备检抑根恢总；② 抑制 vs 根除：抑制圈火、根除灭源；③ 事件四级分类：特别重大最要紧；④ Containment = 抑制。</li>
+  </ol>
+
+  <h2>十、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 17 章 网络安全应急响应技术原理与应用（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>概念与流程梳理（辅助）：<a href="https://www.moondream.cn/?p=2784">月梦工作室 · 应急响应</a> · <a href="https://www.cnblogs.com/mr-ryan/p/17408108.html">博客园 · PDCERF 介绍</a></li>
+    <li>速查：<a href="../reference/incident-response-cheatsheet.html">应急响应速查</a> · <a href="../reference/mnemonics.html#lesson-13">第 13 课口诀</a> · <a href="./0012-classified-protection.html">第 12 课 等保</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「抑制和根除怎么快速判断」「下午卷六阶段怎么写满」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 13 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：系统安全深化（操作系统 / 数据库等，按路线图继续）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

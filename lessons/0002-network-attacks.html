@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 2 课 · 常见网络攻击手法</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 02 · 约 20 分钟</div>
+    <h1>攻击者是怎么进来的：常见网络攻击手法</h1>
+    <p class="meta">本课目标：记住攻击一般过程的八步；看到攻击场景能认出是哪类手法（上午卷高频单选）。</p>
+  </header>
+
+  <h2>开场：攻击 = 破坏安全属性</h2>
+  <p>
+    上一课我们学了 CIA——信息安全追求的「好状态」。攻击者干的事正好相反：<strong>把好状态破坏掉</strong>。
+    教材把攻击的危害归纳为四类：<strong>信息泄露</strong>（破坏机密性）、<strong>完整性破坏</strong>（破坏完整性）、
+    <strong>拒绝服务</strong>（破坏可用性）、<strong>非法使用</strong>（破坏可用性与可控性）。
+    所以记住第 1 课的 CIA，第 2 课的一切都有了解释。
+  </p>
+
+  <h2>一、攻击一般过程：八步走</h2>
+  <p>
+    一次「专业」的攻击不是一锤子买卖，而是有章法的流程。教材给出的八步是<strong>上午卷的常客</strong>，
+    考法通常是「某某动作属于哪一步」。先记框架，前四步在<strong>门外</strong>，后四步在<strong>门里</strong>：
+  </p>
+  <table>
+    <tr><th></th><th>步骤</th><th>干什么</th><th>典型动作</th></tr>
+    <tr><td rowspan="4"><strong>门外</strong><br>藏身摸底</td><td>1 隐藏攻击源</td><td>先藏好自己</td><td>跳板机、代理、伪造 IP</td></tr>
+    <tr><td>2 收集目标信息</td><td>摸清目标资产</td><td>端口扫描、查 IP/OS/用户</td></tr>
+    <tr><td>3 挖掘漏洞信息</td><td>找突破口</td><td>漏洞扫描、试默认口令</td></tr>
+    <tr><td>4 获取访问权限</td><td>进门</td><td>口令破解、缓冲区溢出</td></tr>
+    <tr><td rowspan="4"><strong>门里</strong><br>偷完溜</td><td>5 隐蔽攻击行为</td><td>别被发现</td><td>改日志、隐藏进程文件</td></tr>
+    <tr><td>6 实施攻击</td><td>动手</td><td>删改数据、窃听、停服务</td></tr>
+    <tr><td>7 开辟后门</td><td>留个门</td><td>放宽权限、植入木马</td></tr>
+    <tr><td>8 清除攻击痕迹</td><td>抹痕迹</td><td>篡改日志、改系统时间</td></tr>
+  </table>
+  <p class="meta">口诀（<strong>攻击八步·门外</strong>）：<strong>藏身 → 摸底 → 找洞 → 进门</strong>。<br>口诀（<strong>攻击八步·门里</strong>）：<strong>隐迹 → 动手 → 留门 → 抹痕</strong>。</p>
+
+  <h2>二、常见攻击手法速查</h2>
+  <p>下面是上午卷出现频率最高的十种手法，只记「原理一句话 + 防御一句话」。完整对照表（含英文）在
+    <a href="../reference/attacks-glossary.html">攻击手法词汇表</a>，建议打印。</p>
+  <table>
+    <tr><th>手法</th><th>原理（一句话）</th><th>防御（一句话）</th></tr>
+    <tr><td><strong>端口扫描</strong></td><td>探测目标开哪些端口、跑什么服务</td><td>关闭无关端口，防火墙过滤</td></tr>
+    <tr><td><strong>口令破解</strong></td><td>暴力试 / 字典试 / 撞库试出口令</td><td>强口令 + 多因子认证 + 限次数</td></tr>
+    <tr><td><strong>缓冲区溢出</strong></td><td>超长数据覆盖函数返回地址，跳去执行恶意代码</td><td>NX、ASLR、Canary、安全编码</td></tr>
+    <tr><td><strong>SQL 注入</strong></td><td>把恶意 SQL 拼进查询语句骗数据库</td><td>参数化查询、输入过滤</td></tr>
+    <tr><td><strong>跨站脚本 XSS</strong></td><td>往网页里注入脚本，偷 Cookie、冒充用户</td><td>输出转义、CSP 策略</td></tr>
+    <tr><td><strong>恶意代码</strong></td><td>病毒（感染宿主）、蠕虫（自传播）、木马（伪装）、勒索（加密要赎金）</td><td>防病毒软件 + 补丁 + 最小权限</td></tr>
+    <tr><td><strong>拒绝服务 DoS/DDoS</strong></td><td>耗尽资源让服务瘫痪；DDoS = 控制大量肉鸡一起打</td><td>抗 DDoS、限流、冗余</td></tr>
+    <tr><td><strong>网络钓鱼</strong></td><td>假冒银行/客服等可信方，骗你交出账号密码</td><td>安全意识 + 多因子认证</td></tr>
+    <tr><td><strong>网络窃听 / 中间人</strong></td><td>截获通信数据包，中间人还可篡改</td><td>加密通信（TLS、VPN）</td></tr>
+    <tr><td><strong>会话劫持</strong></td><td>偷走你的会话标识（Cookie），直接顶号</td><td>HTTPS、会话绑定、定期过期</td></tr>
+  </table>
+  <p>还有一个常考套路：<strong>社交工程</strong>——不攻系统，专攻人心（冒充 IT 支持骗你密码）。记住它是「利用人性弱点」就够了。</p>
+
+  <h2>三、动手练一练（点击选项，立刻看对错）</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 攻击者进入目标系统后，修改系统日志、删除审计记录。这属于攻击一般过程的哪一步？</div>
+    <div class="opts">
+      <button class="opt">A. 隐蔽攻击行为</button>
+      <button class="opt">B. 实施攻击行为</button>
+      <button class="opt">C. 开辟后门通道</button>
+      <button class="opt" data-correct="true">D. 清除攻击痕迹</button>
+    </div>
+    <div class="explain">答案 D。改日志、删审计记录 = 销毁证据 = 第 8 步「清除攻击痕迹」。A「隐蔽攻击行为」（第 5 步）是在攻击过程中藏动作，C（第 7 步）是留后门。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 端口扫描中，只完成 TCP 三次握手的前两步就断开、不留下完整连接记录的方式是？</div>
+    <div class="opts">
+      <button class="opt">A. 完全连接扫描</button>
+      <button class="opt" data-correct="true">B. 半连接扫描</button>
+      <button class="opt">C. 反向连接扫描</button>
+      <button class="opt">D. 随机连接扫描</button>
+    </div>
+    <div class="explain">答案 B。半连接（SYN）扫描只发 SYN 收 SYN/ACK 就完事，不完成第三次握手，隐蔽性最好（Nmap -sS）。完全连接扫描准确但会在日志里留记录。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 攻击者在登录框输入 <code>' OR '1'='1</code> 实现无密码登录。这是哪种攻击？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. SQL注入攻击</button>
+      <button class="opt">B. 跨站脚本攻击</button>
+      <button class="opt">C. 会话劫持攻击</button>
+      <button class="opt">D. 拒绝服务攻击</button>
+    </div>
+    <div class="explain">答案 A。SQL 注入的经典考题：恶意语句拼进查询，让条件恒为真（'1'='1），绕过认证。防御：参数化查询——数据库只把输入当数据，不当代码。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 黑客控制大量「肉鸡」同时向目标网站发起洪泛攻击，使其瘫痪无法访问。这属于？</div>
+    <div class="opts">
+      <button class="opt">A. SQL注入攻击</button>
+      <button class="opt">B. 跨站脚本攻击</button>
+      <button class="opt" data-correct="true">C. 分布式拒绝服务</button>
+      <button class="opt">D. 会话劫持攻击</button>
+    </div>
+    <div class="explain">答案 C。DDoS = Distributed Denial of Service。关键词「肉鸡」「洪泛」「瘫痪」都指向它。它破坏的是可用性（想想第 1 课：瘫痪 = 防「」字诀？）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 员工收到「您中奖了」邮件，点开链接后被诱导输入了网银账号和密码。这是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 网络钓鱼攻击</button>
+      <button class="opt">B. 端口扫描攻击</button>
+      <button class="opt">C. 缓冲区溢出攻击</button>
+      <button class="opt">D. 中间人攻击</button>
+    </div>
+    <div class="explain">答案 A。钓鱼 = 假冒可信方（中奖、客服、银行）骗敏感信息。它和社交工程常常组合出现——一个骗的是「系统」，一个骗的是「人」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · Which attack type steals a user's session identifier to impersonate the victim?（英文题）</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. Session hijacking</button>
+      <button class="opt">B. SQL injection</button>
+      <button class="opt">C. Buffer overflow</button>
+      <button class="opt">D. Social engineering</button>
+    </div>
+    <div class="explain">答案 A。session hijacking = 会话劫持，偷「session identifier」（会话标识）顶号。把这批英文词都收进词汇表：<a href="../reference/attacks-glossary.html">攻击手法词汇表</a>。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某公司 Web 服务器频繁出现「SYN 半连接占满」告警，网站间歇性无法访问。请判断：① 攻击类型？② 破坏了哪个安全属性？③ 一条防御建议。</p>
+    <div class="ans">
+      ① SYN Flood（拒绝服务攻击的一种）：伪造源 IP 发大量 SYN 包，占满半连接队列。<br>
+      ② 可用性——服务「瘫痪」了。<br>
+      ③ 答出任意一条即可：部署抗 DDoS 设备 / 设置半连接队列阈值与 SYN Cookie / 限流 / 冗余部署。
+      下午卷就这个套路：判断类型 + 说属性 + 给建议。每答出一点都有分，别空着。
+    </div>
+  </details>
+
+  <h2>四、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>报名确认（如果还没报）</strong>：先去 <a href="https://www.ruankao.org.cn">ruankao.org.cn</a> 核实本省报名窗口——多地 8 月底就截止，这事比任何课程都优先。</li>
+    <li><strong>精读第 2 章（30 分钟）</strong>：<a href="../reference/textbook/ch02.html">教材精读 · 第 2 章 网络攻击</a>，重点看攻击八步和常见攻击手法，找出本课没提的一种攻击。</li>
+    <li><strong>睡前默写（5 分钟）</strong>：按考点背——① 攻击八步·门外：藏身摸底找洞进门；② 攻击八步·门里：隐迹动手留门抹痕。</li>
+  </ol>
+
+  <h2>五、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 2 章「网络攻击原理与常用方法」（<a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_10980501.html">清华大学出版社</a>）</li>
+    <li>备考笔记：<a href="https://zhuanlan.zhihu.com/p/400674531">知乎·第 2 章网络攻击原理</a>、<a href="https://www.cnblogs.com/devdog/p/15533215.html">博客园·备考笔记第二章</a></li>
+    <li>速查卡：<a href="../reference/attacks-glossary.html">攻击手法词汇表</a>（打印）· <a href="../reference/exam-overview.html">考试全貌速查</a> · <a href="./0001-exam-overview-and-cia.html">上一课：CIA 三元组</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有任何不清楚的地方，随时问你的老师（我）。</strong>比如「半连接扫描为什么隐蔽」「撞库和字典攻击什么区别」——都是好问题。</p>
+    <p>下一课预告：密码学入门（对称加密、非对称加密、哈希）——科目一第三大知识域，也是理解数字签名、PKI 的地基。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教材精读 · 第 13 章 网络安全漏洞防护技术原理与应用</title>
+<link rel="stylesheet" href="../../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Textbook · 第 13 章 · 约 15 分钟</div>
+    <h1>网络安全漏洞防护技术原理与应用</h1>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 8 课 ·
+      <a href="../textbook-index.html">教材目录</a></p>
+  </header>
+
+  <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
+    · <a href="../textbook-index.html">相关课程</a></p>
+
+  <h2>13.1 漏洞概述</h2>
+  <ul>
+    <li>漏洞又称脆弱性：使系统与安全策略冲突的缺陷。</li>
+    <li>普通漏洞：信息已公开且已有修补方案；<strong>零日漏洞</strong>：新发现且<strong>尚无补丁</strong>，常用于定向攻击。</li>
+    <li>危害：敏感信息泄露、非授权访问、身份假冒、拒绝服务、权限提升。</li>
+  </ul>
+  <h2>13.2 分类与管理</h2>
+  <ul>
+    <li>国际：<strong>CVE</strong> 统一编号（如 CVE-2019-1543）；<strong>CVSS</strong> 十分制评分（基本/时序/环境度量，分越高越危险）。</li>
+    <li>国内：<strong>CNNVD</strong> 国家信息安全漏洞库；<strong>CNVD</strong> 国家信息安全漏洞共享平台（高/中/低）。</li>
+    <li>来源：非技术性（责任、策略、技能、监督、特权）+ 技术性（设计、输入验证、溢出、配置、竞争条件等）。</li>
+    <li>管理五步：资产确认 → 信息采集 → 评估 → 消除和控制 → 变化跟踪。</li>
+  </ul>
+  <h2>13.3 扫描技术</h2>
+  <ul>
+    <li>主机扫描：不建网络连接，查本机文件/配置；COPS、Tiger、MBSA。</li>
+    <li>网络扫描：先建连再发请求；Nmap、Nessus、X-Scan。</li>
+    <li>专用扫描：Web / 数据库 / 网络设备 / 工控。</li>
+  </ul>
+  <h2>13.4 处置技术</h2>
+  <ul>
+    <li>补丁六环节：现状分析、补丁跟踪、补丁验证、补丁安装、应急处理、补丁检查。</li>
+    <li>利用防范：ASLR、DEP、SEHOP、堆栈保护、<strong>虚拟补丁</strong>（IPS/WAF/UTM 拦截利用，不替代官方补丁）。</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>易错陷阱：</strong>
+    <br>漏扫≠渗透测试：扫描是发现已知漏洞，渗透是验证利用。
+    <br>CNNVD 是库，CNVD 是共享平台。
+    <br>零日 = 尚无补丁。
+  </div>
+
+  <h2>章末自测（1 题）</h2>
+  <div class="quiz">
+    <div class="q">Q · 发现系统已知漏洞的工具是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 漏洞扫描器</button>
+      <button class="opt">B. 防火墙</button>
+      <button class="opt">C. 网闸</button>
+      <button class="opt">D. WAF</button>
+    </div>
+    <div class="explain">答案 A。详见上文必背考点。</div>
+  </div>
+
+  <footer>
+    来源：《信息安全工程师教程（第 2 版）》第 13 章 · 2020 年审定大纲。
+    本页为考点提炼，供无教材考生复习使用。
+  </footer>
+</main>
+<script src="../../assets/quiz.js"></script>
+<script src="../../assets/course-nav.js"></script>
+</body>
+</html>
