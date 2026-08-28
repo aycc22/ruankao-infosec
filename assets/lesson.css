@@ -54,9 +54,17 @@ body {
 }
 
 .sidebar-brand {
+  display: block;
   font-family: "Songti SC", "Noto Serif SC", Georgia, serif;
   font-size: 1.05rem;
   font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.sidebar-brand:hover {
+  color: var(--accent-3);
+  text-decoration: none;
 }
 
 .sidebar-sub {

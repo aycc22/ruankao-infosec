@@ -1,0 +1,49 @@
+// 共享课程目录（首页、侧栏导航、Service Worker 预缓存共用）
+// 新课发布时：在此登记，并确保 lessons/ 下 HTML 已创建
+var COURSE_CATALOG = {
+  lessons: [
+    { file: '0001-exam-overview-and-cia.html', label: '第 1 课', title: '考试地图与 CIA' },
+    { file: '0002-network-attacks.html', label: '第 2 课', title: '常见网络攻击手法' },
+    { file: '0003-crypto-basics.html', label: '第 3 课', title: '密码学入门' },
+    { file: '0004-pki-https.html', label: '第 4 课', title: '数字证书与 PKI' },
+    { file: '0005-firewall-vpn.html', label: '第 5 课', title: '防火墙与 VPN' },
+    { file: '0006-ids-ips.html', label: '第 6 课', title: 'IDS 与 IPS' },
+    { file: '0007-security-audit-siem.html', label: '第 7 课', title: '安全审计与 SIEM' },
+    { file: '0008-vulnerability-patch.html', label: '第 8 课', title: '漏洞与补丁管理' },
+    { file: '0009-malware-defense.html', label: '第 9 课', title: '恶意代码防范' },
+    { file: '0010-active-defense-honeypot.html', label: '第 10 课', title: '主动防御与蜜罐' },
+    { file: '0011-network-risk-assessment.html', label: '第 11 课', title: '网络安全风险评估' },
+    { file: '0012-classified-protection.html', label: '第 12 课', title: '等保 2.0 等级保护' },
+    { file: '0013-incident-response.html', label: '第 13 课', title: '网络安全应急响应' },
+    { file: '0014-os-security.html', label: '第 14 课', title: '操作系统安全' },
+    { file: '0015-database-security.html', label: '第 15 课', title: '数据库系统安全' },
+    { file: '0016-network-device-security.html', label: '第 16 课', title: '网络设备安全' },
+    { file: '0017-website-security.html', label: '第 17 课', title: '网站安全' },
+    { file: '0018-milestone-review.html', label: '第 18 课', title: '第一阶段总结' },
+    { file: '0019-cloud-security.html', label: '第 19 课', title: '云计算安全' },
+    { file: '0020-ics-security.html', label: '第 20 课', title: '工控安全' }
+  ],
+  references: [
+    { file: 'textbook-index.html', label: '教材精读', title: '官方教程 26 章考点' },
+    { file: 'exam-overview.html', label: '考试全貌', title: '考试全貌与安全属性' },
+    { file: 'exam-2023-2025.html', label: '23–25考点', title: '2023–2025 机考考点分布' },
+    { file: 'attacks-glossary.html', label: '攻击词汇', title: '网络攻击手法词汇表' },
+    { file: 'crypto-cheatsheet.html', label: '密码学', title: '密码学速查表' },
+    { file: 'pki-https-cheatsheet.html', label: 'PKI/HTTPS', title: '证书 / PKI / HTTPS' },
+    { file: 'firewall-vpn-cheatsheet.html', label: '防火墙/VPN', title: '防火墙与 VPN 速查' },
+    { file: 'ids-ips-cheatsheet.html', label: 'IDS/IPS', title: 'IDS 与 IPS 速查' },
+    { file: 'vulnerability-cheatsheet.html', label: '漏洞/补丁', title: '漏洞扫描与补丁管理' },
+    { file: 'malware-cheatsheet.html', label: '恶意代码', title: '病毒蠕虫木马与 Botnet' },
+    { file: 'honeypot-cheatsheet.html', label: '蜜罐', title: '主动防御与蜜罐速查' },
+    { file: 'risk-assessment-cheatsheet.html', label: '风险评估', title: '网络安全风险评估速查' },
+    { file: 'classified-protection-cheatsheet.html', label: '等保2.0', title: '网络安全等级保护速查' },
+    { file: 'incident-response-cheatsheet.html', label: '应急响应', title: '网络安全应急响应速查' },
+    { file: 'os-security-cheatsheet.html', label: 'OS安全', title: '操作系统安全速查' },
+    { file: 'database-security-cheatsheet.html', label: '数据库安全', title: '数据库系统安全速查' },
+    { file: 'network-device-cheatsheet.html', label: '网络设备', title: '网络设备安全速查' },
+    { file: 'website-security-cheatsheet.html', label: '网站安全', title: '网站安全速查' },
+    { file: 'cloud-security-cheatsheet.html', label: '云计算安全', title: '云计算安全速查' },
+    { file: 'ics-security-cheatsheet.html', label: '工控安全', title: '工控安全速查' },
+    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-20 课口诀汇总' }
+  ]
+};
