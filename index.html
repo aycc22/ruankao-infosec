@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软考信息安全工程师 · 2026 备考课程</title>
+<meta name="description" content="软考信息安全工程师备考微课：考点导向、课内自测、口诀速查。支持手机添加到主屏幕离线学习。">
+<link rel="stylesheet" href="assets/lesson.css">
+<link rel="stylesheet" href="assets/home.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2f5d50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="软考信安">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" type="image/png">
+</head>
+<body class="home-body">
+<div class="home-wrap">
+  <header class="home-hero">
+    <h1 class="home-brand">软考信息安全工程师</h1>
+    <p class="home-sub">2026 备考 · 考点导向微课 · 每课 15–20 分钟</p>
+    <div class="home-actions">
+      <a class="home-btn primary" href="lessons/0020-ics-security.html">从第 20 课开始</a>
+      <a class="home-btn" href="reference/mnemonics.html">口诀速查</a>
+      <button type="button" class="home-btn" id="pwa-install" hidden>添加到主屏幕</button>
+    </div>
+    <p id="pwa-status" class="pwa-status" aria-live="polite"></p>
+  </header>
+
+  <div id="continue-learning"></div>
+
+  <h2 class="home-section-title">全部课程</h2>
+  <div id="lesson-grid" class="lesson-grid"></div>
+
+  <h2 class="home-section-title">速查与教材</h2>
+  <div id="ref-chips" class="ref-chips"></div>
+
+  <p class="home-tip">
+    <strong>结业测验</strong>仍在 Cursor 对话里完成：学完某一课后说「第 X 课学完了」，我会逐题出题。
+    课内小测与睡前回忆在本页选课后，在课程页面内完成即可。
+  </p>
+
+  <footer class="home-footer">
+    <p>添加到主屏幕后可像 App 一样打开；删除桌面图标即可移除，不影响课程本身。</p>
+    <p>考试：2026-10-24 至 27 · 两科均 ≥45 分及格</p>
+  </footer>
+</div>
+
+<script src="assets/course-catalog.js"></script>
+<script src="assets/pwa.js"></script>
+<script src="assets/home.js"></script>
+<script>
+  RuankaoPWA.init({ installButtonId: 'pwa-install' });
+</script>
+</body>
+</html>
