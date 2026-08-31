@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 22 课 · 大数据安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 22 · 约 18 分钟</div>
+    <h1>海量数据怎么守：大数据安全需求分析与保护工程</h1>
+    <p class="meta">本课目标：背住大数据四特征与七大威胁；分清七类安全需求；掌握全生命周期六属性；秒判自身安全三件套（签名/Hash/加密）；背隐私五技术与基本保护机制；知道 PCI-DSS 六类要求与等保大数据对象怎么叠。</p>
+  </header>
+
+  <h2>开场：App 守完了，数据堆成山怎么守？</h2>
+  <p>
+    第 21 课守的是<strong>口袋里的 App</strong>；本课守的是<strong>汇聚后的大数据</strong>——量更大、来源更杂、边界更糊、隐私更难。
+    考点核心不是「买个大数据平台」，而是：<strong>全生命周期安全</strong> + <strong>分类分级</strong> + <strong>隐私保护（脱敏/匿名/差分隐私）</strong>。
+    教材对应<strong>第 26 章</strong>（教程最后一章）；大数据也是等保 2.0 的重要保护对象。
+  </p>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 移动应用系统由哪三部分构成？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 移动应用、通信网络、应用服务端</button>
+      <button class="opt">B. 仅手机硬件与充电器</button>
+      <button class="opt">C. 仅桌面浏览器与打印机</button>
+      <button class="opt">D. 仅工控 PLC 与 RTU</button>
+    </div>
+    <div class="explain">答案 A。第 21 课：App + 网络 + 服务端端到端。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 ≠ 风险评估（第 18 课易错点）。</div>
+  </div>
+
+  <h2>一、大数据是什么：四特征</h2>
+  <p>教材定义：大数据是<strong>非传统数据处理工具</strong>难以处理的数据集，特征常记为：</p>
+  <table>
+    <tr><th>特征</th><th>一句话</th></tr>
+    <tr><td><strong>海量规模</strong>（Volume）</td><td>数据量巨大</td></tr>
+    <tr><td><strong>快速流转</strong>（Velocity）</td><td>产生与处理速度快</td></tr>
+    <tr><td><strong>多样类型</strong>（Variety）</td><td>结构 / 半结构 / 非结构都有</td></tr>
+    <tr><td><strong>价值密度低</strong>（Value）</td><td>有用信息稀疏，需挖掘</td></tr>
+  </table>
+  <p>相关技术认名：大规模分析、数据挖掘、分布式文件系统/数据库、云计算平台、存储系统。</p>
+  <div class="callout ok">
+    口诀（<strong>大数据四特征</strong>）：<strong>海量快速又多样，价值密度却不高</strong>（字头：海快多低）。
+  </div>
+
+  <h2>二、七大安全威胁（选择题常考）</h2>
+  <ol>
+    <li><strong>「数据集」安全边界模糊</strong>——多源汇聚后边界难画</li>
+    <li><strong>敏感数据泄露风险增大</strong></li>
+    <li><strong>数据失真与大数据污染</strong>——假数据干扰分析/机器学习</li>
+    <li><strong>处理平台业务连续性与拒绝服务</strong></li>
+    <li><strong>个人数据分散多平台，隐私更难保护</strong></li>
+    <li><strong>数据交易安全风险</strong></li>
+    <li><strong>大数据滥用</strong></li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>大数据七大威胁</strong>）：<strong>边界模糊易泄露，污染拒服隐私难；交易滥用两风险</strong>。
+  </div>
+  <div class="callout warn">
+    易错：大数据安全不只「加密存盘」——<strong>污染（假数据）、交易、滥用、跨境</strong>都是高频考点。
+  </div>
+
+  <h2>三、七类安全需求</h2>
+  <table>
+    <tr><th>需求</th><th>考点要点</th></tr>
+    <tr><td><strong>自身安全</strong></td><td>全生命周期：采集→存储→使用→传输→共享→发布→销毁；属性见下节</td></tr>
+    <tr><td><strong>安全合规</strong></td><td>满足法规政策与行业标准</td></tr>
+    <tr><td><strong>跨境安全</strong></td><td>存储位置、跨境流动评估（网安法相关要求）</td></tr>
+    <tr><td><strong>隐私保护</strong></td><td>防个人敏感信息泄露</td></tr>
+    <tr><td><strong>处理平台安全</strong></td><td>物理、网络、OS、库、应用、存储</td></tr>
+    <tr><td><strong>业务安全</strong></td><td>授权、业务逻辑、防滥用/非法交易</td></tr>
+    <tr><td><strong>安全运营</strong></td><td>分类分级、维护、监测、应急</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>大数据七类安全需求</strong>）：<strong>自身合规加跨境，隐私平台业务运</strong>（字头：自合跨隐平业运）。
+  </div>
+
+  <h2>四、自身安全：六属性 + 三件套</h2>
+  <p>全生命周期要守的安全属性（教材常考六项）：</p>
+  <p><strong>真实性 · 实时性 · 机密性 · 完整性 · 可用性 · 可追溯性</strong></p>
+  <table>
+    <tr><th>目标</th><th>常用技术</th></tr>
+    <tr><td><strong>真实性</strong>（来源可信）</td><td><strong>数字签名</strong>、数据源认证</td></tr>
+    <tr><td><strong>完整性</strong></td><td><strong>Hash</strong> / 完整性校验</td></tr>
+    <tr><td><strong>机密性</strong></td><td><strong>加密</strong></td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>大数据自身安全三件套</strong>）：<strong>签名验真 Hash 保完整，加密守机密</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>数据全生命周期六属性</strong>）：<strong>真实时密完可追，采存用传共发销</strong>（属性六项 + 生命周期环节）。
+  </div>
+
+  <h2>五、基本保护机制（必背清单）</h2>
+  <p>教材列的常见机制——下午卷可整段抄：</p>
+  <ul>
+    <li>数据<strong>分类分级</strong></li>
+    <li>数据<strong>源认证</strong> · 数据<strong>溯源</strong></li>
+    <li>数据用户<strong>标识和鉴别</strong></li>
+    <li>数据资源<strong>访问控制</strong></li>
+    <li>数据<strong>隐私保护</strong></li>
+    <li>数据<strong>备份与恢复</strong></li>
+    <li>数据安全<strong>审计与监测</strong></li>
+    <li>数据<strong>安全管理</strong></li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>大数据基本保护机制</strong>）：<strong>分级认证加溯源，鉴别访控护隐私；备份审计再管理</strong>。
+  </div>
+
+  <h2>六、平台 / 业务 / 运营（对照记）</h2>
+  <table>
+    <tr><th>层面</th><th>手段关键词</th></tr>
+    <tr><td><strong>平台安全</strong></td><td>安全分区；网络/数据库/应用防火墙；系统加固；数据防泄露（DLP）</td></tr>
+    <tr><td><strong>业务安全</strong></td><td><strong>RBAC</strong> 业务授权；业务逻辑控制；合规检查与敏感数据检查</td></tr>
+    <tr><td><strong>运营安全</strong></td><td>策略更新、容灾备份、IDS/态势感知、取证、堡垒机、应急响应；经营侧用脱敏、监控、安全网关</td></tr>
+  </table>
+
+  <h2>七、隐私保护五技术（核心考点）</h2>
+  <table>
+    <tr><th>技术</th><th>一句话</th></tr>
+    <tr><td><strong>数据身份匿名</strong></td><td>去掉/替换可识别身份的标识</td></tr>
+    <tr><td><strong>差分隐私</strong></td><td>加噪声，使单条记录增删对查询结果影响可控</td></tr>
+    <tr><td><strong>数据脱敏</strong></td><td>变形/屏蔽敏感字段，保留可用性（测开/共享常用）</td></tr>
+    <tr><td><strong>数据加密</strong></td><td>机密性；含同态等密文计算思路（认名即可）</td></tr>
+    <tr><td><strong>访问控制</strong></td><td>谁能看、能看多少</td></tr>
+  </table>
+  <p>脱敏常见手法对照：</p>
+  <ul>
+    <li><strong>抑制</strong>：删除/屏蔽敏感值（「减法」，分析价值常丢失）</li>
+    <li><strong>泛化</strong>：降低粒度（如 28 岁 → 20–30 岁），保留统计价值</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>大数据隐私保护五技术</strong>）：<strong>匿名差分再脱敏，加密访控守隐私</strong>。
+  </div>
+  <div class="callout warn">
+    易错：脱敏 ≠ 加密；脱敏强调「能用但难识别」，加密强调「看不懂」。测试环境常用<strong>静态脱敏</strong>，查询展示常用<strong>动态脱敏</strong>。
+  </div>
+
+  <h2>八、等保 + 法规 + PCI-DSS（认名）</h2>
+  <p>
+    大数据是等保 2.0 重要保护对象：定级对象涉及大数据时，按标准落实<strong>安全通用要求</strong>，并结合大数据相关扩展/专项要求建设（与云、移动、工控同类思路：<strong>通用 + 扩展</strong>）。
+  </p>
+  <p>法规/标准认名（不必背全文）：</p>
+  <ul>
+    <li>《网络安全法》——分类、备份、加密；关键信息基础设施重要数据境内存储与跨境评估</li>
+    <li>《信息安全技术 个人信息安全规范》等国标</li>
+    <li>大数据服务安全能力要求、大数据安全管理指南、数据交易服务安全要求、个人信息去标识化指南</li>
+  </ul>
+  <p><strong>PCI-DSS</strong>（支付卡行业数据安全标准）六大类要求：</p>
+  <ol>
+    <li>构建和维护安全的网络</li>
+    <li>保护持卡人数据</li>
+    <li>维护漏洞管理程序</li>
+    <li>实施严格的访问控制措施</li>
+    <li>定期监控和测试网络</li>
+    <li>维护信息安全策略</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>PCI-DSS 六类要求</strong>）：<strong>网络安全护持卡，漏洞访控监测策</strong>。
+  </div>
+  <p>案例认名：阿里（业务/数据/生态 + 生命周期）；京东（区块链溯源确权）；上海数据交易（告知同意等个人数据保护原则）；华为 FusionInsight（网络平面隔离 + Kerberos/LDAP + RBAC）；科学数据管理办法（全生命周期、异地备份）。</p>
+
+  <h2>九、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 大数据四特征中，「价值密度低」强调的是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 有用信息稀疏，需挖掘分析</button>
+      <button class="opt">B. 数据只能存于单台电脑</button>
+      <button class="opt">C. 数据类型永远只有一种</button>
+      <button class="opt">D. 数据产生速度永远为零</button>
+    </div>
+    <div class="explain">答案 A。价值密度低 = 海量中有用信息占比低，需分析挖掘。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 验证大数据来源真实性，常用技术是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 数字签名 / 数据源认证</button>
+      <button class="opt">B. 仅删除全部备份副本</button>
+      <button class="opt">C. 仅关闭所有审计日志</button>
+      <button class="opt">D. 仅公开全部明文数据集</button>
+    </div>
+    <div class="explain">答案 A。签名验真；Hash 保完整；加密守机密。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 下列哪项属于大数据隐私保护技术？</div>
+    <div class="opts">
+      <button class="opt">A. 仅机房空调温度调节</button>
+      <button class="opt" data-correct="true">B. 数据脱敏与差分隐私</button>
+      <button class="opt">C. 仅更换显示器分辨率</button>
+      <button class="opt">D. 仅调整办公桌摆放位置</button>
+    </div>
+    <div class="explain">答案 B。隐私五技术：匿名、差分隐私、脱敏、加密、访问控制。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 将精确年龄改为年龄段，属于脱敏中的？</div>
+    <div class="opts">
+      <button class="opt">A. 仅物理销毁硬盘</button>
+      <button class="opt" data-correct="true">B. 泛化（降低粒度）</button>
+      <button class="opt">C. 仅关闭防火墙规则</button>
+      <button class="opt">D. 仅增加 CPU 主频</button>
+    </div>
+    <div class="explain">答案 B。泛化降粒度保统计价值；抑制是删除/屏蔽。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 大数据平台区域隔离常用手段包括？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 安全分区与多类防火墙</button>
+      <button class="opt">B. 仅取消全部身份认证</button>
+      <button class="opt">C. 仅禁止任何数据备份</button>
+      <button class="opt">D. 仅公开管理口令明文</button>
+    </div>
+    <div class="explain">答案 A。平台侧：分区 + 网络/库/应用防火墙 + 加固 + DLP。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · PCI-DSS 的规范目标主要是保护？</div>
+    <div class="opts">
+      <button class="opt">A. 仅打印机耗材库存</button>
+      <button class="opt" data-correct="true">B. 支付卡持卡人数据</button>
+      <button class="opt">C. 仅会议室投影仪</button>
+      <button class="opt">D. 仅工控 PLC 固件版本</button>
+    </div>
+    <div class="explain">答案 B。PCI-DSS 控制持卡人数据的处理、存储与传输安全。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Data masking mainly helps protect?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Only room temperature sensors</button>
+      <button class="opt" data-correct="true">B. Sensitive data privacy in use/share</button>
+      <button class="opt">C. Only printer paper supplies</button>
+      <button class="opt">D. Only keyboard backlight color</button>
+    </div>
+    <div class="explain">答案 B。脱敏（data masking）保护使用/共享中的敏感隐私，同时尽量保留可用性。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某互联网公司建设用户行为大数据平台：多源汇聚后边界不清；测试库直接拷贝生产明文手机号与身份证；分析接口无访问审计；部分数据拟出境合作。请：（1）指出主要风险；（2）给出至少 6 条整改措施。</p>
+    <div class="ans">
+      <strong>（1）主要风险</strong><br>
+      · 数据集边界模糊 → 责任与防护范围不清。<br>
+      · 测试环境明文敏感字段 → 泄露/滥用。<br>
+      · 缺审计 → 越权与滥用难追溯。<br>
+      · 跨境未评估 → 合规风险（网安法等相关要求）。<br>
+      · 可能存在污染数据干扰分析、交易/共享失控等。<br><br>
+      <strong>（2）整改措施（示例）</strong><br>
+      ① <strong>分类分级</strong>：梳理数据资产，按敏感级别定策略。<br>
+      ② <strong>全生命周期</strong>：采集/存储/使用/传输/共享/发布/销毁各环节控制。<br>
+      ③ <strong>隐私保护</strong>：测试/共享前<strong>脱敏</strong>；必要时匿名、差分隐私；传输与存储加密。<br>
+      ④ <strong>访问控制</strong>：标识鉴别 + RBAC/最小权限；业务授权。<br>
+      ⑤ <strong>溯源与审计</strong>：源认证、操作审计、滥用监测。<br>
+      ⑥ <strong>平台防护</strong>：安全分区、防火墙、加固、DLP、容灾备份。<br>
+      ⑦ <strong>跨境合规</strong>：评估后再出境；重要数据按规定存储与评估。<br>
+      ⑧ <strong>等保</strong>：大数据对象落实通用要求 + 相关扩展/专项建设。<br>
+      答题模板：<strong>先写分类分级 + 脱敏/加密 → 再写访问控制/审计/溯源 → 点平台防护与跨境合规</strong>。
+    </div>
+  </details>
+
+  <h2>十、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 26 章（20 分钟）</strong>：阅读<a href="../reference/textbook/ch26.html">第 26 章 大数据安全</a>，对照<a href="../reference/big-data-security-cheatsheet.html">大数据安全速查卡</a>背四特征、七需求、隐私五技术。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：四特征；七威胁；自身安全三件套；隐私五技术；PCI-DSS 六类。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 四特征：海量快速又多样，价值密度却不高；② 七需求：自身合规加跨境，隐私平台业务运；③ 三件套：签名验真 Hash 保完整，加密守机密；④ 隐私：匿名差分再脱敏，加密访控守隐私；⑤ PCI：网络安全护持卡，漏洞访控监测策。</li>
+  </ol>
+
+  <h2>十一、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 26 章 大数据安全需求分析与安全保护工程（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>备考笔记整理：<a href="https://www.cnblogs.com/R-bear/p/17840606.html">博客园·R-Bear·第 26 章</a> · <a href="https://www.moondream.cn/?p=2149">月梦工作室·第 26 章精讲</a></li>
+    <li>脱敏手法辨析（辅助）：<a href="https://rk.51cto.com/article/585395.html">51CTO·抑制 vs 泛化</a></li>
+    <li>速查：<a href="../reference/big-data-security-cheatsheet.html">大数据安全速查</a> · <a href="../reference/mnemonics.html#lesson-22">第 22 课口诀</a> · <a href="./0012-classified-protection.html">第 12 课 等保 2.0</a> · <a href="./0021-mobile-app-security.html">第 21 课 移动应用安全</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「差分隐私和脱敏有什么区别」「抑制和泛化怎么选」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 22 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：第二阶段收束——系统安全案例专项（云/工控/移动/大数据串联，冲刺下午卷）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

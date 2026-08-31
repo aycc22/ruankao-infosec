@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 大数据安全</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>大数据安全速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 26 章 · 打印用</p>
+  </header>
+
+  <h2>一、四特征</h2>
+  <ul>
+    <li>海量规模 · 快速流转 · 多样类型 · 价值密度低</li>
+    <li>数据形态：结构化 / 半结构化 / 非结构化</li>
+  </ul>
+  <p class="meta"><strong>大数据四特征</strong>：海量快速又多样，价值密度却不高。</p>
+
+  <h2>二、七大威胁</h2>
+  <ol>
+    <li>数据集安全边界模糊</li>
+    <li>敏感数据泄露风险增大</li>
+    <li>数据失真与大数据污染</li>
+    <li>处理平台业务连续性与拒绝服务</li>
+    <li>个人数据多平台分散，隐私难保护</li>
+    <li>数据交易安全风险</li>
+    <li>大数据滥用</li>
+  </ol>
+  <p class="meta"><strong>大数据七大威胁</strong>：边界模糊易泄露，污染拒服隐私难；交易滥用两风险。</p>
+
+  <h2>三、七类安全需求</h2>
+  <p>自身 · 合规 · 跨境 · 隐私 · 平台 · 业务 · 运营</p>
+  <p class="meta"><strong>大数据七类安全需求</strong>：自身合规加跨境，隐私平台业务运。</p>
+
+  <h2>四、自身安全</h2>
+  <p><strong>生命周期</strong>：采集 → 存储 → 使用 → 传输 → 共享 → 发布 → 销毁</p>
+  <p><strong>六属性</strong>：真实性 · 实时性 · 机密性 · 完整性 · 可用性 · 可追溯性</p>
+  <table>
+    <tr><th>目标</th><th>技术</th></tr>
+    <tr><td>真实性</td><td>数字签名 / 源认证</td></tr>
+    <tr><td>完整性</td><td>Hash</td></tr>
+    <tr><td>机密性</td><td>加密</td></tr>
+  </table>
+  <p class="meta"><strong>大数据自身安全三件套</strong>：签名验真 Hash 保完整，加密守机密。</p>
+
+  <h2>五、基本保护机制</h2>
+  <ul>
+    <li>分类分级 · 源认证 · 溯源</li>
+    <li>用户标识鉴别 · 访问控制 · 隐私保护</li>
+    <li>备份恢复 · 审计监测 · 安全管理</li>
+  </ul>
+  <p class="meta"><strong>大数据基本保护机制</strong>：分级认证加溯源，鉴别访控护隐私；备份审计再管理。</p>
+
+  <h2>六、平台 / 业务 / 运营</h2>
+  <table>
+    <tr><th>层面</th><th>关键词</th></tr>
+    <tr><td>平台</td><td>分区；网络/库/应用防火墙；加固；DLP</td></tr>
+    <tr><td>业务</td><td>RBAC 授权；业务逻辑；合规检查</td></tr>
+    <tr><td>运营</td><td>维护、容灾、IDS/态势、堡垒机、应急；脱敏/网关/监控</td></tr>
+  </table>
+
+  <h2>七、隐私五技术</h2>
+  <ul>
+    <li>身份匿名 · 差分隐私 · 脱敏 · 加密 · 访问控制</li>
+    <li>脱敏手法：<strong>抑制</strong>（删/屏蔽）· <strong>泛化</strong>（降粒度）</li>
+  </ul>
+  <p class="meta"><strong>大数据隐私保护五技术</strong>：匿名差分再脱敏，加密访控守隐私。</p>
+
+  <h2>八、PCI-DSS 六类</h2>
+  <ol>
+    <li>构建和维护安全的网络</li>
+    <li>保护持卡人数据</li>
+    <li>维护漏洞管理程序</li>
+    <li>实施严格的访问控制措施</li>
+    <li>定期监控和测试网络</li>
+    <li>维护信息安全策略</li>
+  </ol>
+  <p class="meta"><strong>PCI-DSS 六类要求</strong>：网络安全护持卡，漏洞访控监测策。</p>
+
+  <h2>九、等保与易错</h2>
+  <ul>
+    <li>大数据是等保 2.0 重要保护对象 → 通用要求 + 相关扩展/专项</li>
+    <li>脱敏 ≠ 加密；抑制 ≠ 泛化</li>
+    <li>跨境：存储位置 + 流动评估，不是「随便出境」</li>
+    <li>等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2>十、下午卷模板</h2>
+  <p>先写<strong>分类分级 + 脱敏/加密</strong> → 再写<strong>访问控制 / 审计 / 溯源</strong> → <strong>平台分区与容灾</strong> → 点名<strong>跨境合规与等保</strong>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0022-big-data-security.html">第 22 课</a> ·
+    <a href="./mnemonics.html#lesson-22">口诀</a> ·
+    <a href="./classified-protection-cheatsheet.html">等保速查</a> ·
+    <a href="./textbook/ch26.html">教材精读第 26 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

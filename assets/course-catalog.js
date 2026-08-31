@@ -22,7 +22,8 @@ var COURSE_CATALOG = {
     { file: '0018-milestone-review.html', label: '第 18 课', title: '第一阶段总结' },
     { file: '0019-cloud-security.html', label: '第 19 课', title: '云计算安全' },
     { file: '0020-ics-security.html', label: '第 20 课', title: '工控安全' },
-    { file: '0021-mobile-app-security.html', label: '第 21 课', title: '移动应用安全' }
+    { file: '0021-mobile-app-security.html', label: '第 21 课', title: '移动应用安全' },
+    { file: '0022-big-data-security.html', label: '第 22 课', title: '大数据安全' }
   ],
   references: [
     { file: 'textbook-index.html', label: '教材精读', title: '官方教程 26 章考点' },
@@ -46,6 +47,7 @@ var COURSE_CATALOG = {
     { file: 'cloud-security-cheatsheet.html', label: '云计算安全', title: '云计算安全速查' },
     { file: 'ics-security-cheatsheet.html', label: '工控安全', title: '工控安全速查' },
     { file: 'mobile-app-security-cheatsheet.html', label: '移动应用', title: '移动应用安全速查' },
-    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-21 课口诀汇总' }
+    { file: 'big-data-security-cheatsheet.html', label: '大数据安全', title: '大数据安全速查' },
+    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-22 课口诀汇总' }
   ]
 };

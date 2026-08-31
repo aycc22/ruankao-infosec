@@ -11,21 +11,83 @@
   <header class="lesson-head">
     <div class="lesson-no">Textbook · 第 26 章 · 约 15 分钟</div>
     <h1>大数据安全需求分析与安全保护工程</h1>
-    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 24 课 ·
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应
+      <a href="../../lessons/0022-big-data-security.html">第 22 课</a> ·
       <a href="../textbook-index.html">教材目录</a></p>
   </header>
 
   <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
-    · <a href="../textbook-index.html">相关课程</a></p>
+    · <a href="../big-data-security-cheatsheet.html">大数据安全速查</a>
+    · <a href="../../lessons/0022-big-data-security.html">第 22 课</a></p>
 
-  <h2>26.1–26.3 大数据安全</h2>
+  <h2>26.1 威胁与需求分析</h2>
+  <h3>概念与四特征</h3>
   <ul>
-    <li>数据分类分级、脱敏、访问审计、隐私计算概念；生命周期安全。</li>
+    <li>大数据：非传统工具难以处理的数据集。</li>
+    <li>特征：海量规模、快速流转、多样类型、价值密度低。</li>
+    <li>形态：结构化、半结构化、非结构化。</li>
+  </ul>
+
+  <h3>七大威胁</h3>
+  <ol>
+    <li>「数据集」安全边界模糊</li>
+    <li>敏感数据泄露风险增大</li>
+    <li>数据失真与大数据污染</li>
+    <li>处理平台业务连续性与拒绝服务</li>
+    <li>个人数据多平台分布，隐私难保护</li>
+    <li>数据交易安全风险</li>
+    <li>大数据滥用</li>
+  </ol>
+
+  <h3>七类安全需求</h3>
+  <ul>
+    <li><strong>自身安全</strong>：采集→存储→使用→传输→共享→发布→销毁；真实性、实时性、机密性、完整性、可用性、可追溯性</li>
+    <li><strong>安全合规</strong> · <strong>跨境安全</strong> · <strong>隐私保护</strong></li>
+    <li><strong>处理平台安全</strong> · <strong>业务安全</strong> · <strong>安全运营</strong></li>
   </ul>
 
   <div class="callout warn">
     <strong>易错陷阱：</strong>
-    <br>大数据=大量聚合后的隐私风险上升。
+    <br>大数据=大量聚合后的隐私风险上升；假数据污染也会破坏分析可信度。
+  </div>
+
+  <h2>26.2 保护机制与技术方案</h2>
+  <h3>基本机制</h3>
+  <p>分类分级、源认证、溯源、用户标识鉴别、访问控制、隐私保护、备份恢复、审计监测、安全管理。</p>
+
+  <h3>自身安全三件套</h3>
+  <ul>
+    <li>真实性 → 数字签名 / 源认证</li>
+    <li>完整性 → Hash</li>
+    <li>机密性 → 加密</li>
+  </ul>
+
+  <h3>平台 / 业务 / 运营</h3>
+  <ul>
+    <li>平台：安全分区；网络/数据库/应用防火墙；加固；DLP</li>
+    <li>业务：RBAC 授权；业务逻辑安全；合规与敏感数据检查</li>
+    <li>运营：维护、策略更新、容灾、IDS/态势感知、取证、堡垒机、应急；经营侧脱敏、监控、安全网关</li>
+  </ul>
+
+  <h3>隐私保护五技术</h3>
+  <p>身份匿名 · 差分隐私 · 数据脱敏 · 数据加密 · 访问控制</p>
+  <p>脱敏手法：抑制（删/屏蔽）· 泛化（降粒度）</p>
+
+  <h3>标准认名</h3>
+  <p>个人信息安全规范、大数据服务安全能力要求、大数据安全管理指南、数据交易服务安全要求、个人信息去标识化指南等。</p>
+
+  <h2>26.3 综合应用（认名）</h2>
+  <ul>
+    <li>阿里：业务/数据/生态管控，以数据生命周期为中心</li>
+    <li>京东：区块链确权溯源</li>
+    <li>上海数据交易：告知同意等个人数据保护原则；规制+技术</li>
+    <li>华为 FusionInsight：网络平面隔离；Kerberos/LDAP；RBAC；容灾备份</li>
+    <li>科学数据管理办法：全生命周期；异地备份；保密审查</li>
+    <li>PCI-DSS：六类要求——网络安全、护持卡人数据、漏洞管理、访问控制、监控测试、安全策略</li>
+  </ul>
+
+  <div class="callout ok">
+    大数据是等保 2.0 重要保护对象：通用要求 + 相关扩展/专项建设。
   </div>
 
   <h2>章末自测（1 题）</h2>
@@ -37,12 +99,14 @@
       <button class="opt">C. 公开数据集</button>
       <button class="opt">D. 禁用加密</button>
     </div>
-    <div class="explain">答案 A。详见上文必背考点。</div>
+    <div class="explain">答案 A。隐私五技术含脱敏、匿名、差分隐私、加密、访问控制。</div>
   </div>
 
   <footer>
     来源：《信息安全工程师教程（第 2 版）》第 26 章 · 2020 年审定大纲。
-    本页为考点提炼，供无教材考生复习使用。
+    本页为考点提炼，供无教材考生复习使用。配套：
+    <a href="../../lessons/0022-big-data-security.html">第 22 课</a> ·
+    <a href="../big-data-security-cheatsheet.html">速查卡</a>
   </footer>
 </main>
 <script src="../../assets/quiz.js"></script>
