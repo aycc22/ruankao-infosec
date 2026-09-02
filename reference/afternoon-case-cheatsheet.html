@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 下午卷安全工程案例</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 下午卷专项</div>
+    <h1>下午卷安全工程案例速查</h1>
+    <p class="meta">第 23 课配套 · 云 / 工控 / 移动 / 大数据场景 · 打印用</p>
+  </header>
+
+  <h2>一、万能答题骨架（5 步）</h2>
+  <ol>
+    <li><strong>判场景</strong>：云 / 工控 / 移动 / 大数据 / 混合</li>
+    <li><strong>列风险</strong>：3–5 条，「现象 → 后果」</li>
+    <li><strong>写对策</strong>：与风险<strong>成对</strong>，每条一行</li>
+    <li><strong>叠合规</strong>：等保通用 + 对应扩展；跨境/个保等特殊要求</li>
+    <li><strong>收束</strong>：监测审计 + 应急预案</li>
+  </ol>
+  <p class="meta"><strong>下午卷案例答题模板</strong>：先判场景列风险，对策成对写一行，合规扩展别漏项，监测应急来收束。</p>
+
+  <h2>二、安全工程五阶段</h2>
+  <p>需求分析 → 安全设计 → 实施建设 → 测评验收 → 运维保障</p>
+  <p class="meta"><strong>安全工程五阶段</strong>：先分析后设计，实施测评再运维（字头：分设实测评运）。</p>
+
+  <h2>三、四场景对策素材库</h2>
+  <table>
+    <tr><th>场景</th><th>风险关键词</th><th>对策关键词（任挑组合）</th></tr>
+    <tr>
+      <td><strong>云计算</strong></td>
+      <td>逃逸、多租户越权、数据残留、API 滥用、中断</td>
+      <td>责任共担；VPC/安全组；租户隔离；加密+KMS；安全擦除；镜像加固；等保云扩展</td>
+    </tr>
+    <tr>
+      <td><strong>工控</strong></td>
+      <td>公网暴露、默认口令、协议明文、产线停机</td>
+      <td>安全分区；工业防火墙/网闸；关 Telnet/FTP；VPN 远程；白名单；可用优先；等保工控扩展</td>
+    </tr>
+    <tr>
+      <td><strong>移动应用</strong></td>
+      <td>逆向、篡改、明文 Token、中间人、过度权限</td>
+      <td>TLS；Keychain/加密存储；代码混淆与加固；证书绑定；最小权限；等保移动互联扩展</td>
+    </tr>
+    <tr>
+      <td><strong>大数据</strong></td>
+      <td>边界模糊、泄露、污染、跨境、交易滥用</td>
+      <td>分类分级；脱敏/匿名/差分隐私；全生命周期管控；访问审计；DLP；跨境评估；等保大数据扩展</td>
+    </tr>
+  </table>
+  <p class="meta"><strong>第二阶段四场景地图</strong>：云上共担分责任，工控可用排第一，移动三端要加固，大数据先分级再脱敏。</p>
+
+  <h2>四、等保扩展叠加持学问</h2>
+  <table>
+    <tr><th>对象</th><th>扩展</th></tr>
+    <tr><td>云平台 / 云上系统</td><td>云计算安全扩展</td></tr>
+    <tr><td>工业控制系统</td><td>工控安全扩展</td></tr>
+    <tr><td>移动互联应用</td><td>移动互联安全扩展</td></tr>
+    <tr><td>大数据平台</td><td>大数据安全扩展</td></tr>
+  </table>
+  <p class="meta"><strong>等保扩展叠加持学问</strong>：通用打底扩展加，云工移数各不同，测评合规风险另算。</p>
+
+  <h2>五、全局易错（案例里别写反）</h2>
+  <ul>
+    <li><strong>等保测评 ≠ 风险评估</strong>（测评=符合性；评估=算风险）</li>
+    <li><strong>工控优先序</strong>：可用 &gt; 完整 &gt; 机密</li>
+    <li><strong>脱敏 ≠ 加密</strong>；抑制 ≠ 泛化</li>
+    <li><strong>私钥签名 → 公钥验签</strong></li>
+    <li><strong>敏感令牌勿明文</strong>存移动本地</li>
+  </ul>
+
+  <h2>六、下午卷其他高频（非安全工程专题）</h2>
+  <table>
+    <tr><th>题型</th><th>得分点</th></tr>
+    <tr><td>拓扑填设备</td><td>Web → DMZ；库 → 内网；网闸 → 近物理隔离；IPS 串联 / IDS 旁路</td></tr>
+    <tr><td>iptables</td><td>filter 表；<code>-P INPUT DROP</code> 默认拒绝；放行 22/80/443</td></tr>
+    <tr><td>应急响应</td><td>PDCERF：备检抑根恢总；<strong>先抑制后根除</strong></td></tr>
+    <tr><td>风险评估</td><td>七步：准资威脆措析处；≠ 等保测评</td></tr>
+  </table>
+
+  <footer>
+    配套课程：<a href="../lessons/0023-afternoon-case-special.html">第 23 课</a> ·
+    <a href="./exam-2023-2025.html">2023–2025 考点</a> ·
+    <a href="./mnemonics.html#lesson-23">第 23 课口诀</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
