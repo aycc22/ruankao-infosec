@@ -86,7 +86,7 @@ CHAPTERS = [
     },
     {
         "num": 4, "file": "ch04.html", "title": "网络安全体系与网络安全模型",
-        "lesson": "第 1 课 / 第 23 课复习", "lesson_link": "../../lessons/0001-exam-overview-and-cia.html",
+        "lesson": "第 1 课 / 第 24 课（预告）", "lesson_link": "../../lessons/0001-exam-overview-and-cia.html",
         "cheatsheet": "../exam-overview.html", "cheatsheet_label": "考试全貌",
         "sections": [
             ("4.1–4.2 安全体系", [
