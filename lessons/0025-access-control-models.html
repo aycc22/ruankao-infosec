@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 25 课 · 访问控制与安全模型</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 25 · 约 18 分钟 · 冲刺补缺</div>
+    <h1>谁能碰什么：访问控制与安全模型</h1>
+    <p class="meta">本课目标：秒判 DAC / MAC / RBAC / ABAC；分清 ACL 与能力表；对照 BLP（机密）与 Biba（完整）；背住 PDRR 四环节（备份属恢复）；会用默认拒绝与最小权限写下午卷对策。</p>
+  </header>
+
+  <h2>开场：第 14 课点过名，第 4、7 章还没钉死</h2>
+  <p>
+    第 14 课在操作系统里认过 <strong>DAC / MAC / RBAC</strong> 和 BLP 的「禁止上读下写」。
+    <a href="./0023-afternoon-case-special.html">第 23 课 §八</a>把冲刺缺口排在第二的，是教材
+    <strong>第 4 章 网络安全体系与网络安全模型</strong>和<strong>第 7 章 访问控制技术原理与应用</strong>。
+    上午卷会问「BLP 还是 Biba」「File1:(ID1:rx)… 是哪张表」「备份算 PDRR 哪一环」；
+    下午卷写权限方案时，要能说出<strong>选哪种模型、凭什么原则</strong>。
+  </p>
+
+  <div class="callout ok">
+    第 24 课结业测 <strong>7/7</strong>。本课把「谁决定权限、规则贴在哪、机密和完整各用哪套模型」收成一张可背的表。
+  </div>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 = 符合性判定；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 数字签名的密钥方向，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 公钥签名，再用公钥验签</button>
+      <button class="opt" data-correct="true">B. 私钥签名，再用公钥验签</button>
+      <button class="opt">C. 公钥签名，再用私钥验签</button>
+      <button class="opt">D. 私钥签名，再用私钥验签</button>
+    </div>
+    <div class="explain">答案 B。公钥加密 → 私钥解密；私钥签名 → 公钥验签。第 3–4 课持续复习点。</div>
+  </div>
+
+  <h2>一、访问控制管什么（先定位）</h2>
+  <p>
+    教材第 7 章定义：访问控制是对资源对象的访问者<strong>授权、控制</strong>的方法及运行机制。
+    三件套先分清：
+  </p>
+  <table>
+    <tr><th>名词</th><th>是什么</th><th>例子</th></tr>
+    <tr><td><strong>主体</strong></td><td>访问者</td><td>用户、进程、应用程序</td></tr>
+    <tr><td><strong>客体</strong></td><td>被访问的资源</td><td>文件、服务、数据</td></tr>
+    <tr><td><strong>授权</strong></td><td>允许的访问方式</td><td>读、写、删除、收发邮件</td></tr>
+    <tr><td><strong>控制</strong></td><td>监测、限制、做许可或拒绝决策</td><td>禁止访问、授权许可</td></tr>
+  </table>
+  <p>
+    两个目标：<strong>挡住非法用户进系统</strong>；<strong>挡住合法用户越权用资源</strong>。
+    先认证身份（第 4、6 章），再按策略授权——认证过了不等于什么都能碰。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>访问控制三要素</strong>）：<strong>主体来访客体受，授权定方式，控制做拦门</strong>。
+  </div>
+  <div class="callout warn">
+    易错（2025 机考公开回忆）：「读写 / 删除 / 接收邮件」是权限或操作；题干问「属于控制的是」→ 选<strong>禁止访问</strong>。
+  </div>
+
+  <h2>二、DAC / MAC / RBAC / ABAC</h2>
+  <p>第 14 课三模型这里加深一层，并补上教材点名的 <strong>ABAC</strong>。</p>
+  <table>
+    <tr><th>模型</th><th>谁定权限</th><th>一句话</th><th>典型场景</th></tr>
+    <tr>
+      <td><strong>DAC</strong><br>自主访问控制</td>
+      <td>客体<strong>属主</strong></td>
+      <td>灵活、可转授，权限易扩散</td>
+      <td>Unix/Linux 文件属主</td>
+    </tr>
+    <tr>
+      <td><strong>MAC</strong><br>强制访问控制</td>
+      <td><strong>系统</strong>按安全标签</td>
+      <td>用户改不了密级；与 BLP 关联</td>
+      <td>军事分级、SELinux</td>
+    </tr>
+    <tr>
+      <td><strong>RBAC</strong><br>基于角色</td>
+      <td>权限绑<strong>角色</strong>，用户绑角色</td>
+      <td>企业最常用；利最小权限、职责分离</td>
+      <td>OA / ERP / 云平台</td>
+    </tr>
+    <tr>
+      <td><strong>ABAC</strong><br>基于属性</td>
+      <td>主体、客体、<strong>环境</strong>属性 + 策略</td>
+      <td>动态策略；云与分布式常用</td>
+      <td>按部门/时间/位置授权</td>
+    </tr>
+  </table>
+  <p>
+    RBAC 四要素：<strong>用户 U、角色 R、会话 S、权限 P</strong>。用户与角色多对多；权限是主体对客体的操作能力。
+    先把权限赋给角色，再把角色委派给用户，用户与权限<strong>逻辑分离</strong>。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>访问控制四模型</strong>）：<strong>DAC 主人自己定，MAC 标签系统定，RBAC 角色中间转，ABAC 属性随环境变</strong>。
+  </div>
+  <div class="callout warn">
+    题干「属主可授权」→ DAC；「密级标签、用户改不了」→ MAC；「按岗位赋角色」→ RBAC；「属性 + 环境动态」→ ABAC。
+    BLP / Biba 是<strong>多级安全策略模型</strong>，不是企业日常首选——企业题优先选 RBAC。
+  </div>
+
+  <h2>三、权限贴在哪：矩阵、ACL、能力表</h2>
+  <p>
+    访问控制矩阵是总表：行是主体，列是客体。教材把 DAC 实现分成两类：
+  </p>
+  <table>
+    <tr><th>贴在哪</th><th>叫什么</th><th>怎么认</th></tr>
+    <tr>
+      <td><strong>基于列</strong>（跟客体）</td>
+      <td>访问控制表 ACL、保护位</td>
+      <td>客体后面列出「谁能干什么」。Unix 9 比特属保护位；NTFS 权限属 ACL</td>
+    </tr>
+    <tr>
+      <td><strong>基于行</strong>（跟主体）</td>
+      <td>能力表、前缀表、口令</td>
+      <td>主体带着「我能碰哪些客体」。能力是访问钥匙</td>
+    </tr>
+  </table>
+  <p>
+    2024 机考原句风格：<code>File1：（ID1：rx）（ID2：rw）（ID3：rwx）</code>
+    ——权限挂在<strong>客体 File1</strong> 上，列出各主体 → <strong>访问控制表（ACL）</strong>，不是能力表。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>ACL 与能力表</strong>）：<strong>ACL 贴在客体上，能力表揣在主体兜</strong>。
+  </div>
+  <div class="callout warn">
+    Windows 对照（第 7 章应用、第 14 课 SRM）：登录令牌含 SID；客体有 <strong>DACL</strong>（谁能访问）和 <strong>SACL</strong>（记哪些访问）；
+    <strong>SRM</strong> 拿令牌去对 DACL 做裁决。DACL ≠ SACL。
+  </div>
+
+  <h2>四、BLP 与 Biba（第 4 章高频对照）</h2>
+  <p>
+    多级安全给主体、客体打级别。第 14 课只钉了 BLP；本课把<strong>对偶的 Biba</strong> 一起背。
+    军事访问类 = <strong>安全级</strong>（公开 &lt; 秘密 &lt; 机密 &lt; 绝密）+ <strong>范畴集</strong>（人事、财务等）——级高但缺范畴，照样不能读。
+  </p>
+  <table>
+    <tr><th>模型</th><th>保什么</th><th>读规则</th><th>写规则</th><th>合称</th></tr>
+    <tr>
+      <td><strong>BLP</strong><br>Bell-LaPadula</td>
+      <td><strong>机密性</strong></td>
+      <td>不上读（可下读）</td>
+      <td>不下写（可上写）</td>
+      <td>下读上写</td>
+    </tr>
+    <tr>
+      <td><strong>Biba</strong></td>
+      <td><strong>完整性</strong></td>
+      <td>不下读（可上读）</td>
+      <td>不上写（可下写）</td>
+      <td>上读下写</td>
+    </tr>
+  </table>
+  <p>
+    Biba 还有<strong>调用特性</strong>：低完整性主体不能调用高完整性主体。
+    题干「防泄露 / 军事机密」→ BLP；「防篡改 / 防脏数据污染」→ Biba。
+    2025 公开回忆选项口径：<strong>BLP 中主体只能向上写、不能向下写</strong>——这是 BLP 的 * 特性，不是错句。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>BLP 机密性规则</strong>）：<strong>不上读、不下写，机密不往低处流</strong>（下读上写）。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>Biba 完整性规则</strong>）：<strong>不上写、不下读，脏数据不往高处爬</strong>（上读下写）。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>BLP 与 Biba 对照</strong>）：<strong>保机密用 BLP 下读上写，保完整用 Biba 上读下写</strong>。
+  </div>
+  <div class="callout warn">
+    第 14 课口诀「能往下看，不能往上偷；能往上记，不能往下泄」只适用于 <strong>BLP</strong>。
+    不要把同一句套到 Biba 上。
+  </div>
+
+  <h2>五、PDRR 与策略原则</h2>
+  <p>
+    教材第 4 章信息保障模型：PDRR = <strong>Protection 防护、Detection 检测、Recovery 恢复、Response 响应</strong>
+    （《教程》第 2 版第 66 页口径）。备份、数据修复、系统恢复 → <strong>恢复</strong>，不是响应。
+  </p>
+  <table>
+    <tr><th>环节</th><th>典型措施</th></tr>
+    <tr><td><strong>防护 Protection</strong></td><td>加密、签名、访问控制、认证、防火墙</td></tr>
+    <tr><td><strong>检测 Detection</strong></td><td>入侵检测、脆弱性检测、完整性检测</td></tr>
+    <tr><td><strong>恢复 Recovery</strong></td><td>数据备份、数据修复、系统恢复</td></tr>
+    <tr><td><strong>响应 Response</strong></td><td>应急策略与机制、入侵过程分析、安全状态评估</td></tr>
+  </table>
+  <p>
+    易混：<strong>P2DR</strong> = Policy 策略 + 防护 + 检测 + 响应，<strong>策略是核心</strong>，没有把「恢复」写进四个字母。
+    策略书写默认：<strong>未经明确允许的都是禁止的</strong>（默认拒绝），不要用「没写禁止就可以做」。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>PDRR 四环节</strong>）：<strong>先防护再检测，恢复靠备份，响应做应急</strong>（字头：防检恢响）。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>默认拒绝原则</strong>）：<strong>未经明确允许的，一律禁止</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>最小特权原则</strong>）：<strong>只给干活必需的那点权</strong>（Least Privilege；按需使用）。
+  </div>
+
+  <h2>六、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · BLP 模型主要保护的安全属性是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 机密性，防止信息泄露</button>
+      <button class="opt">B. 完整性，防止数据篡改</button>
+      <button class="opt">C. 可用性，防止服务中断</button>
+      <button class="opt">D. 抗抵赖，防止事后否认</button>
+    </div>
+    <div class="explain">答案 A。BLP = Bell-LaPadula，侧重机密性；完整性才是 Biba（教材第 4 章）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · Biba 模型的读写限制，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 不上读也不下写，保机密性</button>
+      <button class="opt" data-correct="true">B. 不上写也不下读，保完整性</button>
+      <button class="opt">C. 只允许同级读写保可用性</button>
+      <button class="opt">D. 由文件属主自行决定权限</button>
+    </div>
+    <div class="explain">答案 B。Biba 上读下写 = 不上写、不下读，防低完整污染高完整；A 是 BLP。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · File1：（ID1：rx）（ID2：rw）（ID3：rwx）这种表示是？</div>
+    <div class="opts">
+      <button class="opt">A. 前缀表：权限挂在主体前</button>
+      <button class="opt" data-correct="true">B. 访问控制表：权限挂在客体上</button>
+      <button class="opt">C. 能力表：权限挂在主体上</button>
+      <button class="opt">D. 后缀表：权限挂在主体后</button>
+    </div>
+    <div class="explain">答案 B。客体 File1 后列出各主体权限 = ACL（基于列）。能力表应挂在主体上（教材第 7 章；2024 机考同型）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 企业信息系统最常用的访问控制模型是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. RBAC 基于角色访问控制</button>
+      <button class="opt">B. MAC 强制访问控制模型</button>
+      <button class="opt">C. BLP 机密性多级安全模型</button>
+      <button class="opt">D. Biba 完整性多级安全模型</button>
+    </div>
+    <div class="explain">答案 A。教材第 7 章：RBAC 企业常用；MAC/BLP 偏分级强制，不是日常 OA 首选。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 在 PDRR 模型中，数据备份对应哪一环节？</div>
+    <div class="opts">
+      <button class="opt">A. 防护 Protection 加密认证</button>
+      <button class="opt">B. 检测 Detection 入侵发现</button>
+      <button class="opt" data-correct="true">C. 恢复 Recovery 备份修复</button>
+      <button class="opt">D. 响应 Response 应急处置</button>
+    </div>
+    <div class="explain">答案 C。教程第 2 版第 66 页：恢复 = 数据备份、数据修复、系统恢复。真题同口径。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 访问控制里属于「控制」的是？</div>
+    <div class="opts">
+      <button class="opt">A. 接收邮件这项具体操作</button>
+      <button class="opt">B. 读写这一组访问权限</button>
+      <button class="opt">C. 删除这一项具体权限</button>
+      <button class="opt" data-correct="true">D. 禁止访问这项控制决策</button>
+    </div>
+    <div class="explain">答案 D。授权是读/写/删等访问方式；控制是许可或拒绝的决策。2025 公开回忆题。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · The Biba model is mainly designed to protect?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Confidentiality of classified data</button>
+      <button class="opt" data-correct="true">B. Integrity against unauthorized change</button>
+      <button class="opt">C. Availability of online services</button>
+      <button class="opt">D. Non-repudiation of transactions</button>
+    </div>
+    <div class="explain">答案 B。Biba → integrity（No Write Up, No Read Down）。Confidentiality 是 BLP。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位办公网文件由属主随意转授；涉密分区未打密级标签；OA 未按岗位赋权；策略按「没写禁止就可以做」执行；仅有防火墙、没有备份。请：（1）指出主要风险；（2）给出至少 5 条整改措施。</p>
+    <div class="ans">
+      <strong>（1）主要风险</strong><br>
+      · DAC 转授失控 → 权限扩散、越权读取。<br>
+      · 涉密区无 MAC/标签 → 达不到强制访问控制，机密可下泄。<br>
+      · 无 RBAC → 岗位变动时权限收不干净。<br>
+      · 默认允许 → 未授权操作被放行。<br>
+      · 有防护无恢复 → 破坏后无法回到安全状态（PDRR 缺恢复）。<br><br>
+      <strong>（2）整改措施（示例）</strong><br>
+      ① <strong>办公网</strong>：以 <strong>RBAC</strong> 按岗位赋角色；落实<strong>最小权限</strong>与职责分离。<br>
+      ② <strong>涉密分区</strong>：实施 <strong>MAC</strong> + 安全标记；读写按 <strong>BLP</strong>（不上读、不下写）防泄露。<br>
+      ③ <strong>完整性要求高的库表</strong>：对照 <strong>Biba</strong>（不上写、不下读）防污染。<br>
+      ④ <strong>策略</strong>：改为<strong>默认拒绝</strong>（未经明确允许的一律禁止）；权限用 ACL 挂在客体上并定期复核。<br>
+      ⑤ <strong>PDRR</strong>：防护（认证+访问控制）→ 检测（审计/IDS）→ <strong>恢复（备份）</strong> → 响应（应急）。<br>
+      ⑥ <strong>等保</strong>：身份鉴别 + 访问控制；测评是符合性检查，≠ 风险评估。<br>
+      答题模板：<strong>先写模型选型理由 → 再写默认拒绝/最小权限 → 点 BLP 或 Biba → 补备份恢复</strong>。
+    </div>
+  </details>
+
+  <h2>七、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 4、7 章（20 分钟）</strong>：阅读
+      <a href="../reference/textbook/ch04.html">第 4 章 网络安全体系与网络安全模型</a> +
+      <a href="../reference/textbook/ch07.html">第 7 章 访问控制技术原理与应用</a>，
+      对照<a href="../reference/access-control-cheatsheet.html">访问控制与安全模型速查卡</a>。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：控制 vs 授权；DAC/MAC/RBAC/ABAC 各一句；ACL 和能力表贴在哪；BLP 与 Biba 读写相反在哪；备份属于 PDRR 哪一环。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 访问控制三要素：主体来访客体受，授权定方式，控制做拦门；② 四模型：主人自己定、标签系统定、角色中间转、属性随环境变；③ ACL 贴在客体上，能力表揣在主体兜；④ BLP：不上读、不下写，机密不往低处流；⑤ Biba：不上写、不下读，脏数据不往高处爬；⑥ PDRR：先防护再检测，恢复靠备份，响应做应急；⑦ 未经明确允许的，一律禁止。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 4 章 网络安全体系与网络安全模型、第 7 章 访问控制技术原理与应用（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）；PDRR 口径见教程第 66 页（<a href="https://www.cnitpm.com/pm1/154365dqe8qfvp0b.html">信管网考点摘录</a>）</li>
+    <li>章结构对照（辅助）：<a href="https://www.moondream.cn/?p=2103">月梦工作室 · 第 4 章</a> ·
+      <a href="https://www.cnblogs.com/evan-whc/p/17091610.html">博客园 · 第 7 章</a> ·
+      <a href="https://rk.51cto.com/article/599317.html">51CTO · DAC/MAC/RBAC</a></li>
+    <li>机考辨析校准：<a href="../reference/exam-2023-2025.html">2023–2025 考点分布</a>（访问控制操作辨析；ACL 表示法）</li>
+    <li>对照旧课：<a href="./0014-os-security.html">第 14 课 操作系统安全</a>（DAC/MAC/RBAC、BLP）·
+      <a href="./0003-crypto-basics.html">第 3 课 密码学</a>（密钥方向）·
+      <a href="./0012-classified-protection.html">第 12 课 等保 2.0</a></li>
+    <li>速查：<a href="../reference/access-control-cheatsheet.html">访问控制与安全模型速查</a> ·
+      <a href="../reference/mnemonics.html#lesson-25">第 25 课口诀</a> ·
+      <a href="../reference/os-security-cheatsheet.html">OS 安全速查</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「BLP 上写为什么不是越权」「ACL 和能力表差在哪」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 25 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：<strong>国密参数表</strong>（SM1–SM4/SM9/ZUC 的对称还是杂凑、分组与密钥长度）——第 23 课 §八下一项缺口。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

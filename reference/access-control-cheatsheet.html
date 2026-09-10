@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 访问控制与安全模型</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>访问控制与安全模型速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 4、7 章 · 打印用</p>
+  </header>
+
+  <h2>一、三要素与两个目标</h2>
+  <ul>
+    <li><strong>主体</strong>访问者 · <strong>客体</strong>资源 · <strong>授权</strong>访问方式（读/写/删）· <strong>控制</strong>许可或拒绝</li>
+    <li>目标：防非法用户进入；阻合法用户越权</li>
+  </ul>
+  <p class="meta"><strong>访问控制三要素</strong>：主体来访客体受，授权定方式，控制做拦门。</p>
+
+  <h2>二、DAC / MAC / RBAC / ABAC</h2>
+  <table>
+    <tr><th>模型</th><th>要点</th></tr>
+    <tr><td>DAC</td><td>属主自主授权；可转授；Unix 文件属主</td></tr>
+    <tr><td>MAC</td><td>系统按标签强制；军事分级；与 BLP 关联</td></tr>
+    <tr><td>RBAC</td><td>用户→角色→权限；U/R/S/P；企业最常用</td></tr>
+    <tr><td>ABAC</td><td>主体/客体/环境属性 + 策略；云与分布式常用</td></tr>
+  </table>
+  <p class="meta"><strong>访问控制四模型</strong>：DAC 主人自己定，MAC 标签系统定，RBAC 角色中间转，ABAC 属性随环境变。</p>
+
+  <h2>三、矩阵 / ACL / 能力表</h2>
+  <table>
+    <tr><th>题干</th><th>选</th><th>别选</th></tr>
+    <tr><td>客体后列出各主体权限<br>如 File1:(ID1:rx)…</td><td><strong>ACL 访问控制表</strong>（基于列）</td><td>能力表、前缀表</td></tr>
+    <tr><td>主体带着可访问客体清单</td><td><strong>能力表</strong>（基于行）</td><td>ACL</td></tr>
+    <tr><td>Unix 9 比特 rwx</td><td><strong>保护位</strong>（基于列）</td><td>能力表</td></tr>
+  </table>
+  <p class="meta"><strong>ACL 与能力表</strong>：ACL 贴在客体上，能力表揣在主体兜。</p>
+  <p>Windows：令牌 SID；DACL 谁能访；SACL 记哪些；SRM 做裁决。</p>
+
+  <h2>四、BLP vs Biba</h2>
+  <table>
+    <tr><th>模型</th><th>属性</th><th>读写</th></tr>
+    <tr><td>BLP</td><td>机密性</td><td>不上读、不下写（下读上写）</td></tr>
+    <tr><td>Biba</td><td>完整性</td><td>不上写、不下读（上读下写）</td></tr>
+  </table>
+  <p class="meta"><strong>BLP 机密性规则</strong>：不上读、不下写，机密不往低处流。</p>
+  <p class="meta"><strong>Biba 完整性规则</strong>：不上写、不下读，脏数据不往高处爬。</p>
+  <p class="meta"><strong>BLP 与 Biba 对照</strong>：保机密用 BLP 下读上写，保完整用 Biba 上读下写。</p>
+  <p>访问类 = 安全级（公开&lt;秘密&lt;机密&lt;绝密）+ 范畴集。Biba 另有调用特性：低完整不能调高完整。</p>
+
+  <h2>五、PDRR 与原则</h2>
+  <ul>
+    <li>PDRR：防护、检测、<strong>恢复</strong>、响应（教程第 2 版第 66 页）</li>
+    <li>数据备份 / 修复 / 系统恢复 → <strong>恢复</strong>，不是响应</li>
+    <li>P2DR：策略 Policy 为核心 + 防护、检测、响应</li>
+    <li>默认拒绝：未经明确允许的都是禁止的</li>
+    <li>最小特权：只给完成任务必需的权限</li>
+  </ul>
+  <p class="meta"><strong>PDRR 四环节</strong>：先防护再检测，恢复靠备份，响应做应急。</p>
+  <p class="meta"><strong>默认拒绝原则</strong>：未经明确允许的，一律禁止。</p>
+  <p class="meta"><strong>最小特权原则</strong>：只给干活必需的那点权。</p>
+
+  <h2>六、易错陷阱</h2>
+  <ul>
+    <li>BLP ≠ Biba（机密 vs 完整；读写规则对偶）</li>
+    <li>ACL ≠ 能力表（贴客体 vs 贴主体）</li>
+    <li>读写/删除是权限；禁止访问才是「控制」</li>
+    <li>备份属恢复，不是响应</li>
+    <li>企业日常首选 RBAC，不是 BLP</li>
+    <li>等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2>七、英文词汇</h2>
+  <p>Access control · Subject / Object · DAC / MAC / RBAC / ABAC ·
+    ACL / Capability · Bell-LaPadula / Biba · Least Privilege · Default deny ·
+    Protection / Detection / Recovery / Response</p>
+
+  <h2>八、下午卷模板</h2>
+  <p>先写<strong>模型选型</strong>（办公 RBAC / 涉密 MAC+BLP / 防篡改 Biba）→
+    再写<strong>默认拒绝 + 最小权限</strong> → 点<strong>ACL 挂客体</strong> → 补 <strong>PDRR 备份恢复</strong>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0025-access-control-models.html">第 25 课</a> ·
+    <a href="./mnemonics.html#lesson-25">口诀</a> ·
+    <a href="./os-security-cheatsheet.html">OS 安全速查</a> ·
+    <a href="./textbook/ch04.html">教材第 4 章</a> ·
+    <a href="./textbook/ch07.html">教材第 7 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
