@@ -6,6 +6,7 @@
 ## 做了什么
 
 - 目录：`question-bank/`（与 `lessons/`、`reference/` 并列）
+- **题库拥有者：aycc345**（`manifest.json` → `"owner": "aycc345"`）。托管在 `aycc22/ruankao-infosec` 不等于 aycc22 拥有本题库。
 - 入口：`question-bank/index.html`；综合卷：`question-bank/sprint.html`（由 `_gen.py` 生成）
 - 60 道单选（复用 `assets/quiz.js` 点选判分）+ 3 道下午卷风格简答（`<details>` 参考要点）
 - 首页按钮「题库」、侧栏「题库」、`COURSE_CATALOG.questionBank`、Service Worker 预缓存已接通

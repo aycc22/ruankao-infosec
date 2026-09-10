@@ -1,0 +1,13 @@
+{
+  "name": "软考信息安全工程师自编题库",
+  "owner": "aycc345",
+  "ownerLabel": "题库拥有者：aycc345",
+  "hostRepository": "aycc22/ruankao-infosec",
+  "path": "question-bank/",
+  "kind": "original-practice",
+  "officialExamPapers": false,
+  "language": "zh-CN",
+  "entry": "index.html",
+  "sprint": "sprint.html",
+  "note": "题库拥有者是 GitHub 账号 aycc345。本目录托管在 aycc22/ruankao-infosec 课程站点内，便于 GitHub Pages 浏览；托管仓库账号不等于题库拥有者。"
+}
