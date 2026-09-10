@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 物理安全与网闸</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>物理安全与网闸速查</h1>
+    <p class="meta">依据《信息安全工程师教程（第 2 版）》第 5、11 章 · 打印用</p>
+  </header>
+
+  <h2>一、物理安全三块</h2>
+  <ul>
+    <li><strong>物理防护</strong>：机房选址、建筑结构、门禁、监控、防盗、防火、防水、防静电</li>
+    <li><strong>电磁与介质</strong>：TEMPEST 电磁泄漏 → 屏蔽、干扰；介质销毁 → 消磁、物理粉碎；报废须清数据</li>
+    <li><strong>环境保障</strong>：温湿度、UPS、防雷、消防（气体灭火等）</li>
+  </ul>
+  <p class="meta"><strong>机房物理防护要点</strong>：选址结构把门禁，监控防盗防火水，静电也要防。</p>
+  <p class="meta"><strong>机房门禁与访客</strong>：生物识别配 IC 卡，双因子进门，访客登记须陪同。</p>
+
+  <h2>二、TEMPEST 与销毁</h2>
+  <table>
+    <tr><th>题干</th><th>选</th><th>别选</th></tr>
+    <tr><td>电磁泄漏 / TEMPEST</td><td><strong>屏蔽、干扰</strong></td><td>加密、防火墙、VPN</td></tr>
+    <tr><td>报废硬盘 / 信息残留</td><td><strong>消磁、物理粉碎</strong> + 清数据</td><td>只删文件、只格式化、直接扔掉</td></tr>
+  </table>
+  <p class="meta"><strong>电磁泄漏防护 TEMPEST</strong>：防电磁泄漏靠屏蔽，干扰可辅助，加密防火墙帮不上。</p>
+  <p class="meta"><strong>存储介质销毁</strong>：报废先清数据，消磁粉碎才算毁。</p>
+  <p class="meta"><strong>机房环境保障</strong>：温湿度要稳，UPS 保电，防雷气体灭火。</p>
+
+  <h2>三、网闸 Gap</h2>
+  <p>内外网<strong>不直连</strong>；数据<strong>单向或受控摆渡</strong>。相关实现：双网卡隔离、光单向导入。强度<strong>高于</strong>防火墙逻辑隔离。</p>
+  <p class="meta"><strong>物理隔离与网闸</strong>：内外网不直连，网闸摆渡或单向，强度高于防火墙。</p>
+
+  <h2>四、设备辨析</h2>
+  <table>
+    <tr><th>技术</th><th>性质</th><th>秒判</th></tr>
+    <tr><td><strong>网闸</strong></td><td>物理 / 近物理隔离</td><td>不直连；摆渡/单向；不对外开端口</td></tr>
+    <tr><td><strong>防火墙</strong></td><td>逻辑隔离</td><td>规则过滤；可开端口；双向会话</td></tr>
+    <tr><td><strong>VPN</strong></td><td>加密隧道</td><td>保密传输，不是隔离</td></tr>
+    <tr><td><strong>IDS</strong></td><td>检测</td><td>旁路告警，不隔离</td></tr>
+    <tr><td><strong>IPS</strong></td><td>逻辑阻断</td><td>串联可挡，仍非物理隔离</td></tr>
+  </table>
+  <p class="meta"><strong>网闸与防火墙辨析</strong>：防火墙逻辑可开端口，网闸物理不直连；VPN 加密不隔离，IDS 只看不隔离。</p>
+
+  <h2>五、等保与工控挂钩</h2>
+  <ul>
+    <li>等保技术五大类第一项：<strong>安全物理环境</strong>（GB/T 22239）</li>
+    <li>工控边界：工业防火墙 / 工业网闸 / 单向隔离；电力横向隔离接近物理隔离</li>
+    <li>下午卷拓扑：近物理隔离 → 填<strong>网闸</strong>；网站 → DMZ；库 → 内网</li>
+  </ul>
+  <p class="meta"><strong>等保物理环境定位</strong>：技术五大类第一项，就是安全物理环境。</p>
+
+  <h2>六、易错陷阱</h2>
+  <ul>
+    <li>双重宿主主机（双网卡防火墙结构）≠ 网闸</li>
+    <li>删文件 ≠ 介质销毁</li>
+    <li>TEMPEST ≠ 加密</li>
+    <li>网闸隔链路，不保证文件里没有恶意代码</li>
+    <li>等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2>七、英文词汇</h2>
+  <p>Physical security · TEMPEST · Shielding · UPS · Degauss · Physical destruction ·
+    Network gap / Gap · Ferry / one-way transfer · Physical isolation vs logical isolation</p>
+
+  <h2>八、下午卷模板</h2>
+  <p>先写<strong>门禁监控 + 介质销毁 + UPS/消防</strong> → 再写<strong>网闸不直连/摆渡</strong> → 防火墙/VPN 只作逻辑补充 → 点名<strong>等保安全物理环境</strong>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0024-physical-security-gap.html">第 24 课</a> ·
+    <a href="./mnemonics.html#lesson-24">口诀</a> ·
+    <a href="./firewall-vpn-cheatsheet.html">防火墙/VPN</a> ·
+    <a href="./classified-protection-cheatsheet.html">等保速查</a> ·
+    <a href="./textbook/ch05.html">教材第 5 章</a> ·
+    <a href="./textbook/ch11.html">教材第 11 章</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
