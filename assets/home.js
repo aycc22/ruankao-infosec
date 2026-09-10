@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0020-ics-security.html',
-    label: '第 20 课',
-    title: '工控安全'
+    file: '0024-physical-security-gap.html',
+    label: '第 24 课',
+    title: '物理安全与网闸'
   };
 
   function el(tag, className, html) {

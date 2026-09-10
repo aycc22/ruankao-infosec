@@ -108,8 +108,8 @@ CHAPTERS = [
     },
     {
         "num": 5, "file": "ch05.html", "title": "物理与环境安全技术",
-        "lesson": "第 12 课（预告）", "lesson_link": "../textbook-index.html",
-        "cheatsheet": "../exam-overview.html", "cheatsheet_label": "考试全貌",
+        "lesson": '<a href="../../lessons/0024-physical-security-gap.html">第 24 课</a>', "lesson_link": "../../lessons/0024-physical-security-gap.html",
+        "cheatsheet": "../physical-gap-cheatsheet.html", "cheatsheet_label": "物理安全与网闸速查",
         "sections": [
             ("5.1–5.3 物理安全", [
                 "机房选址、建筑结构、门禁、监控、防盗、防火、防水、防静电。",
@@ -214,7 +214,7 @@ MORE = [
         ("10.1–10.3 IDS/IPS 概念", ["IDS 检测告警；IPS 检测+阻断 inline。", "HIDS 主机型；NIDS 网络型。", "误报/漏报权衡。"]),
         ("10.4–10.5 检测方法", ["误用检测（特征/签名匹配）；异常检测（行为基线偏离）。", "Hybrid 混合检测。"]),
     ], ["IPS 串联可阻断；IDS 旁路只告警。"], ("IDS 与 IPS 的主要区别是？", "IPS 可主动阻断", "IDS 更快", "IPS 只查病毒", "IDS 需装客户端")),
-    (11, "网络物理隔离技术原理与应用", "第 8 课", [
+    (11, "网络物理隔离技术原理与应用", "第 24 课", [
         ("11.1–11.3 物理隔离", ["网闸 Gap：内外网不直连，数据单向或受控摆渡。", "双网卡隔离、光单向导入。"]),
     ], ["物理隔离强度高于防火墙逻辑隔离。"], ("最高强度的内外网隔离技术是？", "物理隔离/网闸", "状态防火墙", "VPN", "IDS")),
     (12, "网络安全审计技术原理与应用", "第 7 课", [
@@ -361,6 +361,13 @@ MORE = [
 for item in MORE:
     num, title, lesson, sections, traps, quiz = item
     extra = {}
+    if num == 11:
+        extra = {
+            "lesson_link": "../../lessons/0024-physical-security-gap.html",
+            "cheatsheet": "../physical-gap-cheatsheet.html",
+            "cheatsheet_label": "物理安全与网闸速查",
+            "lesson": '<a href="../../lessons/0024-physical-security-gap.html">第 24 课</a>',
+        }
     if num == 23:
         extra = {
             "lesson_link": "../../lessons/0019-cloud-security.html",
@@ -381,7 +388,7 @@ for item in MORE:
         }
     CHAPTERS.append({
         "num": num, "file": f"ch{num:02d}.html", "title": title,
-        "lesson": lesson,
+        "lesson": extra.get("lesson", lesson),
         "lesson_link": extra.get("lesson_link", "../textbook-index.html"),
         "cheatsheet": extra.get("cheatsheet", "../textbook-index.html"),
         "cheatsheet_label": extra.get("cheatsheet_label", "教材目录"),

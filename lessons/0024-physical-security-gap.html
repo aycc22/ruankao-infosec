@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 24 课 · 物理安全与网闸</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 24 · 约 18 分钟 · 冲刺补缺</div>
+    <h1>最后一道防线：物理安全与网闸（Gap）</h1>
+    <p class="meta">本课目标：背住机房选址/门禁/防火防水防静电、TEMPEST 屏蔽、介质销毁、UPS 与气体灭火；秒判物理隔离高于防火墙逻辑隔离；会把网闸和防火墙 / VPN / IDS 拆开。</p>
+  </header>
+
+  <h2>开场：主干学完了，机房和网闸还没上</h2>
+  <p>
+    第 1–23 课主干已经走完。<a href="./0023-afternoon-case-special.html">第 23 课 §八</a>把冲刺缺口排在第一的，就是教材
+    <strong>第 5 章 物理与环境安全</strong>和<strong>第 11 章 网络物理隔离</strong>。
+    上午卷会问「电磁泄漏怎么防」「隔离强度谁最高」；下午卷拓扑里，要<strong>近物理隔离</strong>时填的是<strong>网闸</strong>，不是防火墙。
+    第 5 课的防火墙是<strong>逻辑隔离</strong>；第 12 课等保技术五大类第一项是<strong>安全物理环境</strong>——本课把这两头接上。
+  </p>
+
+  <div class="callout ok">
+    第 23 课结业测 <strong>7/7</strong>。本课是冲刺补缺第一课：把「锁门、断电、毁盘、隔网」收成一张可背的表。
+  </div>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 = 符合性判定；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 数字签名的密钥方向，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 公钥签名，再用公钥验签</button>
+      <button class="opt" data-correct="true">B. 私钥签名，再用公钥验签</button>
+      <button class="opt">C. 公钥签名，再用私钥验签</button>
+      <button class="opt">D. 私钥签名，再用私钥验签</button>
+    </div>
+    <div class="explain">答案 B。公钥加密 → 私钥解密；私钥签名 → 公钥验签。第 3–4 课持续复习点。</div>
+  </div>
+
+  <h2>一、物理安全管什么（先定位）</h2>
+  <p>
+    密码、防火墙、IDS 都管「线上」；有人进机房抽硬盘、电磁把屏幕辐射收走、停电把系统打挂——这些要靠<strong>物理与环境安全</strong>。
+    教材第 5 章把它分成三块：<strong>物理防护</strong>（选址、门禁、防火防水防静电）· <strong>电磁与介质</strong>（TEMPEST、销毁）· <strong>环境保障</strong>（温湿度、UPS、防雷、消防）。
+  </p>
+  <p>
+    等保 2.0（<a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=BAFB47E8874764186BDB7865E8344DAF">GB/T 22239—2019</a>）技术五大类第一项就是<strong>安全物理环境</strong>——门禁、监控、机房环境不是「后勤常识」，是合规条目。
+  </p>
+  <div class="callout warn">
+    易错：物理安全常被当成「最后才想起来的一道防线」，但上午卷有题；等保答题漏写机房门禁/介质销毁也会丢分。
+  </div>
+
+  <h2>二、机房选址、门禁与防护</h2>
+  <table>
+    <tr><th>考点</th><th>要记住什么</th></tr>
+    <tr><td><strong>选址与结构</strong></td><td>机房选址、建筑结构要利于防护（避开易受灾害、易被非法进入的位置）</td></tr>
+    <tr><td><strong>门禁</strong></td><td>生物识别、IC 卡、双因子；访客登记与陪同</td></tr>
+    <tr><td><strong>监控 / 防盗</strong></td><td>区域监控、防盗措施，核心机房不能「刷卡进了就没人管」</td></tr>
+    <tr><td><strong>防火防水防静电</strong></td><td>三类环境危害并列记；电子设备怕水、怕静电击穿</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>机房物理防护要点</strong>）：<strong>选址结构把门禁，监控防盗防火水，静电也要防</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>机房门禁与访客</strong>）：<strong>生物识别配 IC 卡，双因子进门，访客登记须陪同</strong>。
+  </div>
+
+  <h2>三、电磁泄漏（TEMPEST）与介质销毁</h2>
+  <p>
+    显示器、线缆会向外辐射电磁信号，被接收后可能还原信息——这就是<strong>电磁泄漏</strong>，教材点名 <strong>TEMPEST</strong>。
+    防护靠<strong>屏蔽</strong>、<strong>干扰</strong>，不是靠加密、防火墙或 VPN（第 5 章章末自测原口径）。
+  </p>
+  <table>
+    <tr><th>手段</th><th>对应什么</th><th>别混成</th></tr>
+    <tr><td><strong>屏蔽 / 干扰</strong></td><td>防电磁泄漏（TEMPEST）</td><td>≠ 加密、≠ 防火墙</td></tr>
+    <tr><td><strong>消磁、物理粉碎</strong></td><td>存储介质销毁</td><td>≠ 只删文件、≠ 只格式化</td></tr>
+    <tr><td><strong>报废清数据</strong></td><td>设备报废须清除数据，防信息残留</td><td>≠ 硬盘直接扔掉或转卖</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>电磁泄漏防护 TEMPEST</strong>）：<strong>防电磁泄漏靠屏蔽，干扰可辅助，加密防火墙帮不上</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>存储介质销毁</strong>）：<strong>报废先清数据，消磁粉碎才算毁</strong>。
+  </div>
+  <div class="callout warn">
+    易错：删分区、清空回收站 ≠ 销毁。题干出现「报废硬盘 / 信息残留」→ 选消磁或物理粉碎。
+  </div>
+
+  <h2>四、环境安全：电、温湿度、消防</h2>
+  <table>
+    <tr><th>措施</th><th>保的是哪条</th></tr>
+    <tr><td><strong>温湿度</strong></td><td>设备稳定运行，防过热、结露</td></tr>
+    <tr><td><strong>UPS 不间断电源</strong></td><td>市电中断时仍可用（可用性）</td></tr>
+    <tr><td><strong>防雷</strong></td><td>雷击与浪涌损坏设备</td></tr>
+    <tr><td><strong>消防（气体灭火等）</strong></td><td>机房灭火；教材点名气体灭火</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>机房环境保障</strong>）：<strong>温湿度要稳，UPS 保电，防雷气体灭火</strong>。
+  </div>
+
+  <h2>五、物理隔离与网闸（Gap）</h2>
+  <p>
+    防火墙再严，两边仍然在同一套协议上「连着」——这是<strong>逻辑隔离</strong>。
+    <strong>物理隔离</strong>要求：内外网<strong>不直连</strong>；需要交换数据时，用<strong>单向</strong>或<strong>受控摆渡</strong>。
+    典型设备是<strong>网闸（Gap）</strong>；教材还点了<strong>双网卡隔离</strong>、<strong>光单向导入</strong>。
+  </p>
+  <p>
+    摆渡的直观图：同一时刻只接通一侧，数据先落到隔离区再转到另一侧——所以叫「渡」，不是开一条常连的网线。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>物理隔离与网闸</strong>）：<strong>内外网不直连，网闸摆渡或单向，强度高于防火墙</strong>。
+  </div>
+  <div class="callout warn">
+    易错：第 5 课「双重宿主主机」也是双网卡，那是<strong>防火墙体系结构</strong>（一台主机当关卡），<strong>不是网闸</strong>。
+    网闸的考点词是 Gap、不直连、摆渡/单向；防火墙的考点词是规则、端口、会话。
+  </div>
+
+  <h2>六、网闸 vs 防火墙 / VPN / IDS（高频辨析）</h2>
+  <table>
+    <tr><th>技术</th><th>隔离性质</th><th>一句话秒判</th></tr>
+    <tr>
+      <td><strong>网闸 Gap</strong></td>
+      <td>物理隔离（近物理隔离）</td>
+      <td>内外网不直连；单向或受控摆渡；<strong>不对外开端口</strong></td>
+    </tr>
+    <tr>
+      <td><strong>防火墙</strong></td>
+      <td>逻辑隔离</td>
+      <td>按规则过滤；可开放端口；支持双向通信与会话</td>
+    </tr>
+    <tr>
+      <td><strong>VPN</strong></td>
+      <td>加密隧道，不是隔离</td>
+      <td>在公网上开私路；解决机密性，不替代网闸</td>
+    </tr>
+    <tr>
+      <td><strong>IDS</strong></td>
+      <td>不隔离</td>
+      <td>旁路检测告警；实现不了内外网隔离</td>
+    </tr>
+    <tr>
+      <td><strong>IPS</strong></td>
+      <td>逻辑层阻断</td>
+      <td>串联可阻断，仍不是物理隔离</td>
+    </tr>
+  </table>
+  <p>
+    2023–2025 机考把「防火墙 vs 网闸」写成：<strong>物理隔离强度</strong>、<strong>是否对外开端口</strong>。
+    下午卷拓扑：网站放 DMZ、库放内网；要<strong>近物理隔离</strong>的位置填<strong>网闸</strong>。
+    工控场景（第 20 课）边界常用<strong>工业防火墙 / 工业网闸 / 单向隔离</strong>，电力「横向隔离」接近物理隔离。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>网闸与防火墙辨析</strong>）：<strong>防火墙逻辑可开端口，网闸物理不直连；VPN 加密不隔离，IDS 只看不隔离</strong>。
+  </div>
+  <div class="callout warn">
+    网闸隔的是<strong>链路直连</strong>，不是文件内容。摆渡过去的文档里若藏着恶意代码，仍可能打进内网——所以网闸<strong>不是万能</strong>，还要配合内容检查、介质管控。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>等保物理环境定位</strong>）：<strong>技术五大类第一项，就是安全物理环境</strong>（字头：物通边算中的「物」）。
+  </div>
+
+  <h2>七、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 防止电磁泄漏（TEMPEST）应优先采用？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 电磁屏蔽或干扰措施</button>
+      <button class="opt">B. 仅部署状态检测防火墙</button>
+      <button class="opt">C. 仅建立远程接入 VPN</button>
+      <button class="opt">D. 仅使用数字签名验签</button>
+    </div>
+    <div class="explain">答案 A。TEMPEST 防泄漏靠屏蔽/干扰；加密、防火墙、VPN 不解辐射还原问题（教材第 5 章）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 报废硬盘防止信息残留，正确做法是？</div>
+    <div class="opts">
+      <button class="opt">A. 仅删除分区表后继续转卖</button>
+      <button class="opt" data-correct="true">B. 清除数据并消磁或粉碎</button>
+      <button class="opt">C. 仅重命名文件后放入抽屉</button>
+      <button class="opt">D. 仅关闭主机显示器的电源</button>
+    </div>
+    <div class="explain">答案 B。介质销毁：消磁、物理粉碎；设备报废须清除数据，防止信息残留。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 机房环境安全保障通常包括？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 温湿度、UPS、防雷与气体灭火</button>
+      <button class="opt">B. 仅更换桌面壁纸与系统主题</button>
+      <button class="opt">C. 仅提高社交媒体的曝光数量</button>
+      <button class="opt">D. 仅关闭全部门禁监控与报警</button>
+    </div>
+    <div class="explain">答案 A。教材 5.6：温湿度、UPS、防雷、消防（气体灭火等）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 最高强度的内外网隔离技术是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 物理隔离或网闸 Gap</button>
+      <button class="opt">B. 状态检测防火墙过滤</button>
+      <button class="opt">C. 虚拟专用网 VPN 隧道</button>
+      <button class="opt">D. 入侵检测系统 IDS 告警</button>
+    </div>
+    <div class="explain">答案 A。物理隔离强度高于防火墙逻辑隔离；VPN/IDS 都不是隔离装置（教材第 11 章）。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 关于防火墙与网闸，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 二者隔离强度完全相同可互换</button>
+      <button class="opt" data-correct="true">B. 网闸不直连，隔离强度更高</button>
+      <button class="opt">C. 网闸负责加密全部公网流量</button>
+      <button class="opt">D. 防火墙就是物理隔离专用装置</button>
+    </div>
+    <div class="explain">答案 B。网闸：不直连、摆渡/单向、不对外开端口；防火墙：逻辑隔离、可开端口、双向会话。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 等保技术五大类中，机房门禁监控属于？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 安全物理环境类要求</button>
+      <button class="opt">B. 安全通信网络类要求</button>
+      <button class="opt">C. 安全区域边界类要求</button>
+      <button class="opt">D. 安全管理中心类要求</button>
+    </div>
+    <div class="explain">答案 A。技术五类：物理、通信、区域边界、计算环境、管理中心。门禁监控落在「安全物理环境」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · A network gap device is mainly used to?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. Encrypt public traffic like VPN</button>
+      <button class="opt" data-correct="true">B. Isolate networks and ferry data</button>
+      <button class="opt">C. Detect attacks like IDS only</button>
+      <button class="opt">D. Replace antivirus on all hosts</button>
+    </div>
+    <div class="explain">答案 B。Gap = physical isolation + controlled ferry / one-way transfer；不是 VPN、不是 IDS。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某单位核心机房访客可随意进入；报废硬盘直接扔掉；生产内网与互联网只用普通防火墙互联并对外开放维护端口。请：（1）指出主要风险；（2）给出至少 5 条整改措施。</p>
+    <div class="ans">
+      <strong>（1）主要风险</strong><br>
+      · 无门禁/陪同 → 未授权进入、设备被盗或被接线。<br>
+      · 报废介质未销毁 → 数据残留被恢复。<br>
+      · 仅逻辑隔离且对公网开口 → 远程入侵；达不到「近物理隔离」强度。<br>
+      · 缺 UPS/消防等环境保障 → 断电、火灾导致可用性事故。<br><br>
+      <strong>（2）整改措施（示例）</strong><br>
+      ① <strong>物理防护</strong>：选址与分区；门禁（生物识别/IC 卡/双因子）；监控防盗；访客登记陪同。<br>
+      ② <strong>环境保障</strong>：温湿度、UPS、防雷、气体灭火。<br>
+      ③ <strong>电磁与介质</strong>：机房屏蔽/干扰防 TEMPEST；报废消磁或粉碎并清数据。<br>
+      ④ <strong>边界隔离</strong>：内外网不直连；部署<strong>网闸</strong>做摆渡/单向；关闭不必要公网端口。<br>
+      ⑤ <strong>逻辑补充</strong>：防火墙仍用于外网逻辑隔离与会话控制；需要远程则走 VPN + 审计（不能拿 VPN 当网闸）。<br>
+      ⑥ <strong>等保</strong>：落实<strong>安全物理环境</strong> + 区域边界；测评是符合性检查，≠ 风险评估。<br>
+      答题模板：<strong>先写门禁介质环境 → 再写网闸物理隔离 → 防火墙/VPN 只作补充 → 点等保物理环境</strong>。
+    </div>
+  </details>
+
+  <h2>八、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 5、11 章（20 分钟）</strong>：阅读
+      <a href="../reference/textbook/ch05.html">第 5 章 物理与环境安全</a> +
+      <a href="../reference/textbook/ch11.html">第 11 章 网络物理隔离</a>，
+      对照<a href="../reference/physical-gap-cheatsheet.html">物理安全与网闸速查卡</a>。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出：门禁三件套；TEMPEST 靠什么；介质怎么毁；UPS/气体灭火；网闸为什么强于防火墙；VPN/IDS 为什么不是隔离。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 机房物理防护要点：选址结构把门禁，监控防盗防火水，静电也要防；② TEMPEST：防电磁泄漏靠屏蔽；③ 介质：报废先清数据，消磁粉碎才算毁；④ 环境：温湿度要稳，UPS 保电，防雷气体灭火；⑤ 网闸：内外网不直连，摆渡或单向，强度高于防火墙；⑥ 辨析：防火墙逻辑可开端口，网闸物理不直连。</li>
+  </ol>
+
+  <h2>九、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 5 章 物理与环境安全技术、第 11 章 网络物理隔离技术原理与应用（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）</li>
+    <li>等保物理环境条目：<a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=BAFB47E8874764186BDB7865E8344DAF">GB/T 22239—2019</a></li>
+    <li>机考辨析校准：<a href="../reference/exam-2023-2025.html">2023–2025 考点分布</a>（防火墙 vs 网闸：隔离强度、是否对外开端口；下午卷拓扑填网闸）</li>
+    <li>对照旧课：<a href="./0005-firewall-vpn.html">第 5 课 防火墙与 VPN</a>（逻辑隔离）·
+      <a href="./0012-classified-protection.html">第 12 课 等保 2.0</a>（安全物理环境）·
+      <a href="./0020-ics-security.html">第 20 课 工控</a>（工业网闸 / 单向隔离）</li>
+    <li>速查：<a href="../reference/physical-gap-cheatsheet.html">物理安全与网闸速查</a> ·
+      <a href="../reference/mnemonics.html#lesson-24">第 24 课口诀</a> ·
+      <a href="../reference/firewall-vpn-cheatsheet.html">防火墙/VPN</a> ·
+      <a href="../reference/ids-ips-cheatsheet.html">IDS/IPS</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「双重宿主主机和网闸差在哪」「TEMPEST 为什么不是加密」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 24 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：<strong>访问控制与安全模型</strong>（教材第 4、7 章，BLP/Biba、DAC/MAC/RBAC）——第 23 课 §八下一项缺口。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
