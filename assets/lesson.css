@@ -309,6 +309,46 @@ code {
   font-size: 0.95rem;
 }
 
+/* 冲刺练习：进度条与目录 */
+.practice-progress {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0 0 1.2rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper-2);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+.practice-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.8rem 0 1.2rem;
+}
+.practice-toc a {
+  display: inline-block;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+.practice-toc a:hover { background: var(--paper); }
+.case-prompt {
+  background: var(--quiz-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.1rem 1.3rem;
+  margin: 1.4rem 0;
+}
+.case-prompt h3 { margin-top: 0; }
+.case-prompt ol { margin-bottom: 0.4rem; }
+.quiz, .case-prompt { scroll-margin-top: 3.6rem; }
+
 /* 作业清单 */
 .task-list {
   counter-reset: task;
@@ -347,6 +387,9 @@ footer {
 
 /* ============ 窄屏：目录折叠 ============ */
 @media (max-width: 768px) {
+  .practice-progress { top: 3.2rem; }
+  .quiz, .case-prompt { scroll-margin-top: 6.4rem; }
+
   .nav-toggle { display: block; }
 
   .page-shell > main {
@@ -385,6 +428,7 @@ footer {
   .course-sidebar,
   .nav-toggle,
   .nav-overlay { display: none !important; }
+  .practice-progress { position: static; }
   .page-shell { display: block; }
   .page-shell > main,
   main { max-width: none; padding: 1rem; }

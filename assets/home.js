@@ -49,6 +49,21 @@
     });
   }
 
+  function renderQuestionBank() {
+    var mount = document.getElementById('question-bank-entry');
+    if (!mount || !COURSE_CATALOG.questionBank) return;
+
+    var hub = COURSE_CATALOG.questionBank[0];
+    if (!hub) return;
+
+    var card = el('a', 'continue-card practice-card');
+    card.href = 'question-bank/' + hub.file;
+    card.innerHTML =
+      '<span class="continue-label">题库</span>' +
+      '<span class="continue-title">自编冲刺 · 第 1–24 课综合单选 + 下午卷案例</span>';
+    mount.appendChild(card);
+  }
+
   function renderRefs() {
     var mount = document.getElementById('ref-chips');
     if (!mount) return;
@@ -59,6 +74,15 @@
       'exam-overview.html',
       'exam-2023-2025.html'
     ];
+
+    var bankHub = COURSE_CATALOG.questionBank && COURSE_CATALOG.questionBank[0];
+    if (bankHub) {
+      var bankChip = el('a', 'ref-chip');
+      bankChip.href = 'question-bank/' + bankHub.file;
+      bankChip.textContent = '题库';
+      bankChip.title = bankHub.title;
+      mount.appendChild(bankChip);
+    }
 
     featured.forEach(function (file) {
       var item = COURSE_CATALOG.references.find(function (ref) { return ref.file === file; });
@@ -97,6 +121,7 @@
 
   function init() {
     renderContinue();
+    renderQuestionBank();
     renderLessons();
     renderRefs();
     renderOnlineStatus();

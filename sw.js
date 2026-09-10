@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 // Service Worker：离线缓存课程与速查（版本号随内容更新递增）
-var CACHE_VERSION = 'ruankao-v3';
+var CACHE_VERSION = 'ruankao-v6';
 var CORE_ASSETS = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ var CORE_ASSETS = [
   './assets/course-nav.js',
   './assets/pwa.js',
   './assets/home.js',
+  './assets/practice.js',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png'
 ];
@@ -35,6 +36,10 @@ function buildPrecacheList() {
   COURSE_CATALOG.references.forEach(function (item) {
     urls.push('./reference/' + item.file);
   });
+  (COURSE_CATALOG.questionBank || []).forEach(function (item) {
+    urls.push('./question-bank/' + item.file);
+  });
+  urls.push('./question-bank/manifest.json');
   return urls.concat(textbookUrls());
 }
 

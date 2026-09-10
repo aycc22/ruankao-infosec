@@ -4,7 +4,7 @@
 
   function getAppRoot() {
     var path = window.location.pathname || '/';
-    var markers = ['/lessons/', '/reference/', '/assets/'];
+    var markers = ['/lessons/', '/reference/', '/assets/', '/question-bank/'];
     for (var i = 0; i < markers.length; i++) {
       var idx = path.indexOf(markers[i]);
       if (idx !== -1) return path.slice(0, idx + 1);
@@ -21,7 +21,7 @@
   function assetsPrefix() {
     var path = window.location.pathname || '';
     if (path.indexOf('/textbook/') !== -1) return '../../assets/';
-    if (path.indexOf('/lessons/') !== -1 || path.indexOf('/reference/') !== -1) return '../assets/';
+    if (path.indexOf('/lessons/') !== -1 || path.indexOf('/reference/') !== -1 || path.indexOf('/question-bank/') !== -1) return '../assets/';
     return 'assets/';
   }
 

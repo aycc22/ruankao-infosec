@@ -79,6 +79,19 @@
   text-decoration: none;
 }
 
+.practice-card {
+  background: #eef1f6;
+  border-left-color: var(--accent-3);
+}
+
+.practice-card:hover {
+  background: #e4e9f2;
+}
+
+.practice-card .continue-label {
+  color: var(--accent-3);
+}
+
 .continue-label {
   font-size: 0.78rem;
   letter-spacing: 0.08em;

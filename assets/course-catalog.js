@@ -55,5 +55,10 @@ var COURSE_CATALOG = {
     { file: 'physical-gap-cheatsheet.html', label: '物理/网闸', title: '物理安全与网闸速查' },
     { file: 'access-control-cheatsheet.html', label: '访问控制', title: '访问控制与安全模型速查' },
     { file: 'mnemonics.html', label: '口诀速查', title: '第 1-25 课口诀汇总' }
+  ],
+  // 题库拥有者 aycc345（见 question-bank/manifest.json）；本仓库 aycc22 只是托管位置
+  questionBank: [
+    { file: 'index.html', label: '题库首页', title: '自编题库入口' },
+    { file: 'sprint.html', label: '综合冲刺', title: '第 1–24 课自编单选' }
   ]
 };

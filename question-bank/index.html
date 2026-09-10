@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自编题库 · 入口</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">题库 · 独立练习区</div>
+    <h1>自编题库</h1>
+    <p class="meta">独立于课程讲义 · 覆盖已学第 1–24 课（第 25 课访问控制仅轻量带过）· 点击作答，立刻看解析</p>
+    <p class="meta"><strong>题库拥有者：aycc345</strong>（托管于本课程仓库 <code>question-bank/</code>，拥有者不是 aycc22）</p>
+  </header>
+
+  <div class="callout warn">
+    <strong>这不是官方真题。</strong>题目由课程组按教材与课内考点<strong>自编</strong>，风格接近上午卷单选，
+    用于查缺补漏。请勿当成「某年试卷」传播。官方成套解析仍以
+    <a href="../reference/exam-overview.html">指定用书 / 考试全貌</a>为准。
+    课内 <code>lessons/*.html</code> 的小测仍只服务当堂学习，本题库不往课程页塞题。
+  </div>
+
+  <h2>从这里开始刷</h2>
+  <p>
+    <a href="./sprint.html"><strong>综合冲刺卷 →</strong></a>
+    60 道单选 + 3 道下午卷风格简答。单选点选项即判对错；简答先自己写，再展开参考要点。
+  </p>
+  <ul>
+    <li>建议一次做完或按页面目录分段做，错题对照
+      <a href="../reference/mnemonics.html">口诀速查</a>。</li>
+    <li>结业测验仍在 Cursor 对话里逐题进行；本题库<strong>不替代</strong>学完新课后的结业测。</li>
+    <li>考试：2026-10-24 至 27 · 南宁考场 · 以准考证为准。</li>
+  </ul>
+
+  <h2>本批刻意加练的易错点</h2>
+  <ul>
+    <li>非对称密钥方向：公钥加密 → 私钥解密；私钥签名 → 公钥验签</li>
+    <li>DMZ / 屏蔽子网：对外站点放 DMZ，库和 OA 放内网</li>
+    <li>木马英文关键词：disguise + remote control + no replication</li>
+    <li>等保测评 ≠ 风险评估（符合性 vs 算风险）</li>
+  </ul>
+
+  <h2>覆盖范围</h2>
+  <table>
+    <tr><th>板块</th><th>对应课程</th></tr>
+    <tr><td>易错回炉</td><td>密钥、DMZ、木马英文、等保≠风险</td></tr>
+    <tr><td>基础与攻击</td><td>第 1–2 课</td></tr>
+    <tr><td>密码学与 PKI</td><td>第 3–4 课</td></tr>
+    <tr><td>边界与监测</td><td>第 5–7 课 防火墙 / VPN / IDS / 审计</td></tr>
+    <tr><td>漏洞、恶意代码、蜜罐</td><td>第 8–10 课</td></tr>
+    <tr><td>风险、等保、应急</td><td>第 11–13 课</td></tr>
+    <tr><td>系统与网站</td><td>第 14–17 课</td></tr>
+    <tr><td>云 / 工控 / 移动 / 大数据</td><td>第 19–22 课</td></tr>
+    <tr><td>物理安全与网闸</td><td>第 24 课</td></tr>
+    <tr><td>访问控制（轻量）</td><td>第 25 课已有讲义，未学完也可先做</td></tr>
+  </table>
+
+  <h2>本目录有什么</h2>
+  <ul>
+    <li><code>index.html</code> — 题库首页（本页）</li>
+    <li><code>sprint.html</code> — 综合冲刺卷（由 <code>_gen.py</code> 生成）</li>
+    <li><code>manifest.json</code> — 题库元数据（<code>owner: aycc345</code>）</li>
+    <li><code>_gen.py</code> — 题目数据与生成脚本；改题后在本目录运行 <code>python3 _gen.py</code></li>
+  </ul>
+
+  <footer>
+    <p><strong>题库拥有者：aycc345</strong> · 自编练习，非官方真题 · 清单见 <a href="./manifest.json">manifest.json</a></p>
+    <p>返回 <a href="../index.html">课程首页</a> ·
+      下一课入口：<a href="../lessons/0025-access-control-models.html">第 25 课 访问控制与安全模型</a></p>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
