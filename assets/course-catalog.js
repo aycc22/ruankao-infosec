@@ -25,7 +25,8 @@ var COURSE_CATALOG = {
     { file: '0021-mobile-app-security.html', label: '第 21 课', title: '移动应用安全' },
     { file: '0022-big-data-security.html', label: '第 22 课', title: '大数据安全' },
     { file: '0023-afternoon-case-special.html', label: '第 23 课', title: '下午卷案例专项' },
-    { file: '0024-physical-security-gap.html', label: '第 24 课', title: '物理安全与网闸' }
+    { file: '0024-physical-security-gap.html', label: '第 24 课', title: '物理安全与网闸' },
+    { file: '0025-access-control-models.html', label: '第 25 课', title: '访问控制与安全模型' }
   ],
   references: [
     { file: 'textbook-index.html', label: '教材精读', title: '官方教程 26 章考点' },
@@ -52,6 +53,7 @@ var COURSE_CATALOG = {
     { file: 'big-data-security-cheatsheet.html', label: '大数据安全', title: '大数据安全速查' },
     { file: 'afternoon-case-cheatsheet.html', label: '下午卷案例', title: '下午卷安全工程案例速查' },
     { file: 'physical-gap-cheatsheet.html', label: '物理/网闸', title: '物理安全与网闸速查' },
-    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-24 课口诀汇总' }
+    { file: 'access-control-cheatsheet.html', label: '访问控制', title: '访问控制与安全模型速查' },
+    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-25 课口诀汇总' }
   ]
 };

@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0024-physical-security-gap.html',
-    label: '第 24 课',
-    title: '物理安全与网闸'
+    file: '0025-access-control-models.html',
+    label: '第 25 课',
+    title: '访问控制与安全模型'
   };
 
   function el(tag, className, html) {

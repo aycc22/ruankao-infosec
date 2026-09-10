@@ -11,24 +11,25 @@
   <header class="lesson-head">
     <div class="lesson-no">Textbook · 第 4 章 · 约 15 分钟</div>
     <h1>网络安全体系与网络安全模型</h1>
-    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 1 课 / 第 24 课（预告） ·
-      <a href="../exam-overview.html">考试全貌</a></p>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 <a href="../../lessons/0025-access-control-models.html">第 25 课</a> ·
+      <a href="../access-control-cheatsheet.html">访问控制与安全模型速查</a></p>
   </header>
 
   <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
-    · <a href="../../lessons/0001-exam-overview-and-cia.html">相关课程</a></p>
+    · <a href="../../lessons/0025-access-control-models.html">相关课程</a></p>
 
   <h2>4.1–4.2 安全体系</h2>
   <ul>
     <li>安全体系 = 技术 + 管理 + 工程，分层防御（纵深防御 Defense in Depth）。</li>
-    <li>PDRR 模型：Protection 防护、Detection 检测、Response 响应、Recovery 恢复。</li>
+    <li>PDRR 模型：Protection 防护、Detection 检测、Recovery 恢复、Response 响应（教程第 2 版第 66 页）。备份属恢复。</li>
+    <li>P2DR：Policy 策略为核心，再加防护、检测、响应。</li>
   </ul>
   <h2>4.3–4.5 经典安全模型（上午卷选择）</h2>
   <ul>
-    <li><strong>BLP 模型</strong>（Bell-LaPadula）：侧重<strong>机密性</strong>，不上读不下写（No Read Up, No Write Down）。</li>
-    <li><strong>Biba 模型</strong>：侧重<strong>完整性</strong>，不上写下读（No Write Up, No Read Down）。</li>
-    <li><strong>Chinese Wall 模型</strong>：防利益冲突，动态访问控制。</li>
-    <li><strong>Clark-Wilson 模型</strong>：完整性，事务处理与职责分离。</li>
+    <li><strong>BLP 模型</strong>（Bell-LaPadula）：侧重<strong>机密性</strong>，不上读不下写（下读上写；No Read Up, No Write Down）。</li>
+    <li><strong>Biba 模型</strong>：侧重<strong>完整性</strong>，不上写下读（上读下写；No Write Up, No Read Down）；另有调用特性。</li>
+    <li>访问类 = 安全级（公开&lt;秘密&lt;机密&lt;绝密）+ 范畴集。</li>
+    <li>信息流模型：按客体安全属性控制信息传输，用于分析隐蔽通道。</li>
   </ul>
   <h2>4.4 访问控制模型关系</h2>
   <ul>
@@ -38,7 +39,7 @@
   <div class="callout warn">
     <strong>易错陷阱：</strong>
     <br>BLP=机密性，Biba=完整性，别搞反。
-    <br>PDRR 四个阶段顺序常考。
+    <br>PDRR 备份属于恢复，不是响应。
   </div>
 
   <h2>章末自测（1 题）</h2>

@@ -11,29 +11,36 @@
   <header class="lesson-head">
     <div class="lesson-no">Textbook · 第 7 章 · 约 15 分钟</div>
     <h1>访问控制技术原理与应用</h1>
-    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 第 9 课（预告） ·
-      <a href="../exam-overview.html">考试全貌</a></p>
+    <p class="meta">《信息安全工程师教程（第 2 版）》考点精读 · 对应 <a href="../../lessons/0025-access-control-models.html">第 25 课</a> ·
+      <a href="../access-control-cheatsheet.html">访问控制与安全模型速查</a></p>
   </header>
 
   <p class="meta"><a href="../textbook-index.html">← 返回 26 章目录</a>
-    · <a href="../textbook-index.html">相关课程</a></p>
+    · <a href="../../lessons/0025-access-control-models.html">相关课程</a></p>
 
+  <h2>7.1 概念</h2>
+  <ul>
+    <li>访问控制 = 对资源访问者授权、控制的方法及运行机制。主体（访问者）、客体（资源）、授权（读/写等）、控制（许可或拒绝）。</li>
+    <li>目标：防非法用户进入；阻合法用户越权。读写/删除是权限；禁止访问才是控制。</li>
+  </ul>
   <h2>7.1–7.3 访问控制模型</h2>
   <ul>
     <li><strong>DAC</strong> 自主访问控制：资源所有者决定权限（如 Unix 文件 owner）。</li>
     <li><strong>MAC</strong> 强制访问控制：系统强制策略（军事分级，与 BLP 关联）。</li>
-    <li><strong>RBAC</strong> 基于角色：用户→角色→权限，企业常用。</li>
-    <li><strong>ABAC</strong> 基于属性：动态策略，云环境常用。</li>
+    <li><strong>RBAC</strong> 基于角色：用户→角色→权限；四要素 U/R/S/P；企业常用。</li>
+    <li><strong>ABAC</strong> 基于属性：主体/客体/环境属性 + 策略；云环境常用。</li>
   </ul>
   <h2>7.4–7.6 实现机制</h2>
   <ul>
-    <li>ACL 访问控制列表、能力表 Capabilities、访问控制矩阵。</li>
-    <li>最小权限原则、职责分离、默认拒绝。</li>
+    <li>访问控制矩阵；基于列：ACL、保护位；基于行：能力表、前缀表、口令。</li>
+    <li>ACL 贴在客体上（如 File1:(ID1:rx)…）；能力表揣在主体兜。</li>
+    <li>最小权限原则、职责分离、默认拒绝（未经明确允许的都是禁止的）。</li>
   </ul>
 
   <div class="callout warn">
     <strong>易错陷阱：</strong>
     <br>RBAC 考最多；MAC 与分级标签相关。
+    <br>ACL ≠ 能力表；备份属 PDRR 的恢复环节。
   </div>
 
   <h2>章末自测（1 题）</h2>

@@ -86,24 +86,25 @@ CHAPTERS = [
     },
     {
         "num": 4, "file": "ch04.html", "title": "网络安全体系与网络安全模型",
-        "lesson": "第 1 课 / 第 24 课（预告）", "lesson_link": "../../lessons/0001-exam-overview-and-cia.html",
-        "cheatsheet": "../exam-overview.html", "cheatsheet_label": "考试全貌",
+        "lesson": '<a href="../../lessons/0025-access-control-models.html">第 25 课</a>', "lesson_link": "../../lessons/0025-access-control-models.html",
+        "cheatsheet": "../access-control-cheatsheet.html", "cheatsheet_label": "访问控制与安全模型速查",
         "sections": [
             ("4.1–4.2 安全体系", [
                 "安全体系 = 技术 + 管理 + 工程，分层防御（纵深防御 Defense in Depth）。",
-                "PDRR 模型：Protection 防护、Detection 检测、Response 响应、Recovery 恢复。",
+                "PDRR 模型：Protection 防护、Detection 检测、Recovery 恢复、Response 响应（教程第 2 版第 66 页）。备份属恢复。",
+                "P2DR：Policy 策略为核心，再加防护、检测、响应。",
             ]),
             ("4.3–4.5 经典安全模型（上午卷选择）", [
-                "<strong>BLP 模型</strong>（Bell-LaPadula）：侧重<strong>机密性</strong>，不上读不下写（No Read Up, No Write Down）。",
-                "<strong>Biba 模型</strong>：侧重<strong>完整性</strong>，不上写下读（No Write Up, No Read Down）。",
-                "<strong>Chinese Wall 模型</strong>：防利益冲突，动态访问控制。",
-                "<strong>Clark-Wilson 模型</strong>：完整性，事务处理与职责分离。",
+                "<strong>BLP 模型</strong>（Bell-LaPadula）：侧重<strong>机密性</strong>，不上读不下写（下读上写；No Read Up, No Write Down）。",
+                "<strong>Biba 模型</strong>：侧重<strong>完整性</strong>，不上写下读（上读下写；No Write Up, No Read Down）；另有调用特性。",
+                "访问类 = 安全级（公开&lt;秘密&lt;机密&lt;绝密）+ 范畴集。",
+                "信息流模型：按客体安全属性控制信息传输，用于分析隐蔽通道。",
             ]),
             ("4.4 访问控制模型关系", [
                 "自主访问控制 DAC、强制访问控制 MAC 与 BLP/Biba 密切相关。",
             ]),
         ],
-        "traps": ["BLP=机密性，Biba=完整性，别搞反。", "PDRR 四个阶段顺序常考。"],
+        "traps": ["BLP=机密性，Biba=完整性，别搞反。", "PDRR 备份属于恢复，不是响应。"],
         "quiz": ("BLP 模型主要保护的安全属性是？", "机密性", "完整性", "可用性", "不可否认性"),
     },
     {
@@ -149,21 +150,26 @@ CHAPTERS = [
     },
     {
         "num": 7, "file": "ch07.html", "title": "访问控制技术原理与应用",
-        "lesson": "第 9 课（预告）", "lesson_link": "../textbook-index.html",
-        "cheatsheet": "../exam-overview.html", "cheatsheet_label": "考试全貌",
+        "lesson": '<a href="../../lessons/0025-access-control-models.html">第 25 课</a>', "lesson_link": "../../lessons/0025-access-control-models.html",
+        "cheatsheet": "../access-control-cheatsheet.html", "cheatsheet_label": "访问控制与安全模型速查",
         "sections": [
+            ("7.1 概念", [
+                "访问控制 = 对资源访问者授权、控制的方法及运行机制。主体（访问者）、客体（资源）、授权（读/写等）、控制（许可或拒绝）。",
+                "目标：防非法用户进入；阻合法用户越权。读写/删除是权限；禁止访问才是控制。",
+            ]),
             ("7.1–7.3 访问控制模型", [
                 "<strong>DAC</strong> 自主访问控制：资源所有者决定权限（如 Unix 文件 owner）。",
                 "<strong>MAC</strong> 强制访问控制：系统强制策略（军事分级，与 BLP 关联）。",
-                "<strong>RBAC</strong> 基于角色：用户→角色→权限，企业常用。",
-                "<strong>ABAC</strong> 基于属性：动态策略，云环境常用。",
+                "<strong>RBAC</strong> 基于角色：用户→角色→权限；四要素 U/R/S/P；企业常用。",
+                "<strong>ABAC</strong> 基于属性：主体/客体/环境属性 + 策略；云环境常用。",
             ]),
             ("7.4–7.6 实现机制", [
-                "ACL 访问控制列表、能力表 Capabilities、访问控制矩阵。",
-                "最小权限原则、职责分离、默认拒绝。",
+                "访问控制矩阵；基于列：ACL、保护位；基于行：能力表、前缀表、口令。",
+                "ACL 贴在客体上（如 File1:(ID1:rx)…）；能力表揣在主体兜。",
+                "最小权限原则、职责分离、默认拒绝（未经明确允许的都是禁止的）。",
             ]),
         ],
-        "traps": ["RBAC 考最多；MAC 与分级标签相关。"],
+        "traps": ["RBAC 考最多；MAC 与分级标签相关。", "ACL ≠ 能力表；备份属 PDRR 的恢复环节。"],
         "quiz": ("企业信息系统最常用的访问控制模型是？", "RBAC", "MAC", "BLP", "Biba"),
     },
     {
