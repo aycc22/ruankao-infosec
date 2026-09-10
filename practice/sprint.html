@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自编综合冲刺 · 60 道单选</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Practice · 自编综合冲刺</div>
+    <h1>第 1–24 课综合练习（含第 25 课轻量）</h1>
+    <p class="meta">60 道单选 · 3 道下午卷风格简答 · 点选项显示解析 · 非官方真题</p>
+  </header>
+
+  <div id="practice-progress" class="practice-progress">共 60 道单选 · 点选项后显示对错与解析</div>
+
+  <div class="callout warn">
+    <strong>自编练习，不是某年软考原卷。</strong>考点来自本站课程与教材精读，题面重新编写。
+    官方真题请用指定《试题分析与解答》计时模考。结业测仍在对话里完成。
+  </div>
+
+  <p>分段跳转：</p>
+  <nav class="practice-toc">
+    <a href="#weak">易错回炉</a> <a href="#foundation">基础与攻击</a> <a href="#crypto">密码学与 PKI</a> <a href="#perimeter">边界与监测</a> <a href="#vuln">漏洞、恶意代码与蜜罐</a> <a href="#gov">风险评估、等保与应急</a> <a href="#systems">操作系统、数据库、网络设备与网站</a> <a href="#emerging">云计算、工控、移动与大数据</a> <a href="#physical">物理安全与网闸</a> <a href="#access">访问控制轻量</a> <a href="#afternoon">下午卷案例</a>
+  </nav>
+
+  <h2 id="weak">易错回炉（密钥 / DMZ / 木马英文 / 等保≠风险）</h2>
+  <p>第 3、5、9、18 课反复踩过的坑。建议先做本组，错了立刻对照口诀。</p>
+  <div class="quiz" id="q1">
+    <div class="q">1 · 甲要把一份机密合同只发给乙、且只有乙能读。甲应使用哪把钥匙加密？</div>
+    <div class="opts">
+      <button class="opt">A. 甲的公钥</button>
+      <button class="opt" data-correct="true">B. 乙的公钥</button>
+      <button class="opt">C. 乙的私钥</button>
+      <button class="opt">D. 甲的私钥</button>
+    </div>
+    <div class="explain">答案 B。公钥加密 → 私钥解密。加密必须用<strong>接收方乙</strong>的公钥，只有乙的私钥能解开。选甲的钥匙会变成「只有甲自己能读」或变成签名场景。</div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">2 · 甲对报告做了数字签名。乙要验证「确实是甲签的、内容没被改」，应使用？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 甲的公钥</button>
+      <button class="opt">B. 甲的私钥</button>
+      <button class="opt">C. 乙的公钥</button>
+      <button class="opt">D. 乙的私钥</button>
+    </div>
+    <div class="explain">答案 A。私钥签名 → 公钥验签。签名是甲签的，验签用<strong>甲的公钥</strong>。乙的钥匙用来给乙自己加密/签名，验不了甲的章。</div>
+  </div>
+
+  <div class="quiz" id="q3">
+    <div class="q">3 · 关于屏蔽子网（Screened Subnet）与 DMZ，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 双宿主主机结构里同样划有独立 DMZ 网段</button>
+      <button class="opt" data-correct="true">B. DMZ 出现在屏蔽子网的内外路由器之间</button>
+      <button class="opt">C. DMZ 与堡垒主机是完全相同的一台设备</button>
+      <button class="opt">D. 核心数据库应当放在 DMZ 供外网直连</button>
+    </div>
+    <div class="explain">答案 B。屏蔽子网：外路由 → DMZ → 内路由 → 内网。双宿主、屏蔽主机结构没有独立 DMZ 网段。DMZ 是网段，堡垒主机是一台加固机器。库放内网。</div>
+  </div>
+
+  <div class="quiz" id="q4">
+    <div class="q">4 · 对外门户网站与内部 OA、人事数据库，较稳妥的部署是？</div>
+    <div class="opts">
+      <button class="opt">A. 全部放进 DMZ 方便运维</button>
+      <button class="opt" data-correct="true">B. 官网放 DMZ，OA 与数据库放内网</button>
+      <button class="opt">C. 全部放内网并映射全部端口</button>
+      <button class="opt">D. 官网放内网，数据库放 DMZ</button>
+    </div>
+    <div class="explain">答案 B。对外开门放 DMZ，内部自用放内网。数据库进 DMZ 等于把核心资产送到半开放区。</div>
+  </div>
+
+  <div class="quiz" id="q5">
+    <div class="q">5 · A program disguises as useful software, enables remote control, and does not replicate itself. It is a:</div>
+    <div class="opts">
+      <button class="opt">A. Computer virus</button>
+      <button class="opt">B. Network worm</button>
+      <button class="opt" data-correct="true">C. Trojan horse</button>
+      <button class="opt">D. Logic bomb</button>
+    </div>
+    <div class="explain">答案 C。英文三关键词：<strong>disguise + remote control + no replication</strong> → 木马。病毒需宿主并传染；蠕虫自传播；逻辑炸弹靠条件触发、不以远程控制为定义。</div>
+  </div>
+
+  <div class="quiz" id="q6">
+    <div class="q">6 · 等保等级测评与网络安全风险评估的关系，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 完全同一件事，标准都写作 GB/T 28448</button>
+      <button class="opt" data-correct="true">B. 测评判定符合性，评估用来计算风险</button>
+      <button class="opt">C. 风险评估只是等保测评的另一个名称</button>
+      <button class="opt">D. 等保测评只检查可用性这一项属性</button>
+    </div>
+    <div class="explain">答案 B。测评 = 符合性（常用 GB/T 28448）；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点：不能把 GB/T 28448 当成风险评估标准。</div>
+  </div>
+
+  <h2 id="foundation">基础与攻击（第 1–2 课）</h2>
+  <p>CIA 对号入座、攻击八步、英文术语。</p>
+  <div class="quiz" id="q7">
+    <div class="q">7 · 网上公示的中标结果被改成另一家公司。主要破坏的安全属性是？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性</button>
+      <button class="opt" data-correct="true">B. 完整性</button>
+      <button class="opt">C. 可用性</button>
+      <button class="opt">D. 真实性</button>
+    </div>
+    <div class="explain">答案 B。「篡改」→ 完整性。机密性是偷看，可用性是瘫痪。</div>
+  </div>
+
+  <div class="quiz" id="q8">
+    <div class="q">8 · 报名缴费系统被海量伪造请求打挂，页面无法打开。主要破坏的是？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性</button>
+      <button class="opt">B. 完整性</button>
+      <button class="opt" data-correct="true">C. 可用性</button>
+      <button class="opt">D. 不可否认性</button>
+    </div>
+    <div class="explain">答案 C。拒绝服务 → 可用性。防瘫痪靠限流、冗余、清洗，不是靠哈希。</div>
+  </div>
+
+  <div class="quiz" id="q9">
+    <div class="q">9 · 有人打电话冒充网管，骗员工说出登录口令。这属于？</div>
+    <div class="opts">
+      <button class="opt">A. 端口扫描</button>
+      <button class="opt" data-correct="true">B. 社交工程</button>
+      <button class="opt">C. SQL 注入</button>
+      <button class="opt">D. ARP 欺骗</button>
+    </div>
+    <div class="explain">答案 B。社交工程：不攻系统，专攻人心。其余三项都是技术攻击手法。</div>
+  </div>
+
+  <div class="quiz" id="q10">
+    <div class="q">10 · 入侵得手后，删除安全设备上的告警与登录记录。这对应攻击八步中的？</div>
+    <div class="opts">
+      <button class="opt">A. 收集信息</button>
+      <button class="opt">B. 挖掘漏洞</button>
+      <button class="opt">C. 开辟后门</button>
+      <button class="opt" data-correct="true">D. 清除痕迹</button>
+    </div>
+    <div class="explain">答案 D。改日志、删审计 = 第 8 步清除痕迹。开辟后门是留下再入通道，不是擦记录。</div>
+  </div>
+
+  <div class="quiz" id="q11">
+    <div class="q">11 · Which CIA attribute means authorized users can use the system when they need it?</div>
+    <div class="opts">
+      <button class="opt">A. Confidentiality</button>
+      <button class="opt">B. Integrity</button>
+      <button class="opt" data-correct="true">C. Availability</button>
+      <button class="opt">D. Authenticity</button>
+    </div>
+    <div class="explain">答案 C。Availability = 可用性（when they need it）。Confidentiality 防偷看，Integrity 防篡改，Authenticity 是扩展属性「真实性」。</div>
+  </div>
+
+  <h2 id="crypto">密码学与 PKI（第 3–4 课）</h2>
+  <p>哈希≠加密、国密分工、证书与吊销、HTTPS 握手思路。</p>
+  <div class="quiz" id="q12">
+    <div class="q">12 · 关于哈希与加密，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 哈希可逆还原原文，加密单向</button>
+      <button class="opt" data-correct="true">B. 哈希不是加密：加密可逆，哈希单向</button>
+      <button class="opt">C. MD5 仍是推荐的传输加密算法</button>
+      <button class="opt">D. 哈希输出可以唯一解密出输入</button>
+    </div>
+    <div class="explain">答案 B。加密可解密还原；哈希单向、雪崩、相同输入相同输出。MD5 / SHA-1 已淘汰，且 MD5 是哈希不是加密。</div>
+  </div>
+
+  <div class="quiz" id="q13">
+    <div class="q">13 · 国产商用密码算法对应关系正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. SM2 对称加密，SM4 做哈希</button>
+      <button class="opt" data-correct="true">B. SM2 公钥算法，SM3 哈希，SM4 对称</button>
+      <button class="opt">C. SM3 专门用于传输对称密钥</button>
+      <button class="opt">D. SM4 是非对称签名算法</button>
+    </div>
+    <div class="explain">答案 B。对称「A 系」+ SM4；非对称 RSA/ECC/SM2；哈希 SHA-256/SM3。数字信封是「非对称传密钥、对称加密数据」。</div>
+  </div>
+
+  <div class="quiz" id="q14">
+    <div class="q">14 · 下列算法目前不宜再作为安全哈希使用的是？</div>
+    <div class="opts">
+      <button class="opt">A. SHA-256</button>
+      <button class="opt">B. SM3</button>
+      <button class="opt" data-correct="true">C. SHA-1</button>
+      <button class="opt">D. SHA-3</button>
+    </div>
+    <div class="explain">答案 C。淘汰 DES / MD5 / SHA-1。现代用 AES、SHA-256 / SHA-3、SM3。</div>
+  </div>
+
+  <div class="quiz" id="q15">
+    <div class="q">15 · X.509 数字证书中通常包含、且不应包含的是？</div>
+    <div class="opts">
+      <button class="opt">A. 包含主体私钥，不含 CA 签名</button>
+      <button class="opt" data-correct="true">B. 包含主体公钥和 CA 签名，不含私钥</button>
+      <button class="opt">C. 只包含 RA 的口头审核意见</button>
+      <button class="opt">D. 明文存放本次对称会话密钥</button>
+    </div>
+    <div class="explain">答案 B。证书 = 身份信息 + 公钥 + CA 签名。私钥绝不进证书。RA 审核，CA 签发。会话密钥在 TLS 握手里协商，不写进证书。</div>
+  </div>
+
+  <div class="quiz" id="q16">
+    <div class="q">16 · 证书尚未到期，但私钥已经泄露。正确处置是？</div>
+    <div class="opts">
+      <button class="opt">A. 等到证书有效期结束再更换证书</button>
+      <button class="opt" data-correct="true">B. 由 CA 吊销并通过 CRL 或 OCSP 公布</button>
+      <button class="opt">C. 清理浏览器缓存即可宣布作废</button>
+      <button class="opt">D. 把站点改回 HTTP 来避开证书</button>
+    </div>
+    <div class="explain">答案 B。提前作废叫吊销（CRL / OCSP），不是等过期。私钥泄露不能拖。</div>
+  </div>
+
+  <div class="quiz" id="q17">
+    <div class="q">17 · HTTPS 默认端口与传输思路，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 80；全程用非对称算法加密网页</button>
+      <button class="opt" data-correct="true">B. 443；先非对称握手传密钥，再对称通信</button>
+      <button class="opt">C. 443；全程只做哈希、不加密内容</button>
+      <button class="opt">D. 53；先对称加密再交换证书</button>
+    </div>
+    <div class="explain">答案 B。HTTPS = 443（HTTP=80，DNS=53）。先用证书里的公钥完成身份与密钥协商，业务数据用对称算法传，因为对称快。</div>
+  </div>
+
+  <h2 id="perimeter">边界与监测（第 5–7 课）</h2>
+  <p>三类防火墙、IPSec/SSL VPN、IDS/IPS、审计与时间同步。</p>
+  <div class="quiz" id="q18">
+    <div class="q">18 · 「只看包头地址与端口、不记会话状态、易被 IP 欺骗」描述的是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 包过滤防火墙</button>
+      <button class="opt">B. 状态检测防火墙</button>
+      <button class="opt">C. 应用代理防火墙</button>
+      <button class="opt">D. Web 应用防火墙</button>
+    </div>
+    <div class="explain">答案 A。包过滤看「快递单」；状态检测记会话；代理拆包最严也最慢；WAF 看 HTTP 应用层。</div>
+  </div>
+
+  <div class="quiz" id="q19">
+    <div class="q">19 · 防火墙的典型能力边界，下列正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 能完全防止内部人员滥用权限</button>
+      <button class="opt">B. 能替代主机杀毒与补丁管理</button>
+      <button class="opt" data-correct="true">C. 主要防外，一般不深查应用层注入</button>
+      <button class="opt">D. 能解密并阻断所有加密隧道</button>
+    </div>
+    <div class="explain">答案 C。防外不防内、不杀毒、普通防火墙不解析 SQL。注入要靠参数化、WAF、数据库防火墙等。</div>
+  </div>
+
+  <div class="quiz" id="q20">
+    <div class="q">20 · 在 IPSec 协议族中，负责对载荷加密的是？</div>
+    <div class="opts">
+      <button class="opt">A. AH（认证头）</button>
+      <button class="opt" data-correct="true">B. ESP（封装安全载荷）</button>
+      <button class="opt">C. IKE 直接承载网页</button>
+      <button class="opt">D. OCSP</button>
+    </div>
+    <div class="explain">答案 B。AH 认证不加密；ESP 可加密；IKE 管密钥协商（UDP 500 / NAT 穿越 4500）；OCSP 是证书状态查询。</div>
+  </div>
+
+  <div class="quiz" id="q21">
+    <div class="q">21 · 出差员工用浏览器临时访问内网 OA，较合适的远程接入是？</div>
+    <div class="opts">
+      <button class="opt">A. 站点到站点的 IPSec 隧道</button>
+      <button class="opt" data-correct="true">B. 走 443 端口的 SSL VPN 接入</button>
+      <button class="opt">C. 在公网直接开放 Telnet 服务</button>
+      <button class="opt">D. 对公网开放全部远程管理口</button>
+    </div>
+    <div class="explain">答案 B。临时 Web 访问 → SSL VPN；长期全流量/站点互联 → IPSec。Telnet 明文，管理口不能裸奔公网。</div>
+  </div>
+
+  <div class="quiz" id="q22">
+    <div class="q">22 · 关于 IDS 与 IPS 的部署，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. IDS 必须串联在链路中才能告警</button>
+      <button class="opt" data-correct="true">B. IDS 旁路监测告警，IPS 串联可阻断</button>
+      <button class="opt">C. IPS 只能旁路镜像，不能丢包</button>
+      <button class="opt">D. IDS 可替代防火墙做网络隔离</button>
+    </div>
+    <div class="explain">答案 B。防火墙管访问控制；IDS 旁路告警；IPS 串联阻断。IDS 不做隔离、不杀毒。</div>
+  </div>
+
+  <div class="quiz" id="q23">
+    <div class="q">23 · 题干强调「先建行为基线，再判断是否偏离轮廓」。这是？</div>
+    <div class="opts">
+      <button class="opt">A. 误用检测（特征/签名）</button>
+      <button class="opt" data-correct="true">B. 异常检测</button>
+      <button class="opt">C. 仅主机杀毒特征码</button>
+      <button class="opt">D. 仅防火墙默认拒绝</button>
+    </div>
+    <div class="explain">答案 B。特征库/签名 → 误用检测（已知攻击准、怕零日）；基线/轮廓/偏离 → 异常检测（能抓未知、误报高）。</div>
+  </div>
+
+  <div class="quiz" id="q24">
+    <div class="q">24 · 要把防火墙、IDS、主机日志关联还原事件先后，首先应保证？</div>
+    <div class="opts">
+      <button class="opt">A. 全部设备改用 HTTP 明文管理</button>
+      <button class="opt" data-correct="true">B. 各设备时钟同步（如 NTP）</button>
+      <button class="opt">C. 关闭审计功能以免干扰</button>
+      <button class="opt">D. 只用单机杀毒、不收集日志</button>
+    </div>
+    <div class="explain">答案 B。跨设备追溯的前提是时间同步，否则 SIEM 关联会把顺序排错。审计要留痕，不能关。</div>
+  </div>
+
+  <h2 id="vuln">漏洞、恶意代码与蜜罐（第 8–10 课）</h2>
+  <p>零日、CVE/CVSS、扫描器、蠕虫 vs 病毒、蜜罐隔离。</p>
+  <div class="quiz" id="q25">
+    <div class="q">25 · 零日漏洞最贴切的定义是？</div>
+    <div class="opts">
+      <button class="opt">A. 厂商已出补丁但管理员尚未安装</button>
+      <button class="opt" data-correct="true">B. 新发现且厂商尚未提供正式补丁</button>
+      <button class="opt">C. CVSS 评分必须等于 10 分</button>
+      <button class="opt">D. 只出现在过期的家用软件中</button>
+    </div>
+    <div class="explain">答案 B。零日 = 零补丁。有补丁没打 ≠ 零日。危害高低用 CVSS，不是定义本身。</div>
+  </div>
+
+  <div class="quiz" id="q26">
+    <div class="q">26 · CVE 与 CVSS 的分工是？</div>
+    <div class="opts">
+      <button class="opt">A. CVE 负责打分，CVSS 负责编号</button>
+      <button class="opt" data-correct="true">B. CVE 给漏洞编号，CVSS 评估严重程度</button>
+      <button class="opt">C. 二者都是中国国家漏洞库名称</button>
+      <button class="opt">D. CVE 等于渗透测试合同文本</button>
+    </div>
+    <div class="explain">答案 B。CVE 对号，CVSS 打分。国内常考 CNNVD（漏洞库）与 CNVD（共享平台）。漏扫发现已知洞，渗透验证利用。</div>
+  </div>
+
+  <div class="quiz" id="q27">
+    <div class="q">27 · 口诀「家有警虎微，网有图老 X」中，Nmap、Nessus 属于？</div>
+    <div class="opts">
+      <button class="opt">A. 主机漏洞扫描工具</button>
+      <button class="opt" data-correct="true">B. 网络漏洞扫描工具</button>
+      <button class="opt">C. 仅用于编写蠕虫</button>
+      <button class="opt">D. 仅用于部署蜜罐</button>
+    </div>
+    <div class="explain">答案 B。主机：COPS / Tiger / MBSA（不连网查本地）；网络：Nmap / Nessus / X-Scan（先连网发请求）。</div>
+  </div>
+
+  <div class="quiz" id="q28">
+    <div class="q">28 · 蠕虫相对于计算机病毒，最显著的差别是？</div>
+    <div class="opts">
+      <button class="opt">A. 蠕虫必须寄生在 Word 宏里才能运行</button>
+      <button class="opt" data-correct="true">B. 蠕虫可独立运行并主动在网络上扩散</button>
+      <button class="opt">C. 病毒完全不会破坏文件或系统</button>
+      <button class="opt">D. 蠕虫一定没有攻击负载模块</button>
+    </div>
+    <div class="explain">答案 B。病毒靠宿主传染；蠕虫自传播（探传引负）；木马伪装、不复制、重在远程控制。</div>
+  </div>
+
+  <div class="quiz" id="q29">
+    <div class="q">29 · 关于蜜罐，正确的理解是？</div>
+    <div class="opts">
+      <button class="opt">A. 应承载真实生产库以提高仿真度</button>
+      <button class="opt" data-correct="true">B. 无真实业务价值，故意暴露，且须与生产隔离</button>
+      <button class="opt">C. 可完全替代防火墙和补丁管理</button>
+      <button class="opt">D. 只能安装在财务人员的办公电脑上</button>
+    </div>
+    <div class="explain">答案 B。蜜罐诱捕分析，不能当生产、不能替代被动防御。蜜网是多蜜罐加路由/防火墙/IDS 的陷阱网络。</div>
+  </div>
+
+  <div class="quiz" id="q30">
+    <div class="q">30 · 关于蜜罐交互级别，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 低交互风险最大、情报最全</button>
+      <button class="opt" data-correct="true">B. 高交互能观察更多真实手法，但成本与风险更高</button>
+      <button class="opt">C. 高交互蜜罐一定不会被攻击者识破</button>
+      <button class="opt">D. 蜜网等于单台低交互蜜罐的别名</button>
+    </div>
+    <div class="explain">答案 B。低交互：简单、低风险、易识破；高交互：情报多、维护贵、风险大。</div>
+  </div>
+
+  <h2 id="gov">风险评估、等保与应急（第 11–13 课）</h2>
+  <p>七步与四策略、等保标准号、PDCERF 先抑制后根除。</p>
+  <div class="quiz" id="q31">
+    <div class="q">31 · 风险评估给资产赋值，主要依据是？</div>
+    <div class="opts">
+      <button class="opt">A. 采购发票上的设备价格</button>
+      <button class="opt" data-correct="true">B. 机密性、完整性、可用性的相对等级</button>
+      <button class="opt">C. 机房空调的额定功率</button>
+      <button class="opt">D. 运维人员的加班时长</button>
+    </div>
+    <div class="explain">答案 B。资产价值基于 CIA 相对赋值（常见 1–5 级），不是物理价格。</div>
+  </div>
+
+  <div class="quiz" id="q32">
+    <div class="q">32 · 风险评估七步，开始阶段的正确顺序是？</div>
+    <div class="opts">
+      <button class="opt">A. 处置 → 准备 → 资产识别 → 威胁识别</button>
+      <button class="opt" data-correct="true">B. 准备 → 资产识别 → 威胁识别 → 脆弱性识别</button>
+      <button class="opt">C. 等保测评 → 定级 → 备案 → 建设整改</button>
+      <button class="opt">D. 渗透测试 → 写整改 → 忽略风险 → 关闭审计</button>
+    </div>
+    <div class="explain">答案 B。准资威脆措析处：准备→资产→威胁→脆弱性→已有措施→分析→处置。不要把等保五环节套进来。</div>
+  </div>
+
+  <div class="quiz" id="q33">
+    <div class="q">33 · 单位为服务器购买网络安全保险。这属于风险处置的哪一种？</div>
+    <div class="opts">
+      <button class="opt">A. 降低</button>
+      <button class="opt" data-correct="true">B. 转移</button>
+      <button class="opt">C. 接受</button>
+      <button class="opt">D. 规避</button>
+    </div>
+    <div class="explain">答案 B。降转接避：买保险、外包部分损失 → 转移。降低是加控制措施；接受须明示记录；规避是取消业务。</div>
+  </div>
+
+  <div class="quiz" id="q34">
+    <div class="q">34 · 发现中风险后既不登记也不审批，当没看见。这等于？</div>
+    <div class="opts">
+      <button class="opt">A. 已经履行风险接受程序</button>
+      <button class="opt" data-correct="true">B. 不是接受；接受必须明示并留痕</button>
+      <button class="opt">C. 属于标准的风险规避</button>
+      <button class="opt">D. 等保测评将自动判定通过</button>
+    </div>
+    <div class="explain">答案 B。忽略而不记录 ≠ 接受。接受是有意识的管理决策，要审批、要记录残余风险。</div>
+  </div>
+
+  <div class="quiz" id="q35">
+    <div class="q">35 · 等保工作五个环节的顺序，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 先测评，再定级，然后备案</button>
+      <button class="opt" data-correct="true">B. 定级、备案、建设整改、测评、监督检查</button>
+      <button class="opt">C. 就是应急响应的六阶段</button>
+      <button class="opt">D. 准备、资产、威胁、脆弱性、处置</button>
+    </div>
+    <div class="explain">答案 B。定备建测监。备案通常向公安机关；三级及以上常见每年至少一测。不要和风险七步、应急六阶段记混。</div>
+  </div>
+
+  <div class="quiz" id="q36">
+    <div class="q">36 · 等保相关标准对应正确的是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 22239 基本要求，28448 测评，17859 五级</button>
+      <button class="opt">B. 17859 基本要求，22239 测评，28448 五级</button>
+      <button class="opt">C. 三套标准都可以写成 GB/T 28448</button>
+      <button class="opt">D. 测评标准等同于风险评估指南</button>
+    </div>
+    <div class="explain">答案 A。GB/T 22239—2019 基本要求；GB/T 28448 测评要求；GB 17859 五级划分。测评 ≠ 风险评估。</div>
+  </div>
+
+  <div class="quiz" id="q37">
+    <div class="q">37 · 勒索软件正在内网扩散。按应急六阶段（PDCERF），当前应优先？</div>
+    <div class="opts">
+      <button class="opt">A. 先写年度总结再开始处置</button>
+      <button class="opt" data-correct="true">B. 抑制：隔离受害主机与网段，然后再根除</button>
+      <button class="opt">C. 先全量恢复业务，取证以后再说</button>
+      <button class="opt">D. 跳过检测，直接丢弃全部交换机</button>
+    </div>
+    <div class="explain">答案 B。备检抑根恢总。抑制（Containment）是圈住火，根除（Eradication）是灭火源。未隔离就清杀易扩散、毁证。</div>
+  </div>
+
+  <h2 id="systems">操作系统、数据库、网络设备与网站（第 14–17 课）</h2>
+  <p>DAC、最小特权、参数化、TDE、端口、SSH、XSS/CSRF、WAF。</p>
+  <div class="quiz" id="q38">
+    <div class="q">38 · 文件属主自行把读权限转授给同事。这属于？</div>
+    <div class="opts">
+      <button class="opt">A. 强制访问控制 MAC</button>
+      <button class="opt" data-correct="true">B. 自主访问控制 DAC</button>
+      <button class="opt">C. Biba 完整性模型</button>
+      <button class="opt">D. 仅基于属性的云策略</button>
+    </div>
+    <div class="explain">答案 B。DAC 主人自己定、可转授；MAC 标签由系统定、用户改不了密级。企业日常授权更常用 RBAC。</div>
+  </div>
+
+  <div class="quiz" id="q39">
+    <div class="q">39 · “Least privilege” requires that an account is granted:</div>
+    <div class="opts">
+      <button class="opt">A. Every right in the domain, to save time later</button>
+      <button class="opt" data-correct="true">B. Only the rights required to perform assigned tasks</button>
+      <button class="opt">C. The same rights as the security administrator</button>
+      <button class="opt">D. No rights at all until an incident is declared</button>
+    </div>
+    <div class="explain">答案 B。最小特权：只给干活必需的那点权。默认拒绝：未经明确允许的一律禁止。</div>
+  </div>
+
+  <div class="quiz" id="q40">
+    <div class="q">40 · 防止 SQL 注入，开发侧最可靠的做法是？</div>
+    <div class="opts">
+      <button class="opt">A. 只过滤单引号等个别字符</button>
+      <button class="opt" data-correct="true">B. 使用参数化查询 / 预编译语句</button>
+      <button class="opt">C. 把详细数据库报错回显给用户</button>
+      <button class="opt">D. 仅部署网络层包过滤防火墙</button>
+    </div>
+    <div class="explain">答案 B。简单过滤挡不住注入；隐藏报错 ≠ 防注入。普通防火墙不看 SQL。</div>
+  </div>
+
+  <div class="quiz" id="q41">
+    <div class="q">41 · 透明数据加密 TDE 主要保护的是？</div>
+    <div class="opts">
+      <button class="opt">A. 网络上传输的 SQL 文本</button>
+      <button class="opt" data-correct="true">B. 磁盘上的数据库文件（存储加密）</button>
+      <button class="opt">C. 替代访问控制与审计功能</button>
+      <button class="opt">D. 专门用来阻断 XSS 脚本</button>
+    </div>
+    <div class="explain">答案 B。网上传输走 SSL/TLS，落地存储可库内/库外加密；TDE 是存储侧。脱敏 ≠ 加密。</div>
+  </div>
+
+  <div class="quiz" id="q42">
+    <div class="q">42 · SQL Server 与 MySQL 的常见默认端口分别是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 1433 与 3306</button>
+      <button class="opt">B. 3306 与 1433</button>
+      <button class="opt">C. 443 与 80</button>
+      <button class="opt">D. 22 与 3389</button>
+    </div>
+    <div class="explain">答案 A。SQL Server 1433，MySQL 3306。不要记反。22 是 SSH，3389 是 RDP，80/443 是 Web。</div>
+  </div>
+
+  <div class="quiz" id="q43">
+    <div class="q">43 · 路由器远程管理较稳妥的做法是？</div>
+    <div class="opts">
+      <button class="opt">A. 开启 Telnet 并允许任意源地址</button>
+      <button class="opt" data-correct="true">B. 使用 SSH，并对 VTY 线路配置 ACL</button>
+      <button class="opt">C. 关闭全部日志以便提高性能</button>
+      <button class="opt">D. SNMP v1 团体名保持为 public</button>
+    </div>
+    <div class="explain">答案 B。SSH 加密、Telnet 裸传；管理口要 ACL；特权口令用 enable secret；SNMP 用 v3。先改默认口令。</div>
+  </div>
+
+  <div class="quiz" id="q44">
+    <div class="q">44 · XSS 与 CSRF 的核心差别是？</div>
+    <div class="opts">
+      <button class="opt">A. XSS 借登录态发请求，CSRF 插脚本偷 Cookie</button>
+      <button class="opt" data-correct="true">B. XSS 插脚本（常偷 Cookie），CSRF 借登录态发请求</button>
+      <button class="opt">C. 二者都能被包过滤防火墙彻底消灭</button>
+      <button class="opt">D. CSRF 必须依靠宏病毒才能成功</button>
+    </div>
+    <div class="explain">答案 B。XSS 偷脚本盗 Cookie；CSRF 借 Cookie 发请求。防护 CSRF：Token、Referer、SameSite。</div>
+  </div>
+
+  <div class="quiz" id="q45">
+    <div class="q">45 · 部署在 Web 入口、解析 HTTP 并拦注入与 XSS 的设备更接近？</div>
+    <div class="opts">
+      <button class="opt">A. 仅工作在网络层的包过滤防火墙</button>
+      <button class="opt" data-correct="true">B. Web 应用防火墙 WAF</button>
+      <button class="opt">C. 旁路流量镜像交换机</button>
+      <button class="opt">D. 用于物理隔离的网闸</button>
+    </div>
+    <div class="explain">答案 B。WAF 串联 Web 入口。普通防火墙 ≠ WAF。网闸是物理隔离摆渡，不是 HTTP 语义防护的首选名。</div>
+  </div>
+
+  <h2 id="emerging">云计算、工控、移动与大数据（第 19–22 课）</h2>
+  <p>责任共担、工控可用优先、令牌勿明文、脱敏≠加密、等保扩展。</p>
+  <div class="quiz" id="q46">
+    <div class="q">46 · IaaS 模式下，租户通常仍需自己负责的是？</div>
+    <div class="opts">
+      <button class="opt">A. 数据中心物理门禁</button>
+      <button class="opt" data-correct="true">B. 客户操作系统与其上的应用和数据</button>
+      <button class="opt">C. 云数据中心的城市选址</button>
+      <button class="opt">D. 底层设施的市电引入</button>
+    </div>
+    <div class="explain">答案 B。IaaS：你管系统和应用；PaaS：你管应用和数据；SaaS：你管账号和用法。底座多由云商负责。上云 ≠ 全包。</div>
+  </div>
+
+  <div class="quiz" id="q47">
+    <div class="q">47 · 「业务上云以后，安全全部由云商负责」这一说法？</div>
+    <div class="opts">
+      <button class="opt">A. 正确，责任共担等于云商全责</button>
+      <button class="opt" data-correct="true">B. 错误，应按 IaaS/PaaS/SaaS 划分双方责任</button>
+      <button class="opt">C. 正确，租户不必再管账号权限</button>
+      <button class="opt">D. 错误，理由是云上信息系统不必做等保</button>
+    </div>
+    <div class="explain">答案 B。责任共担：厂商管底座，用户管业务与账号。云上系统仍可能要等保，并叠加云计算扩展要求。</div>
+  </div>
+
+  <div class="quiz" id="q48">
+    <div class="q">48 · 工业控制系统相对办公信息化系统，安全需求优先序通常是？</div>
+    <div class="opts">
+      <button class="opt">A. 机密性高于完整性，完整性高于可用性</button>
+      <button class="opt" data-correct="true">B. 可用性高于完整性，完整性高于机密性</button>
+      <button class="opt">C. 不可否认性绝对排在第一位</button>
+      <button class="opt">D. 与互联网门户网站完全相同</button>
+    </div>
+    <div class="explain">答案 B。工控先保能用再保完整，机密性靠后。停产的代价往往大于信息泄露。功能安全 ≠ 信息安全。</div>
+  </div>
+
+  <div class="quiz" id="q49">
+    <div class="q">49 · 电力监控系统安全防护「十六字方针」包含下列哪一组？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 安全分区、网络专用、横向隔离、纵向认证</button>
+      <button class="opt">B. 公网直连、端口开放、明文管理、默认口令</button>
+      <button class="opt">C. 只做传输加密、不做分区与隔离</button>
+      <button class="opt">D. 用办公防火墙完全替代工业隔离</button>
+    </div>
+    <div class="explain">答案 A。分专横纵。远程若必须连，应关 Telnet/FTP 等高危服务，走 VPN；边界常用工业防火墙或网闸。</div>
+  </div>
+
+  <div class="quiz" id="q50">
+    <div class="q">50 · 移动 App 把登录 Token 明文写进本地普通文件，主要风险是？</div>
+    <div class="opts">
+      <button class="opt">A. 能自动提高等保测评符合率</button>
+      <button class="opt" data-correct="true">B. 设备丢失或恶意程序可直接读走令牌</button>
+      <button class="opt">C. 明文存储等于使用了系统密钥库</button>
+      <button class="opt">D. 明文存储可以替代 TLS 传输保护</button>
+    </div>
+    <div class="explain">答案 B。敏感令牌勿明文本地存储，应用 Keychain / 密钥库等。传输仍要 TLS。加固四防：逆向、调试、篡改、窃取。</div>
+  </div>
+
+  <div class="quiz" id="q51">
+    <div class="q">51 · 对手机号做掩码展示（如 138****1234），这属于？</div>
+    <div class="opts">
+      <button class="opt">A. 传输层 TLS 加密</button>
+      <button class="opt" data-correct="true">B. 数据脱敏</button>
+      <button class="opt">C. 数字签名</button>
+      <button class="opt">D. 等保等级测评</button>
+    </div>
+    <div class="explain">答案 B。脱敏 ≠ 加密。加密可还原给授权者；脱敏让展示/测试数据降低敏感度。测评是符合性判定，不是这种处理技术。</div>
+  </div>
+
+  <div class="quiz" id="q52">
+    <div class="q">52 · 大数据特征「价值密度低」对应四特征中的哪一项？</div>
+    <div class="opts">
+      <button class="opt">A. Volume 体量大</button>
+      <button class="opt">B. Velocity 速度快</button>
+      <button class="opt">C. Variety 类型多</button>
+      <button class="opt" data-correct="true">D. Value 价值密度不高</button>
+    </div>
+    <div class="explain">答案 D。海快多低：Volume / Velocity / Variety / Value（密度低）。不要把 Value 理解成「价值很高」。</div>
+  </div>
+
+  <div class="quiz" id="q53">
+    <div class="q">53 · 云上信息系统做等级保护时，通常还需要？</div>
+    <div class="opts">
+      <button class="opt">A. 只做安全通用要求，不必看扩展</button>
+      <button class="opt" data-correct="true">B. 通用要求叠加云计算安全扩展要求</button>
+      <button class="opt">C. 用风险评估报告代替等级测评</button>
+      <button class="opt">D. 只检查机房物理环境一项即可</button>
+    </div>
+    <div class="explain">答案 B。通用打底、扩展叠加：云 / 工控 / 移动互联 / 大数据各用各的扩展。测评仍 ≠ 风险评估。</div>
+  </div>
+
+  <h2 id="physical">物理安全与网闸（第 24 课）</h2>
+  <p>TEMPEST、介质销毁、网闸隔离强度、英文 Gap。</p>
+  <div class="quiz" id="q54">
+    <div class="q">54 · 防电磁泄漏（TEMPEST）的主要手段是？</div>
+    <div class="opts">
+      <button class="opt">A. 仅部署包过滤防火墙</button>
+      <button class="opt" data-correct="true">B. 屏蔽、干扰等电磁防护措施</button>
+      <button class="opt">C. 仅把对外网站改成 HTTPS</button>
+      <button class="opt">D. 仅修改交换机默认口令</button>
+    </div>
+    <div class="explain">答案 B。TEMPEST 靠屏蔽/干扰等物理电磁手段。加密和防火墙解决不了辐射泄漏。</div>
+  </div>
+
+  <div class="quiz" id="q55">
+    <div class="q">55 · 报废存有敏感数据的硬盘，较正确的做法是？</div>
+    <div class="opts">
+      <button class="opt">A. 在资源管理器里删除文件即可</button>
+      <button class="opt" data-correct="true">B. 先清除数据，再消磁、粉碎等销毁</button>
+      <button class="opt">C. 快速格式化一次后对外出售</button>
+      <button class="opt">D. 交给保洁直接丢进生活垃圾</button>
+    </div>
+    <div class="explain">答案 B。删文件 ≠ 销毁。报废先清数据，消磁粉碎才算毁。</div>
+  </div>
+
+  <div class="quiz" id="q56">
+    <div class="q">56 · 网闸与防火墙相比，更准确的说法是？</div>
+    <div class="opts">
+      <button class="opt">A. 网闸允许任意端口转发，比防火墙更开放</button>
+      <button class="opt" data-correct="true">B. 网闸在链路/协议上不直接连通，隔离强度更高</button>
+      <button class="opt">C. 网闸就是 IDS 产品的商品名称</button>
+      <button class="opt">D. 网闸等于一台 SSL VPN 集中器</button>
+    </div>
+    <div class="explain">答案 B。防火墙是逻辑隔离，可开端口；网闸物理不直连，靠摆渡/单向。VPN 加密不等于隔离；IDS 只看不隔离。双重宿主主机 ≠ 网闸。</div>
+  </div>
+
+  <div class="quiz" id="q57">
+    <div class="q">57 · A device that isolates two networks without a direct IP connection and ferries files across is a:</div>
+    <div class="opts">
+      <button class="opt">A. Packet-filter firewall</button>
+      <button class="opt">B. SSL VPN gateway</button>
+      <button class="opt" data-correct="true">C. Network gap (air-gap gateway)</button>
+      <button class="opt">D. Signature-based IDS</button>
+    </div>
+    <div class="explain">答案 C。Gap / 网闸。英文题常见 gap、air gap、unidirectional gateway。防火墙、VPN、IDS 都不是物理隔离摆渡。</div>
+  </div>
+
+  <h2 id="access">访问控制轻量（第 25 课讲义）</h2>
+  <p>尚未学完第 25 课也可以做：ACL vs 能力表、BLP vs Biba、PDRR 备份属恢复。</p>
+  <div class="quiz" id="q58">
+    <div class="q">58 · 「File1: (Alice: r, Bob: rw)」按客体列出谁能干什么，更接近？</div>
+    <div class="opts">
+      <button class="opt">A. 能力表（权限贴在主体上）</button>
+      <button class="opt" data-correct="true">B. 访问控制列表 ACL（权限贴在客体上）</button>
+      <button class="opt">C. 仅用于哈希完整性校验</button>
+      <button class="opt">D. 仅用于数字信封传密钥</button>
+    </div>
+    <div class="explain">答案 B。ACL 贴在客体上；能力表揣在主体兜里。矩阵是总表：行是主体、列是客体。</div>
+  </div>
+
+  <div class="quiz" id="q59">
+    <div class="q">59 · BLP 与 Biba 的保护目标，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. BLP 保完整性，Biba 保机密性</button>
+      <button class="opt" data-correct="true">B. BLP 保机密性，Biba 保完整性</button>
+      <button class="opt">C. 二者规则完全相同，可以混用名称</button>
+      <button class="opt">D. 企业 OA 必须首选 BLP 而不能用 RBAC</button>
+    </div>
+    <div class="explain">答案 B。BLP：不上读、不下写（机密不往低处流）。Biba：不上写、不下读（脏数据不往高处爬）。企业授权题优先想 RBAC。</div>
+  </div>
+
+  <div class="quiz" id="q60">
+    <div class="q">60 · PDRR 模型里，定期全量备份并异地存放，属于哪一环节？</div>
+    <div class="opts">
+      <button class="opt">A. 防护 Protection</button>
+      <button class="opt">B. 检测 Detection</button>
+      <button class="opt" data-correct="true">C. 恢复 Recovery</button>
+      <button class="opt">D. 响应 Response（应急阻断）</button>
+    </div>
+    <div class="explain">答案 C。防检恢响。备份属恢复，不是响应。响应更接近应急处置/抑制；防护是 ACL、加固、防火墙等。</div>
+  </div>
+
+
+  <h2 id="afternoon">下午卷风格案例（简答）</h2>
+  <p>写法提醒：先判场景，再「风险 → 对策」成对写，最后叠等保扩展与监测应急。参考
+    <a href="../reference/afternoon-case-cheatsheet.html">下午卷案例速查</a>。</p>
+  <div class="case-prompt" id="case-1">
+    <h3>案例 1 · 市政务网站被注入（拓扑 + Web）</h3>
+    <p>某市政务服务网站对外提供查询与办事。当前拓扑把 Web、应用和市民库都放在同一网段并映射到公网。近期出现「输入单引号页面报数据库语法错误」、后台可被拖库的迹象。单位已定级为第三级，但有人主张「做过一次漏洞扫描就等于做过等保测评」。</p>
+    <p><strong>请先自己写，再展开对照：</strong></p>
+    <ol>
+      <li>指出至少 3 处风险（现象 → 后果）。</li>
+      <li>给出与风险成对的改进措施（含分区部署与开发侧防护）。</li>
+      <li>说明「漏洞扫描 / 风险评估 / 等保测评」为什么不能互相替代。</li>
+    </ol>
+    <details class="details">
+      <summary>展开参考要点</summary>
+      <div class="ans">
+        <ul>
+        <li>Web 与数据库同网段并对公网暴露 → 拖库、横向移动；市民数据机密性、完整性受损。</li>
+        <li>详细 SQL 报错回显 → 便于注入探测。</li>
+        <li>把漏扫当成等保测评 → 符合性未判定，监管与备案要求落空。</li>
+        <li>对策：Web 放 DMZ，库放内网；入口串联 WAF；开发用参数化查询，关闭详细报错；管理口 SSH+ACL。</li>
+        <li>漏扫：发现已知漏洞。风险评估：算 R。等保测评：按 GB/T 28448 等判定是否符合相应等级。三者目的不同。</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="case-prompt" id="case-2">
+    <h3>案例 2 · 离散制造产线远程运维（工控）</h3>
+    <p>一家零部件工厂的 PLC / HMI 与办公网、互联网通过普通交换机扁平互联，工程人员用公网 Telnet 远程改参数，设备仍是出厂默认口令。管理层认为「工控也要先加密所有工艺数据，机密性第一」。</p>
+    <p><strong>请先自己写，再展开对照：</strong></p>
+    <ol>
+      <li>纠正安全需求优先序，并说明理由。</li>
+      <li>列出至少 4 条可落地的防护措施（分区、远程、口令、边界设备）。</li>
+      <li>若该系统要做等保，除通用要求外应叠加哪类扩展？</li>
+    </ol>
+    <details class="details">
+      <summary>展开参考要点</summary>
+      <div class="ans">
+        <ul>
+        <li>工控优先序：可用性 > 完整性 > 机密性。停线、误动作的后果通常大于工艺数据被看。</li>
+        <li>安全分区：工控与办公/互联网隔离；关闭 Telnet/FTP；必要远程走 VPN；改默认口令；白名单。</li>
+        <li>边界：工业防火墙或网闸，而不是只靠办公包过滤。</li>
+        <li>等保：通用要求 + <strong>工业控制系统安全扩展</strong>。测评仍不等于风险评估。</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="case-prompt" id="case-3">
+    <h3>案例 3 · 政务 SaaS 上云（责任共担 + 合规）</h3>
+    <p>某局把办事系统迁到公有云 IaaS：云商提供虚拟机，局方安装操作系统和业务。多套系统共驻同一宿主机。项目组认为「上云后备份、补丁、账号、等保都由云商一揽子负责」，并计划用一份风险评估报告代替等级测评。</p>
+    <p><strong>请先自己写，再展开对照：</strong></p>
+    <ol>
+      <li>按责任共担，列出局方至少仍应负责的 4 类事项。</li>
+      <li>写出多租户场景下的 3 条风险及对应措施。</li>
+      <li>说明为何不能用风险评估报告代替等保测评；云场景还要叠加什么扩展。</li>
+    </ol>
+    <details class="details">
+      <summary>展开参考要点</summary>
+      <div class="ans">
+        <ul>
+        <li>IaaS 下局方通常管：客户 OS 补丁与加固、应用与数据、账号权限、业务日志与备份策略、上云配置（安全组/VPC）。</li>
+        <li>风险：虚拟机逃逸/共驻泄露、安全组过宽、快照残留、账号滥用。措施：租户隔离、最小权限、加密+KMS、安全擦除、镜像加固。</li>
+        <li>风险评估算风险；等保测评做符合性。云上系统：通用要求 + <strong>云计算安全扩展</strong>。监测审计与应急预案收束。</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+
+  <h2>做完之后</h2>
+  <ul>
+    <li>错题对照 <a href="../reference/mnemonics.html">口诀速查</a>，尤其是密钥方向、DMZ、木马英文、等保≠风险。</li>
+    <li>下一课：<a href="../lessons/0025-access-control-models.html">第 25 课 访问控制与安全模型</a>。</li>
+    <li>返回 <a href="./index.html">练习入口</a> · <a href="../index.html">课程首页</a>。</li>
+  </ul>
+
+  <footer>
+    <p>题目为课程组自编，供 2026 年 10 月考季备考练习。南宁考场批次以准考证为准。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

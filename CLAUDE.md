@@ -9,7 +9,7 @@
 2. 课程文件命名：`lessons/000N-<dash-case>.html`，编号递增；复用 `assets/lesson.css`、`assets/quiz.js`、`assets/course-nav.js`，引用已有的 `reference/*.html` 速查文档，不重复造组件。
 3. 互动测验的选项长度尽量一致，避免通过格式暴露答案；用户答错的点记入 `learning-records/`，并在后续课程或速查卡中安排针对性复习。
 4. 课程引用真实、已核实的资源（教材、官方公告、备考笔记），不凭记忆编造考点；涉及新知识域先搜索核实再授课。
-5. **课程目录**：新 lesson / reference HTML 须引入 `assets/course-nav.js`；并在 `course-nav.js` 的 `COURSE_CATALOG` 中登记条目。
+5. **课程目录**：新 lesson / reference / practice HTML 须引入 `assets/course-nav.js`；并在 `assets/course-catalog.js` 的 `COURSE_CATALOG` 中登记条目。
 6. **教材精读**：无纸质教材时，今日任务链到 `reference/textbook/chNN.html`；26 章总目录见 `reference/textbook-index.html`。
 7. **结业测验**：用户学完课后，按 `POST-LESSON-QUIZ.md` 在对话里逐题检验（结构化点选优先）；结果写入 `learning-records/` 与 `NOTES.md`。
 

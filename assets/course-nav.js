@@ -9,21 +9,12 @@
 
   function pageContext() {
     var path = window.location.pathname || '';
-    var file = currentFile();
-    if (file === '' || file === 'index.html') {
-      return {
-        type: 'home',
-        lessonPrefix: 'lessons/',
-        refPrefix: 'reference/',
-        assetsPrefix: 'assets/',
-        homePrefix: './'
-      };
-    }
     if (path.indexOf('/textbook/') !== -1 || path.indexOf('\\textbook\\') !== -1) {
       return {
         type: 'textbook',
         lessonPrefix: '../../lessons/',
         refPrefix: '../',
+        practicePrefix: '../../practice/',
         assetsPrefix: '../../assets/',
         homePrefix: '../../'
       };
@@ -33,6 +24,7 @@
         type: 'lesson',
         lessonPrefix: './',
         refPrefix: '../reference/',
+        practicePrefix: '../practice/',
         assetsPrefix: '../assets/',
         homePrefix: '../'
       };
@@ -42,14 +34,26 @@
         type: 'reference',
         lessonPrefix: '../lessons/',
         refPrefix: './',
+        practicePrefix: '../practice/',
+        assetsPrefix: '../assets/',
+        homePrefix: '../'
+      };
+    }
+    if (path.indexOf('/practice/') !== -1 || path.indexOf('\\practice\\') !== -1) {
+      return {
+        type: 'practice',
+        lessonPrefix: '../lessons/',
+        refPrefix: '../reference/',
+        practicePrefix: './',
         assetsPrefix: '../assets/',
         homePrefix: '../'
       };
     }
     return {
-      type: 'unknown',
+      type: 'home',
       lessonPrefix: 'lessons/',
       refPrefix: 'reference/',
+      practicePrefix: 'practice/',
       assetsPrefix: 'assets/',
       homePrefix: './'
     };
@@ -117,6 +121,19 @@
       );
     });
     sidebar.appendChild(buildSection('课程', lessonLinks));
+
+    var practiceItems = catalog.practice || [];
+    if (practiceItems.length) {
+      var practiceLinks = practiceItems.map(function (item) {
+        return buildLink(
+          ctx.practicePrefix + item.file,
+          item.label,
+          item.title,
+          ctx.type === 'practice' && file === item.file
+        );
+      });
+      sidebar.appendChild(buildSection('练习', practiceLinks));
+    }
 
     var refLinks = catalog.references.map(function (item) {
       var active = file === item.file || (inTextbookChapter && item.file === 'textbook-index.html');
