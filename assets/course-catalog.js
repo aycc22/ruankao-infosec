@@ -56,8 +56,8 @@ var COURSE_CATALOG = {
     { file: 'access-control-cheatsheet.html', label: '访问控制', title: '访问控制与安全模型速查' },
     { file: 'mnemonics.html', label: '口诀速查', title: '第 1-25 课口诀汇总' }
   ],
-  practice: [
-    { file: 'index.html', label: '练习入口', title: '自编冲刺练习题库' },
+  questionBank: [
+    { file: 'index.html', label: '题库首页', title: '自编题库入口' },
     { file: 'sprint.html', label: '综合冲刺', title: '第 1–24 课自编单选' }
   ]
 };

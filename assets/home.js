@@ -49,18 +49,18 @@
     });
   }
 
-  function renderPractice() {
-    var mount = document.getElementById('practice-entry');
-    if (!mount || !COURSE_CATALOG.practice) return;
+  function renderQuestionBank() {
+    var mount = document.getElementById('question-bank-entry');
+    if (!mount || !COURSE_CATALOG.questionBank) return;
 
-    var hub = COURSE_CATALOG.practice[0];
+    var hub = COURSE_CATALOG.questionBank[0];
     if (!hub) return;
 
     var card = el('a', 'continue-card practice-card');
-    card.href = 'practice/' + hub.file;
+    card.href = 'question-bank/' + hub.file;
     card.innerHTML =
-      '<span class="continue-label">自编练习</span>' +
-      '<span class="continue-title">冲刺题库 · 第 1–24 课综合单选 + 下午卷案例</span>';
+      '<span class="continue-label">题库</span>' +
+      '<span class="continue-title">自编冲刺 · 第 1–24 课综合单选 + 下午卷案例</span>';
     mount.appendChild(card);
   }
 
@@ -75,13 +75,13 @@
       'exam-2023-2025.html'
     ];
 
-    var practiceHub = COURSE_CATALOG.practice && COURSE_CATALOG.practice[0];
-    if (practiceHub) {
-      var practiceChip = el('a', 'ref-chip');
-      practiceChip.href = 'practice/' + practiceHub.file;
-      practiceChip.textContent = '冲刺练习';
-      practiceChip.title = practiceHub.title;
-      mount.appendChild(practiceChip);
+    var bankHub = COURSE_CATALOG.questionBank && COURSE_CATALOG.questionBank[0];
+    if (bankHub) {
+      var bankChip = el('a', 'ref-chip');
+      bankChip.href = 'question-bank/' + bankHub.file;
+      bankChip.textContent = '题库';
+      bankChip.title = bankHub.title;
+      mount.appendChild(bankChip);
     }
 
     featured.forEach(function (file) {
@@ -121,7 +121,7 @@
 
   function init() {
     renderContinue();
-    renderPractice();
+    renderQuestionBank();
     renderLessons();
     renderRefs();
     renderOnlineStatus();

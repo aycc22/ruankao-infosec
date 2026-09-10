@@ -19,7 +19,7 @@
 
 - `lessons/000N-<dash-case>.html` — 单课 HTML，编号递增
 - `reference/*.html` — 速查卡 / 术语表；课中用锚点引用，不重复造轮子
-- `practice/` — 自编冲刺练习（非官方真题）；在 `course-catalog.js` 的 `practice` 数组登记
+- `question-bank/` — **独立自编题库**（非官方真题，不写入 `lessons/`）；在 `course-catalog.js` 的 `questionBank` 数组登记
 - `assets/lesson.css`、`assets/quiz.js`、`assets/course-nav.js` — 共享样式、测验与左侧课程目录；新可复用能力先放 `assets/`
 - `learning-records/000N-<dash-case>.md` — 学习记录，编号递增
 
@@ -31,7 +31,7 @@
 3. **测验公平**：选项长度尽量一致，避免格式泄题；答错点写入 `learning-records/`，后续课安排复习。
 4. **有据可查**：引用教材、官方公告、备考笔记等已核实资源；不凭记忆编造考点；新知识域先搜索核实再写进课。
 5. **打开课程**：课做好后尽量用系统方式打开 HTML，方便用户立刻学。
-6. **课程目录**：新 lesson / reference / practice HTML 须引入 `assets/course-nav.js`；并在 `assets/course-catalog.js` 的 `COURSE_CATALOG` 中登记条目。
+6. **课程目录**：新 lesson / reference / 题库 HTML 须引入 `assets/course-nav.js`；并在 `assets/course-catalog.js` 的 `COURSE_CATALOG` 中登记条目。题库放 `question-bank/`，不要把综合练习塞进 `lessons/*.html`。
 7. **教材精读**：用户无纸质教材时，今日任务中的「读教材」链接到 `reference/textbook/chNN.html`；新章考点更新 `reference/textbook/_gen.py` 后重新生成。
 
 ## 结业测验（用户学完课后必做）
@@ -76,7 +76,7 @@
 - 第 23 课（下午卷案例专项）：**已学完**；结业测 7/7（2026-09-10 对话）
 - 第 24 课（物理安全与网闸）：**已学完**；结业测 7/7（2026-09-10 对话）
 - 第 25 课（访问控制与安全模型）：**已制作**；用户尚未学习（教材第 4、7 章）
-- 自编冲刺练习：`practice/`（60 道单选 + 3 道下午卷风格案例，非官方真题）
+- 自编题库：`question-bank/`（60 道单选 + 3 道下午卷风格案例，非官方真题）
 - **下一课入口**：第 25 课 访问控制与安全模型——学完后结业测；可穿插刷练习题库
 
 ## 明确不做

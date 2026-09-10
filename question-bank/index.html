@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>自编冲刺练习 · 题库入口</title>
+<title>自编题库 · 入口</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
-    <div class="lesson-no">Practice · 自编题库</div>
-    <h1>冲刺练习入口</h1>
-    <p class="meta">覆盖已学第 1–24 课（第 25 课访问控制仅轻量带过）· 点击作答，立刻看解析</p>
+    <div class="lesson-no">题库 · 独立练习区</div>
+    <h1>自编题库</h1>
+    <p class="meta">独立于课程讲义 · 覆盖已学第 1–24 课（第 25 课访问控制仅轻量带过）· 点击作答，立刻看解析</p>
   </header>
 
   <div class="callout warn">
     <strong>这不是官方真题。</strong>题目由课程组按教材与课内考点<strong>自编</strong>，风格接近上午卷单选，
     用于查缺补漏。请勿当成「某年试卷」传播。官方成套解析仍以
     <a href="../reference/exam-overview.html">指定用书 / 考试全貌</a>为准。
+    课内 <code>lessons/*.html</code> 的小测仍只服务当堂学习，本题库不往课程页塞题。
   </div>
 
   <h2>从这里开始刷</h2>
@@ -54,6 +55,13 @@
     <tr><td>物理安全与网闸</td><td>第 24 课</td></tr>
     <tr><td>访问控制（轻量）</td><td>第 25 课已有讲义，未学完也可先做</td></tr>
   </table>
+
+  <h2>本目录有什么</h2>
+  <ul>
+    <li><code>index.html</code> — 题库首页（本页）</li>
+    <li><code>sprint.html</code> — 综合冲刺卷（由 <code>_gen.py</code> 生成）</li>
+    <li><code>_gen.py</code> — 题目数据与生成脚本；改题后在本目录运行 <code>python3 _gen.py</code></li>
+  </ul>
 
   <footer>
     <p>返回 <a href="../index.html">课程首页</a> ·

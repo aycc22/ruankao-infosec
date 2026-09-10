@@ -14,7 +14,7 @@
         type: 'textbook',
         lessonPrefix: '../../lessons/',
         refPrefix: '../',
-        practicePrefix: '../../practice/',
+        bankPrefix: '../../question-bank/',
         assetsPrefix: '../../assets/',
         homePrefix: '../../'
       };
@@ -24,7 +24,7 @@
         type: 'lesson',
         lessonPrefix: './',
         refPrefix: '../reference/',
-        practicePrefix: '../practice/',
+        bankPrefix: '../question-bank/',
         assetsPrefix: '../assets/',
         homePrefix: '../'
       };
@@ -34,17 +34,17 @@
         type: 'reference',
         lessonPrefix: '../lessons/',
         refPrefix: './',
-        practicePrefix: '../practice/',
+        bankPrefix: '../question-bank/',
         assetsPrefix: '../assets/',
         homePrefix: '../'
       };
     }
-    if (path.indexOf('/practice/') !== -1 || path.indexOf('\\practice\\') !== -1) {
+    if (path.indexOf('/question-bank/') !== -1 || path.indexOf('\\question-bank\\') !== -1) {
       return {
-        type: 'practice',
+        type: 'question-bank',
         lessonPrefix: '../lessons/',
         refPrefix: '../reference/',
-        practicePrefix: './',
+        bankPrefix: './',
         assetsPrefix: '../assets/',
         homePrefix: '../'
       };
@@ -53,7 +53,7 @@
       type: 'home',
       lessonPrefix: 'lessons/',
       refPrefix: 'reference/',
-      practicePrefix: 'practice/',
+      bankPrefix: 'question-bank/',
       assetsPrefix: 'assets/',
       homePrefix: './'
     };
@@ -112,17 +112,17 @@
       '<div class="sidebar-sub">2026 备考 · 课程目录</div>';
     sidebar.appendChild(header);
 
-    var practiceItems = catalog.practice || [];
-    if (practiceItems.length) {
-      var practiceLinks = practiceItems.map(function (item) {
+    var bankItems = catalog.questionBank || [];
+    if (bankItems.length) {
+      var bankLinks = bankItems.map(function (item) {
         return buildLink(
-          ctx.practicePrefix + item.file,
+          ctx.bankPrefix + item.file,
           item.label,
           item.title,
-          ctx.type === 'practice' && file === item.file
+          ctx.type === 'question-bank' && file === item.file
         );
       });
-      sidebar.appendChild(buildSection('练习', practiceLinks));
+      sidebar.appendChild(buildSection('题库', bankLinks));
     }
 
     var lessonLinks = catalog.lessons.map(function (item) {

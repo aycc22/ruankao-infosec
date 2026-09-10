@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate practice/sprint.html from structured 自编 items. Run: python3 practice/_gen.py"""
+"""Generate question-bank/sprint.html from structured 自编 items. Run: python3 question-bank/_gen.py"""
 from __future__ import annotations
 
 import html
@@ -763,13 +763,13 @@ def build() -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>自编综合冲刺 · 60 道单选</title>
+<title>题库 · 自编综合冲刺 60 道单选</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
-    <div class="lesson-no">Practice · 自编综合冲刺</div>
+    <div class="lesson-no">题库 · 自编综合冲刺</div>
     <h1>第 1–24 课综合练习（含第 25 课轻量）</h1>
     <p class="meta">60 道单选 · 3 道下午卷风格简答 · 点选项显示解析 · 非官方真题</p>
   </header>
@@ -797,7 +797,7 @@ def build() -> str:
   <ul>
     <li>错题对照 <a href="../reference/mnemonics.html">口诀速查</a>，尤其是密钥方向、DMZ、木马英文、等保≠风险。</li>
     <li>下一课：<a href="../lessons/0025-access-control-models.html">第 25 课 访问控制与安全模型</a>。</li>
-    <li>返回 <a href="./index.html">练习入口</a> · <a href="../index.html">课程首页</a>。</li>
+    <li>返回 <a href="./index.html">题库首页</a> · <a href="../index.html">课程首页</a>。</li>
   </ul>
 
   <footer>
