@@ -112,16 +112,6 @@
       '<div class="sidebar-sub">2026 备考 · 课程目录</div>';
     sidebar.appendChild(header);
 
-    var lessonLinks = catalog.lessons.map(function (item) {
-      return buildLink(
-        ctx.lessonPrefix + item.file,
-        item.label,
-        item.title,
-        file === item.file
-      );
-    });
-    sidebar.appendChild(buildSection('课程', lessonLinks));
-
     var practiceItems = catalog.practice || [];
     if (practiceItems.length) {
       var practiceLinks = practiceItems.map(function (item) {
@@ -134,6 +124,16 @@
       });
       sidebar.appendChild(buildSection('练习', practiceLinks));
     }
+
+    var lessonLinks = catalog.lessons.map(function (item) {
+      return buildLink(
+        ctx.lessonPrefix + item.file,
+        item.label,
+        item.title,
+        file === item.file
+      );
+    });
+    sidebar.appendChild(buildSection('课程', lessonLinks));
 
     var refLinks = catalog.references.map(function (item) {
       var active = file === item.file || (inTextbookChapter && item.file === 'textbook-index.html');

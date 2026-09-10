@@ -6,7 +6,13 @@
     var correct = 0;
     quizzes.forEach(function (quiz) {
       var opts = quiz.querySelectorAll('.opt');
-      if (!opts.length || !opts[0].disabled) return;
+      var done = false;
+      opts.forEach(function (o) {
+        if (o.disabled || o.classList.contains('correct') || o.classList.contains('wrong')) {
+          done = true;
+        }
+      });
+      if (!done) return;
       answered += 1;
       if (!quiz.querySelector('.opt.wrong')) correct += 1;
     });
@@ -24,15 +30,24 @@
     }
   }
 
-  document.addEventListener('click', function (e) {
-    if (e.target && e.target.classList && e.target.classList.contains('opt')) {
-      setTimeout(render, 0);
+  function bind() {
+    document.querySelectorAll('.quiz .opt').forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        setTimeout(render, 0);
+      });
+    });
+    if (typeof MutationObserver === 'function') {
+      var observer = new MutationObserver(render);
+      document.querySelectorAll('.quiz').forEach(function (quiz) {
+        observer.observe(quiz, { attributes: true, subtree: true, attributeFilter: ['class', 'disabled'] });
+      });
     }
-  });
+    render();
+  }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
+    document.addEventListener('DOMContentLoaded', bind);
   } else {
-    render();
+    bind();
   }
 })();

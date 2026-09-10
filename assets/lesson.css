@@ -347,6 +347,7 @@ code {
 }
 .case-prompt h3 { margin-top: 0; }
 .case-prompt ol { margin-bottom: 0.4rem; }
+.quiz, .case-prompt { scroll-margin-top: 3.6rem; }
 
 /* 作业清单 */
 .task-list {
@@ -387,6 +388,7 @@ footer {
 /* ============ 窄屏：目录折叠 ============ */
 @media (max-width: 768px) {
   .practice-progress { top: 3.2rem; }
+  .quiz, .case-prompt { scroll-margin-top: 6.4rem; }
 
   .nav-toggle { display: block; }
 
