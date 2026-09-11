@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 26 课 · 国密算法参数表</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 26 · 约 18 分钟 · 冲刺补缺</div>
+    <h1>国密怎么考：SM1–SM4 / SM9 / ZUC 参数表</h1>
+    <p class="meta">本课目标：秒判每个 SM* / ZUC 是对称、非对称、杂凑还是标识密码；只背教材能撑住的对照，外加<strong>机考回忆</strong>里的 SM1 分组/密钥 128/128；会拿 SM4/SM2/SM3 去对 AES/RSA/SHA-256。</p>
+  </header>
+
+  <h2>开场：第 3 课点过名，机考要「对称还是杂凑」</h2>
+  <p>
+    <a href="./0003-crypto-basics.html">第 3 课</a>已经会认国产三件套：<strong>SM2</strong> 非对称、<strong>SM3</strong> 哈希、<strong>SM4</strong> 对称。
+    <a href="./0023-afternoon-case-special.html">第 23 课 §八</a>把冲刺缺口排在第三的，就是<strong>国密参数表</strong>。
+    机考后更爱问「SM1/SM2/SM3/SM4/SM9/ZUC 到底是对称还是杂凑」，偶尔再问一个数字。
+    本课不推椭圆曲线、不背内部轮函数——只钉<strong>分类 + 对照 + 唯一要背的那对长度</strong>。
+  </p>
+
+  <div class="callout ok">
+    第 25 课结业测 <strong>7/7</strong>。本课把第 3 课的名字补成一张可背的表。
+  </div>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 = 符合性判定；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 数字签名的密钥方向，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 公钥签名，再用公钥验签</button>
+      <button class="opt" data-correct="true">B. 私钥签名，再用公钥验签</button>
+      <button class="opt">C. 公钥签名，再用私钥验签</button>
+      <button class="opt">D. 私钥签名，再用私钥验签</button>
+    </div>
+    <div class="explain">答案 B。公钥加密 → 私钥解密；私钥签名 → 公钥验签。第 3–4 课持续复习点。</div>
+  </div>
+
+  <h2>一、先分家：每个 SM* 是哪一类</h2>
+  <p>
+    教材第 3 章把工具分成三类：对称（同钥、快）、非对称（公钥/私钥、慢）、哈希（无密钥、不可逆）。
+    国密只是「国产实现」，分类规则不变。机考题干常把全家点名一遍，再问其中一个属于哪类。
+  </p>
+  <table>
+    <tr><th>算法</th><th>类别（要秒判）</th><th>一句话用途</th><th>依据</th></tr>
+    <tr>
+      <td><strong>SM1</strong></td>
+      <td>对称 · 分组密码</td>
+      <td>加密数据本体（同钥加解密）</td>
+      <td>速查卡：国产 SM1/SM4 列在对称栏；机考题干写「对称分组」</td>
+    </tr>
+    <tr>
+      <td><strong>SM2</strong></td>
+      <td>非对称 · 椭圆曲线公钥</td>
+      <td>加密密钥、数字签名</td>
+      <td>教材第 3 章：RSA、ECC、<strong>SM2</strong></td>
+    </tr>
+    <tr>
+      <td><strong>SM3</strong></td>
+      <td>杂凑（哈希）</td>
+      <td>完整性校验、签名前置</td>
+      <td>教材第 3 章：SHA-256、<strong>SM3</strong></td>
+    </tr>
+    <tr>
+      <td><strong>SM4</strong></td>
+      <td>对称 · 分组密码</td>
+      <td>加密数据本体（对标 AES）</td>
+      <td>教材第 3 章：AES、<strong>SM4</strong>；国密局：GM/T 0002《SM4 分组密码算法》</td>
+    </tr>
+    <tr>
+      <td><strong>SM9</strong></td>
+      <td>标识密码（公钥体系）</td>
+      <td>用身份标识当公钥，不是对称、不是杂凑</td>
+      <td>机考题干写「SM9 标识密码算法」；国密局：GM/T 0044</td>
+    </tr>
+    <tr>
+      <td><strong>ZUC</strong></td>
+      <td>对称 · 序列（流）密码</td>
+      <td>按比特流加解密；不是杂凑</td>
+      <td>国密局公告第 23 号：GM/T 0001《祖冲之序列密码算法》</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>国密算法分类</strong>）：<strong>SM1 和 SM4 是对称分组，SM2 是椭圆曲线公钥，SM3 是杂凑，SM9 是标识密码，ZUC 是祖冲之序列密码</strong>。
+  </div>
+  <div class="callout warn">
+    易错：看见「SM」不要一律当对称。SM3 是杂凑；SM2 / SM9 走公钥一侧；ZUC 是序列密码，属于对称范畴，但不是分组、更不是哈希。
+  </div>
+
+  <h2>二、对照国际算法：换国产名，别换类别</h2>
+  <p>
+    第 3 课口诀「淘汰 DES / MD5 / SHA-1；现代 AES / SHA-256；国产 SM2 · SM3 · SM4」这里加深一层：
+    <strong>对照的是用途类别</strong>，不是「比特数必须一样」。
+  </p>
+  <table>
+    <tr><th>要办的事</th><th>国际常用</th><th>国产对位</th><th>别选成</th></tr>
+    <tr>
+      <td>加密大量数据（对称分组）</td>
+      <td><strong>AES</strong></td>
+      <td><strong>SM4</strong>（还有 SM1）</td>
+      <td>SM2、SM3</td>
+    </tr>
+    <tr>
+      <td>传密钥 / 数字签名（公钥）</td>
+      <td><strong>RSA</strong> / ECC</td>
+      <td><strong>SM2</strong></td>
+      <td>SM4、SM3</td>
+    </tr>
+    <tr>
+      <td>算指纹、校验完整性（杂凑）</td>
+      <td><strong>SHA-256</strong></td>
+      <td><strong>SM3</strong></td>
+      <td>SM4、AES</td>
+    </tr>
+    <tr>
+      <td>用身份标识当公钥</td>
+      <td>标识密码 / IBC（名称了解即可）</td>
+      <td><strong>SM9</strong></td>
+      <td>SM1、ZUC</td>
+    </tr>
+  </table>
+  <p>
+    数字信封思路不变：<strong>对称加密数据，非对称传那把对称密钥</strong>。
+    政务/等保场景写成国密，就是 <strong>SM4 加密文件 + SM2 保护会话密钥 + SM3 做哈希/配合签名</strong>。
+    SM2 签名的密钥方向仍是铁律：<strong>私钥签名 → 公钥验签</strong>。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>国产三件套对照国际</strong>）：<strong>加密签名用 SM2 对标 RSA 和 ECC，杂凑用 SM3 对标 SHA-256，对称分组用 SM4 对标 AES</strong>。
+  </div>
+
+  <h2>三、参数表：只背能站得住的数字</h2>
+  <p>
+    <a href="../reference/exam-2023-2025.html">2023–2025 考点分布</a>写得很清楚：要补的是「对称还是杂凑」，以及
+    <strong>SM1 分组与密钥长度（公开回忆题给的是 128/128）</strong>。
+    教材第 3 章精读<strong>没有</strong>给 SM2/SM3/SM4/SM9/ZUC 的比特表——本课也不编造。
+  </p>
+  <table>
+    <tr><th>条目</th><th>考试怎么答</th><th>来源标签</th></tr>
+    <tr>
+      <td>SM1 是什么</td>
+      <td>对称分组密码</td>
+      <td>教材/速查分类 + 机考题干</td>
+    </tr>
+    <tr>
+      <td>SM1 分组长度、密钥长度</td>
+      <td><strong>128 比特、128 比特</strong></td>
+      <td><strong>机考回忆</strong>（非官方成套真题；培训站点公开回忆）</td>
+    </tr>
+    <tr>
+      <td>SM2 / SM3 / SM4 / SM9 / ZUC 的比特数</td>
+      <td>本课<strong>不背、不填</strong></td>
+      <td>教材未给；避免把 SHA-256 的 256 随手套上去</td>
+    </tr>
+  </table>
+  <div class="callout warn">
+    <strong>机考回忆</strong>不是清华社官方试题分析，不能拿来估通过率。
+    唯一允许默写的长度就是 SM1 的 <strong>128 / 128</strong>。看见选项里 64、256 配对，先排除「两个数不一样」和「全是 256」。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>SM1 分组与密钥长度</strong>）：<strong>机考公开回忆是分组一百二十八、密钥也是一百二十八</strong>。
+  </div>
+
+  <h2>四、下午卷怎么写国密（不考证明）</h2>
+  <p>
+    题干出现「商用密码 / 国产算法 / 等保密码应用」，把第 3 课方案里的 AES/RSA/SHA-256 换成对位国密即可：
+  </p>
+  <ol>
+    <li><strong>保密</strong>：SM4（对称分组）加密数据；对称密钥用对方 <strong>SM2 公钥</strong>封装（数字信封）。</li>
+    <li><strong>完整</strong>：对原文算 <strong>SM3</strong> 杂凑。</li>
+    <li><strong>防抵赖</strong>：发送方用自己的 <strong>SM2 私钥</strong>对杂凑签名，接收方用发送方公钥验签。</li>
+  </ol>
+  <p class="meta">需求 → 技术 → 理由，各写一行。不要在下午卷默写未在教材出现的轮数、曲线方程。</p>
+
+  <h2>五、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 下列属于椭圆曲线公钥密码算法的是？</div>
+    <div class="opts">
+      <button class="opt">A. SM3 杂凑算法</button>
+      <button class="opt">B. SM1 对称分组算法</button>
+      <button class="opt" data-correct="true">C. SM2 椭圆曲线公钥</button>
+      <button class="opt">D. SM4 对称分组算法</button>
+    </div>
+    <div class="explain">答案 C。教材：非对称代表是 RSA、ECC、SM2。SM1/SM4 对称分组；SM3 杂凑。机考同型问「椭圆曲线公钥」。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · SM3 在国密体系里属于哪一类？</div>
+    <div class="opts">
+      <button class="opt">A. 对称分组密码，用来加密数据本体</button>
+      <button class="opt" data-correct="true">B. 杂凑哈希算法，用来计算消息指纹</button>
+      <button class="opt">C. 椭圆曲线公钥，用来加密或签名</button>
+      <button class="opt">D. 标识密码算法，用身份当作公钥</button>
+    </div>
+    <div class="explain">答案 B。SM3 对标 SHA-256，是杂凑不是加密。哈希不可逆；不要选成 SM4。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 与 AES 用途最接近的国产算法是？</div>
+    <div class="opts">
+      <button class="opt">A. SM2 椭圆曲线公钥算法</button>
+      <button class="opt">B. SM3 密码杂凑算法</button>
+      <button class="opt" data-correct="true">C. SM4 对称分组密码算法</button>
+      <button class="opt">D. SM9 标识密码算法</button>
+    </div>
+    <div class="explain">答案 C。AES 与 SM4 都是对称分组，加密数据本体。SM2 对 RSA/ECC；SM3 对 SHA-256。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 机考公开回忆：SM1 分组长度和密钥长度分别是？</div>
+    <div class="opts">
+      <button class="opt">A. 256 比特和 128 比特</button>
+      <button class="opt">B. 64 比特和 128 比特</button>
+      <button class="opt">C. 256 比特和 256 比特</button>
+      <button class="opt" data-correct="true">D. 128 比特和 128 比特</button>
+    </div>
+    <div class="explain">答案 D。<strong>机考回忆</strong>口径：SM1 对称分组，分组与密钥均为 128 比特。本课不推广到其他 SM 算法的比特数。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · SM9 属于哪一类密码？</div>
+    <div class="opts">
+      <button class="opt">A. 对称分组，加密数据本体</button>
+      <button class="opt">B. 杂凑哈希，计算消息指纹</button>
+      <button class="opt" data-correct="true">C. 标识密码，用身份当公钥</button>
+      <button class="opt">D. 序列密码，按比特流加密</button>
+    </div>
+    <div class="explain">答案 C。机考题干称「SM9 标识密码算法」；国密局 GM/T 0044。不是对称分组，也不是杂凑。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · ZUC（祖冲之算法）正确的分类是？</div>
+    <div class="opts">
+      <button class="opt">A. 杂凑算法，输出固定指纹</button>
+      <button class="opt" data-correct="true">B. 序列密码，属于对称范畴</button>
+      <button class="opt">C. 公钥算法，用于数字签名</button>
+      <button class="opt">D. 标识密码，用邮箱当公钥</button>
+    </div>
+    <div class="explain">答案 B。国密局公告第 23 号：GM/T 0001《祖冲之序列密码算法》。序列密码 = 流密码，对称；不是杂凑、不是 SM9。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · Which Chinese algorithm is a cryptographic hash function?</div>
+    <div class="opts">
+      <button class="opt">A. SM2 public-key algorithm on elliptic curves</button>
+      <button class="opt" data-correct="true">B. SM3 cryptographic hash for integrity checks</button>
+      <button class="opt">C. SM4 block cipher for bulk data encryption</button>
+      <button class="opt">D. SM1 symmetric block cipher for bulk data</button>
+    </div>
+    <div class="explain">答案 B。SM3 = hash / 杂凑（integrity）。SM2 = public-key；SM1/SM4 = symmetric block cipher。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某政务系统要求：大文件传输保密、收方能验证未被篡改、发送方不能抵赖，并优先采用商用密码。请给出方案（需求 → 技术 → 理由）。</p>
+    <div class="ans">
+      ① <strong>保密</strong>：用 <strong>SM4</strong> 对称分组加密文件——数据量大、对称快；会话密钥用接收方 <strong>SM2 公钥</strong>封装送达（数字信封）。<br>
+      ② <strong>防篡改</strong>：对文件计算 <strong>SM3</strong> 杂凑，收方重算比对。<br>
+      ③ <strong>防抵赖</strong>：发送方用自己的 <strong>SM2 私钥</strong>对杂凑签名，收方用发送方公钥验签。<br>
+      ④ 不要写「用 SM3 加密文件」或「用 SM4 做签名」。密钥方向：<strong>公钥加密 → 私钥解密；私钥签名 → 公钥验签</strong>。<br>
+      ⑤ 等保测评是符合性检查，<strong>不等于</strong>风险评估。
+    </div>
+  </details>
+
+  <h2>六、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读第 3 章（15 分钟）</strong>：阅读
+      <a href="../reference/textbook/ch03.html">第 3 章 密码学基本理论</a>，
+      对照<a href="../reference/gm-crypto-cheatsheet.html">国密参数速查卡</a>和
+      <a href="../reference/crypto-cheatsheet.html">密码学速查</a>，只记分类与对照。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出 SM1–SM4、SM9、ZUC 各是哪一类；SM4/SM2/SM3 分别对标谁；SM1 的 128/128 要加「机考回忆」四个字。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 国密算法分类：SM1 和 SM4 是对称分组，SM2 是椭圆曲线公钥，SM3 是杂凑，SM9 是标识密码，ZUC 是祖冲之序列密码；② 国产三件套对照国际：加密签名用 SM2 对标 RSA 和 ECC，杂凑用 SM3 对标 SHA-256，对称分组用 SM4 对标 AES；③ SM1 分组与密钥长度：机考公开回忆是分组一百二十八、密钥也是一百二十八；④ 非对称密钥方向：公钥加密私钥解保密，私钥签名公钥验认证；⑤ 等保测评与风险评估：测评看符合性，评估看风险，两套不是同一件事。</li>
+  </ol>
+
+  <h2>七、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 3 章 密码学基本理论（<a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>）·
+      <a href="./0003-crypto-basics.html">第 3 课</a> ·
+      <a href="../reference/crypto-cheatsheet.html">密码学速查</a></li>
+    <li>机考缺口清单：<a href="../reference/exam-2023-2025.html">2023–2025 考点分布</a>（SM1/SM2/SM3/SM4/SM9/ZUC 的「对称还是杂凑」；SM1 分组与密钥 128/128 为<strong>公开回忆</strong>）</li>
+    <li>已核实官方公告（只引标题与分类，不抄算法细节）：
+      <a href="https://www.oscca.gov.cn/sca/xxgk/2012-03/21/content_1002392.shtml">国家密码管理局公告第 23 号</a>
+      （GM/T 0001 祖冲之序列密码、GM/T 0002 SM4 分组、GM/T 0003 SM2 椭圆曲线公钥、GM/T 0004 SM3 杂凑）；
+      <a href="https://www.oscca.gov.cn/sca/xxgk/2016-03/28/content_1002407.shtml">公告第 30 号</a>
+      （GM/T 0044 SM9 标识密码）</li>
+    <li>国家标准题录：
+      <a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81199D3A7E05397BE0A0AB82A">GB/T 32907—2016 SM4 分组密码算法</a> ·
+      <a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D8119BD3A7E05397BE0A0AB82A">GB/T 32905—2016 SM3 密码杂凑算法</a></li>
+    <li>速查：<a href="../reference/gm-crypto-cheatsheet.html">国密参数速查</a> ·
+      <a href="../reference/mnemonics.html#lesson-26">第 26 课口诀</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「SM9 和 SM2 差在哪」「ZUC 为什么算对称」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 26 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：冲刺缺口还剩<strong>法律法规条款</strong>与<strong>下午卷 iptables 命令模板</strong>（见第 23 课 §八）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>口诀速查 · 第 1-25 课汇总</title>
+<title>口诀速查 · 第 1-26 课汇总</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
     <div class="lesson-no">Reference · 记忆卡</div>
-    <h1>一句话口诀速查（第 1-25 课汇总）</h1>
-    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-09-10</p>
+    <h1>一句话口诀速查（第 1-26 课汇总）</h1>
+    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-09-11</p>
   </header>
 
   <div class="callout ok">
@@ -309,13 +309,24 @@
     <li><strong>访问控制三要素</strong>：主体来访客体受，授权定方式，控制做拦门</li>
     <li><strong>访问控制四模型</strong>：DAC 主人自己定，MAC 标签系统定，RBAC 角色中间转，ABAC 属性随环境变</li>
     <li><strong>ACL 与能力表</strong>：ACL 贴在客体上，能力表揣在主体兜</li>
+    <li><strong>访问控制矩阵实现</strong>：基于行三人——能力、前缀、口令；基于列俩货——ACL、保护位</li>
     <li><strong>BLP 机密性规则</strong>：不上读、不下写，机密不往低处流（下读上写）</li>
     <li><strong>Biba 完整性规则</strong>：不上写、不下读，脏数据不往高处爬（上读下写）</li>
     <li><strong>BLP 与 Biba 对照</strong>：保机密用 BLP 下读上写，保完整用 Biba 上读下写</li>
     <li><strong>PDRR 四环节</strong>：先防护再检测，恢复靠备份，响应做应急（字头：防检恢响）</li>
     <li><strong>默认拒绝原则</strong>：未经明确允许的，一律禁止</li>
     <li><strong>最小特权原则</strong>：只给干活必需的那点权</li>
-    <li><strong>第 25 课易错</strong>：BLP ≠ Biba；ACL ≠ 能力表；读写是权限、禁止访问才是控制；备份属恢复不是响应；等保测评 ≠ 风险评估</li>
+    <li><strong>第 25 课易错</strong>：BLP ≠ Biba；ACL ≠ 能力表；行三人（能力、前缀、口令）≠ 列俩货（ACL、保护位）；读写是权限、禁止访问才是控制；备份属恢复不是响应；等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2 id="lesson-26">第 26 课 · 国密算法参数表</h2>
+  <ul>
+    <li><strong>国密算法分类</strong>：SM1 和 SM4 是对称分组，SM2 是椭圆曲线公钥，SM3 是杂凑，SM9 是标识密码，ZUC 是祖冲之序列密码</li>
+    <li><strong>国产三件套对照国际</strong>：加密签名用 SM2 对标 RSA 和 ECC，杂凑用 SM3 对标 SHA-256，对称分组用 SM4 对标 AES</li>
+    <li><strong>SM1 分组与密钥长度</strong>：机考公开回忆是分组一百二十八、密钥也是一百二十八</li>
+    <li><strong>非对称密钥方向</strong>：公钥加密私钥解保密，私钥签名公钥验认证</li>
+    <li><strong>等保测评与风险评估</strong>：测评看符合性，评估看风险，两套不是同一件事</li>
+    <li><strong>第 26 课易错</strong>：SM3 ≠ 加密；SM2 ≠ SM4；SM9 ≠ 对称分组；ZUC ≠ 杂凑；不要把 SHA-256 的 256 随手套到所有 SM 上；除 SM1 的 128/128（机考回忆）外不编造其他比特数</li>
   </ul>
 
   <h2>答题套路（下午卷通用）</h2>
@@ -327,7 +338,7 @@
   </ul>
 
   <footer>
-    本表汇总第 1-25 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
+    本表汇总第 1-26 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
     <a href="./attacks-glossary.html">攻击词汇表</a> · <a href="./crypto-cheatsheet.html">密码学速查</a> ·
     <a href="./pki-https-cheatsheet.html">PKI 速查</a> · <a href="./firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a> ·
     <a href="./ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="./vulnerability-cheatsheet.html">漏洞补丁速查</a> ·
@@ -346,6 +357,7 @@
     <a href="./afternoon-case-cheatsheet.html">下午卷案例速查</a> ·
     <a href="./physical-gap-cheatsheet.html">物理安全与网闸速查</a> ·
     <a href="./access-control-cheatsheet.html">访问控制与安全模型速查</a> ·
+    <a href="./gm-crypto-cheatsheet.html">国密参数速查</a> ·
     <a href="../question-bank/index.html">自编题库</a>
   </footer>
 </main>
