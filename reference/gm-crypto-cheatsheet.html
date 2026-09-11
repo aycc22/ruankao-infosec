@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 国密算法参数表</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>国密算法参数速查</h1>
+    <p class="meta">依据教材第 3 章分类 + 国密局已核实公告标题 · 打印用 · 不推数学</p>
+  </header>
+
+  <h2>一、分类秒判</h2>
+  <table>
+    <tr><th>算法</th><th>选</th><th>别选</th></tr>
+    <tr><td>SM1</td><td><strong>对称分组</strong></td><td>杂凑、公钥</td></tr>
+    <tr><td>SM2</td><td><strong>椭圆曲线公钥</strong>（非对称）</td><td>对称、杂凑</td></tr>
+    <tr><td>SM3</td><td><strong>杂凑 / 哈希</strong></td><td>加密、分组</td></tr>
+    <tr><td>SM4</td><td><strong>对称分组</strong></td><td>公钥、杂凑</td></tr>
+    <tr><td>SM9</td><td><strong>标识密码</strong>（公钥体系）</td><td>对称、杂凑</td></tr>
+    <tr><td>ZUC 祖冲之</td><td><strong>序列（流）密码</strong>，对称范畴</td><td>杂凑、标识密码</td></tr>
+  </table>
+  <p class="meta"><strong>国密算法分类</strong>：SM1 和 SM4 是对称分组，SM2 是椭圆曲线公钥，SM3 是杂凑，SM9 是标识密码，ZUC 是祖冲之序列密码。</p>
+
+  <h2>二、对照国际</h2>
+  <table>
+    <tr><th>用途</th><th>国际</th><th>国产</th></tr>
+    <tr><td>大量数据保密</td><td>AES</td><td>SM4（及 SM1）</td></tr>
+    <tr><td>传密钥 / 签名</td><td>RSA / ECC</td><td>SM2</td></tr>
+    <tr><td>完整性指纹</td><td>SHA-256</td><td>SM3</td></tr>
+    <tr><td>身份当公钥</td><td>标识密码</td><td>SM9</td></tr>
+  </table>
+  <p class="meta"><strong>国产三件套对照国际</strong>：加密签名用 SM2 对标 RSA 和 ECC，杂凑用 SM3 对标 SHA-256，对称分组用 SM4 对标 AES。</p>
+
+  <h2>三、唯一必背数字</h2>
+  <table>
+    <tr><th>条目</th><th>数字</th><th>标签</th></tr>
+    <tr><td>SM1 分组长度、密钥长度</td><td><strong>128 / 128</strong> 比特</td><td><strong>机考回忆</strong>，非官方成套真题</td></tr>
+    <tr><td>其他 SM / ZUC 比特数</td><td>本表不列</td><td>教材未给，不编造</td></tr>
+  </table>
+  <p class="meta"><strong>SM1 分组与密钥长度</strong>：机考公开回忆是分组一百二十八、密钥也是一百二十八。</p>
+
+  <h2>四、数字信封（国密写法）</h2>
+  <ul>
+    <li>SM4 加密数据；SM2 公钥封装对称密钥；SM3 算哈希</li>
+    <li>签名：SM2 <strong>私钥签、公钥验</strong></li>
+    <li>不要用 SM3 加密，也不要用 SM4 做签名</li>
+  </ul>
+  <p class="meta"><strong>非对称密钥方向</strong>：公钥加密私钥解保密，私钥签名公钥验认证。</p>
+
+  <h2>五、易错陷阱</h2>
+  <ul>
+    <li>SM3 ≠ 对称加密；哈希不可逆</li>
+    <li>SM2 ≠ SM4；公钥慢，只适合密钥和签名</li>
+    <li>SM9 ≠ 对称分组；题干写「标识密码」就选 SM9</li>
+    <li>ZUC ≠ 杂凑；祖冲之是序列密码</li>
+    <li>不要把 SHA-256 的「256」随手套到所有 SM 上</li>
+    <li>等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2>六、英文词汇</h2>
+  <p>ShangMi / SM-series · Symmetric block cipher · Elliptic-curve public-key ·
+    Hash / digest · Identity-based cryptography · ZUC stream cipher · Digital envelope</p>
+
+  <h2>七、下午卷模板</h2>
+  <p>先写 <strong>SM4 加密大数据</strong> → 再写 <strong>SM2 传密钥 + 私钥签名</strong> → 点 <strong>SM3 完整性</strong> → 补一句密钥方向。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0026-gm-crypto-params.html">第 26 课</a> ·
+    <a href="./mnemonics.html#lesson-26">口诀</a> ·
+    <a href="./crypto-cheatsheet.html">密码学速查</a> ·
+    <a href="./textbook/ch03.html">教材第 3 章</a> ·
+    <a href="./exam-2023-2025.html">2023–2025 考点</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
