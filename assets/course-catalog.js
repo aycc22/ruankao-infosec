@@ -26,7 +26,8 @@ var COURSE_CATALOG = {
     { file: '0022-big-data-security.html', label: '第 22 课', title: '大数据安全' },
     { file: '0023-afternoon-case-special.html', label: '第 23 课', title: '下午卷案例专项' },
     { file: '0024-physical-security-gap.html', label: '第 24 课', title: '物理安全与网闸' },
-    { file: '0025-access-control-models.html', label: '第 25 课', title: '访问控制与安全模型' }
+    { file: '0025-access-control-models.html', label: '第 25 课', title: '访问控制与安全模型' },
+    { file: '0026-gm-crypto-params.html', label: '第 26 课', title: '国密算法参数表' }
   ],
   references: [
     { file: 'textbook-index.html', label: '教材精读', title: '官方教程 26 章考点' },
@@ -34,6 +35,7 @@ var COURSE_CATALOG = {
     { file: 'exam-2023-2025.html', label: '23–25考点', title: '2023–2025 机考考点分布' },
     { file: 'attacks-glossary.html', label: '攻击词汇', title: '网络攻击手法词汇表' },
     { file: 'crypto-cheatsheet.html', label: '密码学', title: '密码学速查表' },
+    { file: 'gm-crypto-cheatsheet.html', label: '国密参数', title: '国密算法参数速查' },
     { file: 'pki-https-cheatsheet.html', label: 'PKI/HTTPS', title: '证书 / PKI / HTTPS' },
     { file: 'firewall-vpn-cheatsheet.html', label: '防火墙/VPN', title: '防火墙与 VPN 速查' },
     { file: 'ids-ips-cheatsheet.html', label: 'IDS/IPS', title: 'IDS 与 IPS 速查' },
@@ -54,7 +56,7 @@ var COURSE_CATALOG = {
     { file: 'afternoon-case-cheatsheet.html', label: '下午卷案例', title: '下午卷安全工程案例速查' },
     { file: 'physical-gap-cheatsheet.html', label: '物理/网闸', title: '物理安全与网闸速查' },
     { file: 'access-control-cheatsheet.html', label: '访问控制', title: '访问控制与安全模型速查' },
-    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-25 课口诀汇总' }
+    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-26 课口诀汇总' }
   ],
   // 题库拥有者 aycc345（见 question-bank/manifest.json）；本仓库 aycc22 只是托管位置
   questionBank: [

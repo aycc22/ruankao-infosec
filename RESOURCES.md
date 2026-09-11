@@ -66,6 +66,17 @@
 - 第 26 章大数据安全（辅助）：[博客园·R-Bear·第二十六章](https://www.cnblogs.com/R-bear/p/17840606.html)、[月梦工作室·第 26 章精讲](https://www.moondream.cn/?p=2149)、[51CTO·抑制 vs 泛化](https://rk.51cto.com/article/585395.html)
 - 2023–2025 机考考点分布（本工作区）：[`reference/exam-2023-2025.html`](reference/exam-2023-2025.html)
   只收录可公开核对的考点清单与题型，不收录完整回忆卷；二手来源包括 [信管网 2025 综合知识公开题干](https://www.cnitpm.com/pm1/179799rht2l9gca8.html)、[信管网试题栏目](https://www.cnitpm.com/class/19/e6_1.html)。
+- 商用密码行业标准公告（2026-09-11 核链）：
+  [国家密码管理局第 23 号公告](https://www.oscca.gov.cn/sca/xxgk/2012-03/21/content_1002392.shtml)（GM/T 0001 祖冲之序列密码、GM/T 0002 SM4、GM/T 0003 SM2、GM/T 0004 SM3）；
+  [国家密码管理局第 30 号公告](https://www.oscca.gov.cn/sca/xxgk/2016-03/28/content_1002407.shtml)（GM/T 0044 SM9 标识密码）。
+- 国密相关国家标准题录（国家标准全文公开系统，2026-09-11 核链）：
+  [GB/T 32907—2016 SM4](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=7803DE42D3BC5E80B0C3E5D8E873D56A)、
+  [GB/T 32905—2016 SM3](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=45B1A67F20F3BF339211C391E9278F5E)、
+  [GB/T 32918.5—2017 SM2 参数定义](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=728DEA8B8BB32ACFB6EF4BF449BC3077)、
+  [GB/T 33133.1—2016 祖冲之序列密码](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=8C41A3AEECCA52B5C0011C8010CF0715)、
+  [GB/T 38635.1—2020 SM9](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=B7A0D7DFF411CD0AAE76135ADE91886A)。
+  SM3 输出 256 比特见 [国家密码管理局《SM3 密码杂凑算法》PDF](https://www.oscca.gov.cn/sca/xxgk/2010-12/17/1002389/files/302a3ada057c4a73830536d03e683110.pdf)。
+  第 26 课参数表见 [`reference/gm-crypto-cheatsheet.html`](reference/gm-crypto-cheatsheet.html)。SM1 分组/密钥 128/128 仅作机考公开回忆，不把它写成已公开国标全文。
 
 以上内容可用于复习或自测，但若与现行考纲、指定教程、法律或国家标准冲突，以官方原文为准；不采用“押题”作为课程依据。
 

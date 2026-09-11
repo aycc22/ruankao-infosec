@@ -59,8 +59,8 @@ CHAPTERS = [
     },
     {
         "num": 3, "file": "ch03.html", "title": "密码学基本理论",
-        "lesson": "第 3 课", "lesson_link": "../../lessons/0003-crypto-basics.html",
-        "cheatsheet": "../crypto-cheatsheet.html", "cheatsheet_label": "密码学速查",
+        "lesson": '<a href="../../lessons/0003-crypto-basics.html">第 3 课</a> / <a href="../../lessons/0026-gm-crypto-params.html">第 26 课</a>', "lesson_link": "../../lessons/0026-gm-crypto-params.html",
+        "cheatsheet": "../gm-crypto-cheatsheet.html", "cheatsheet_label": "国密参数速查",
         "sections": [
             ("3.1–3.2 密码体制", [
                 "对称：同钥加解密，快，DES（不安全）、AES、SM4。",
@@ -70,6 +70,7 @@ CHAPTERS = [
             ("3.3 哈希函数", [
                 "单向不可逆；相同输入相同输出；雪崩效应。",
                 "MD5、SHA-1 已不安全；SHA-256、SM3 为现代标准。",
+                "国密冲刺（第 26 课）：SM1/SM4 对称分组，SM2 公钥，SM3 杂凑，SM9 标识密码，ZUC 序列密码；不推数学。",
                 "用途：完整性校验、口令存储（加盐哈希）、数字签名前置步骤。",
             ]),
             ("3.4–3.6 数字签名与密钥管理", [
@@ -81,7 +82,7 @@ CHAPTERS = [
                 "ECB、CBC、CFB、OFB、CTR 等（知道名称即可，CBC 需 IV）。",
             ]),
         ],
-        "traps": ["哈希不是加密；证书里是公钥不是私钥（第 6 章）。"],
+        "traps": ["哈希不是加密；证书里是公钥不是私钥（第 6 章）。", "SM1 的 128/128 标成机考公开回忆，不是已公开国标全文。"],
         "quiz": ("用于保证消息完整性的技术是？", "哈希函数", "对称加密", "数字证书", "防火墙"),
     },
     {

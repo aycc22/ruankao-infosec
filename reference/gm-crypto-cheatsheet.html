@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 国密算法参数表</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>国密算法参数速查</h1>
+    <p class="meta">冲刺补缺 · 类型 + 能核对的比特数 · 打印用 · 不推数学</p>
+  </header>
+
+  <div class="callout warn">
+    SM1 的 128/128 标成<strong>机考公开回忆</strong>，不是已公开的国家标准全文。其余数字只收有 GB/T 或国密局文本撑腰的。
+  </div>
+
+  <h2>一、六兄弟类型</h2>
+  <table>
+    <tr><th>算法</th><th>类型</th><th>用途一句话</th></tr>
+    <tr><td>SM1</td><td>对称分组</td><td>芯片加密数据；细节未公开</td></tr>
+    <tr><td>SM2</td><td>公钥（椭圆曲线）</td><td>加密、签名、密钥交换</td></tr>
+    <tr><td>SM3</td><td>杂凑</td><td>完整性、签名前置、口令存储</td></tr>
+    <tr><td>SM4</td><td>对称分组</td><td>公开标准的数据加密</td></tr>
+    <tr><td>SM9</td><td>标识密码</td><td>身份当公钥，少交换证书</td></tr>
+    <tr><td>ZUC 祖冲之</td><td>序列密码</td><td>密钥流做流式加密</td></tr>
+  </table>
+  <p class="meta"><strong>国密六兄弟类型</strong>：SM1 和 SM4 做对称分组，SM2 做公钥椭圆曲线，SM3 做杂凑，SM9 做标识密码，祖冲之做序列密码。</p>
+
+  <h2>二、国产三件套对照</h2>
+  <table>
+    <tr><th>国际</th><th>国产</th><th>干什么</th></tr>
+    <tr><td>AES</td><td>SM4（芯片场景可写 SM1）</td><td>对称加密数据</td></tr>
+    <tr><td>RSA / ECC</td><td>SM2</td><td>公钥加密、签名、密钥交换</td></tr>
+    <tr><td>SHA-256</td><td>SM3</td><td>杂凑 / 完整性</td></tr>
+  </table>
+  <p class="meta"><strong>国产三件套对照</strong>：国产 SM4 对 AES，SM2 对 RSA，SM3 对 SHA-256。</p>
+  <p>数字信封：SM4（或 SM1）加密文件 + SM2 保护对称密钥 + SM3 哈希后签名。</p>
+
+  <h2>三、可背数字</h2>
+  <table>
+    <tr><th>算法</th><th>数字</th><th>怎么标</th></tr>
+    <tr><td>SM4</td><td>分组 128、密钥 128</td><td>GB/T 32907—2016 / GM/T 0002</td></tr>
+    <tr><td>SM3</td><td>输出 256 比特</td><td>GB/T 32905—2016；国密局 SM3 文本</td></tr>
+    <tr><td>SM2</td><td>推荐 256 比特素数域曲线</td><td>GB/T 32918.5—2017；题更爱问「椭圆曲线公钥」</td></tr>
+    <tr><td>ZUC</td><td>128 比特初始密钥 + 128 比特 IV</td><td>类型见 GB/T 33133.1 标准名；装入长度见 GM/T 0001.1</td></tr>
+    <tr><td>SM1</td><td>分组 128、密钥 128</td><td><strong>机考公开回忆</strong></td></tr>
+    <tr><td>SM9</td><td>本表不背比特</td><td>先认标识密码；GB/T 38635 / GM/T 0044</td></tr>
+  </table>
+  <p class="meta"><strong>SM4 标准参数</strong>：SM4 分组一百二十八，密钥也是一百二十八。</p>
+  <p class="meta"><strong>SM3 输出长度</strong>：SM3 杂凑输出二百五十六，正好对标 SHA-256。</p>
+  <p class="meta"><strong>SM1 机考数字</strong>：SM1 分组和密钥，公开回忆都是 128 比特。</p>
+
+  <h2>四、一句话用途</h2>
+  <ul>
+    <li><strong>SM2 用途一句话</strong>：SM2 是椭圆曲线公钥算法，加密签名密钥交换都能干</li>
+    <li><strong>SM9 标识密码</strong>：SM9 用身份当公钥，不必先交换证书</li>
+    <li><strong>ZUC 序列密码</strong>：祖冲之是序列密码，密钥流按拍往外吐</li>
+  </ul>
+
+  <h2>五、题干秒判</h2>
+  <table>
+    <tr><th>题干</th><th>选</th><th>别选</th></tr>
+    <tr><td>椭圆曲线公钥</td><td>SM2</td><td>SM1 / SM3 / SM4</td></tr>
+    <tr><td>杂凑 / 哈希 / 256 比特指纹</td><td>SM3</td><td>SM4、MD5</td></tr>
+    <tr><td>对称分组、公开标准</td><td>SM4</td><td>SM2、ZUC</td></tr>
+    <tr><td>对称分组、芯片未公开</td><td>SM1</td><td>把 SM1 当哈希</td></tr>
+    <tr><td>身份当公钥、少证书</td><td>SM9</td><td>填进三件套替 AES</td></tr>
+    <tr><td>序列 / 流密码 / 密钥流</td><td>ZUC</td><td>分组、杂凑</td></tr>
+    <tr><td>SM1 分组和密钥长度</td><td>128 和 128（回忆）</td><td>256/64 等干扰项</td></tr>
+  </table>
+
+  <h2>六、英文词汇</h2>
+  <p>SM4 block cipher · SM2 public-key / elliptic curve · SM3 hash ·
+    SM9 identity-based cryptography · ZUC stream cipher ·
+    Commercial cryptography of China</p>
+
+  <h2>七、下午卷模板</h2>
+  <p>先写<strong>三件套对照</strong>（SM4/SM2/SM3）→ 再点<strong>类型</strong>（分组/公钥/杂凑/标识/序列）→
+    数字只写<strong>有出处的</strong> → SM1 的 128/128 标回忆 → 密钥方向仍是私钥签名、公钥验签。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0026-gm-crypto-params.html">第 26 课</a> ·
+    <a href="./mnemonics.html#lesson-26">口诀</a> ·
+    <a href="./crypto-cheatsheet.html">密码学速查</a> ·
+    <a href="./textbook/ch03.html">教材第 3 章</a> ·
+    <a href="./exam-2023-2025.html">2023–2025 考点</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

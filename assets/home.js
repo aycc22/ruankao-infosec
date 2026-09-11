@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0025-access-control-models.html',
-    label: '第 25 课',
-    title: '访问控制与安全模型'
+    file: '0026-gm-crypto-params.html',
+    label: '第 26 课',
+    title: '国密算法参数表'
   };
 
   function el(tag, className, html) {
