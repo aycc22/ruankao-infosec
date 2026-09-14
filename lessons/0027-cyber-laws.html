@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 27 课 · 法律法规三法考点</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 27 · 约 18 分钟 · 冲刺补缺</div>
+    <h1>三法怎么考：网安法 · 数安法 · 个保法</h1>
+    <p class="meta">本课目标：秒判题干该引哪部法；写出网安法运营者核心义务（含日志不少于六个月）；分清等保与关基；数安法分类分级 / 重要数据；个保法同意与敏感个人信息单独同意；下午卷能写「合规一句」。</p>
+  </header>
+
+  <h2>开场：第 23 课 §八还剩「法条」这一块</h2>
+  <p>
+    <a href="./0023-afternoon-case-special.html">第 23 课 §八</a>把冲刺缺口排在法律法规：
+    <strong>《网络安全法》《数据安全法》《个人信息保护法》</strong>。
+    教材第 1 章只点名网安法，等保五环节已在
+    <a href="./0012-classified-protection.html">第 12 课</a> /
+    <a href="../reference/textbook/ch18.html">第 18 章</a>讲过——本课<strong>不重复</strong>定级备案测评细节，只钉
+    <strong>法律依据 + 三法分工 + 高频义务</strong>。
+  </p>
+  <div class="callout ok">
+    第 26 课结业测 <strong>7/7</strong>。本课把「合规」从口号补成能写进答题卡的句子。
+  </div>
+  <div class="callout warn">
+    <strong>条号铁律：</strong>2017 年施行文本里「国家实行网络安全等级保护制度」多写为<strong>第 21 条</strong>；
+    2025 年修正、自 <strong>2026-01-01</strong> 施行的重新公布文本，该条为<strong>第 23 条</strong>（日志留存不少于六个月仍在该条第三项）。
+    本课条号已对照
+    <a href="https://www.cac.gov.cn/2025-12/29/c_1768735112911946.htm">中央网信办公布的修正后全文</a>
+    （来源标注中国人大网）和
+    <a href="https://www.cac.gov.cn/2025-10/29/c_1763461514768457.htm">修正决定</a>。
+    答题时：现行法写<strong>第 23 条</strong>；看见教材/旧题「第 21 条」知道是<strong>同一条义务的旧条号</strong>。不要背错成关基专条。
+  </div>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 等保等级测评与网络安全风险评估是同一件事吗？</div>
+    <div class="opts">
+      <button class="opt">A. 是，二者完全等价可互换</button>
+      <button class="opt" data-correct="true">B. 否，测评看符合性，评估看风险</button>
+      <button class="opt">C. 是，都只用 GB/T 28448</button>
+      <button class="opt">D. 否，测评只看可用性一项</button>
+    </div>
+    <div class="explain">答案 B。等保测评 = 符合性判定；风险评估 = R=f(资产,威胁,脆弱性)。第 18 课易错点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · 数字签名的密钥方向，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 公钥签名，再用公钥验签</button>
+      <button class="opt" data-correct="true">B. 私钥签名，再用公钥验签</button>
+      <button class="opt">C. 公钥签名，再用私钥验签</button>
+      <button class="opt">D. 私钥签名，再用私钥验签</button>
+    </div>
+    <div class="explain">答案 B。公钥加密 → 私钥解密；私钥签名 → 公钥验签。第 3–4 课持续复习点。</div>
+  </div>
+
+  <h2>一、先分家：题干该引哪部法</h2>
+  <p>三部法同时有效，不是互相替代。机考先看<strong>保护对象</strong>：网络与运行 → 网安法；数据作为生产要素 / 重要数据 → 数安法；识别到自然人 → 个保法。同一案例可以三部一起点名，但关键词不能张冠李戴。</p>
+  <table>
+    <tr><th>法律</th><th>管什么（秒判）</th><th>题干关键词</th><th>别选成</th></tr>
+    <tr>
+      <td><strong>《网络安全法》</strong></td>
+      <td>网络运行安全、等保、关基、日志、实名</td>
+      <td>网络运营者、等级保护、关基、日志六个月</td>
+      <td>把「病历单独同意」只写成网安法</td>
+    </tr>
+    <tr>
+      <td><strong>《数据安全法》</strong></td>
+      <td>数据处理活动、分类分级、重要数据 / 核心数据</td>
+      <td>分类分级、重要数据目录、核心数据</td>
+      <td>把「人脸识别单独同意」只写成数安法</td>
+    </tr>
+    <tr>
+      <td><strong>《个人信息保护法》</strong></td>
+      <td>个人信息处理、同意、敏感个人信息</td>
+      <td>告知同意、单独同意、生物识别、不满十四周岁</td>
+      <td>把「等保日志留存」只写成个保法</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>三法分工秒判</strong>）：<strong>网安法管网络运行和等保关基，数安法管数据分类分级和重要数据，个保法管个人同意和敏感信息</strong>。
+  </div>
+  <p class="meta">
+    施行时间只作背景，不替义务：网安法 2017-06-01 施行、修正决定 2026-01-01 施行；
+    数安法 2021-09-01 施行；个保法 2021-11-01 施行。全文入口：
+    <a href="https://flk.npc.gov.cn/">国家法律法规数据库</a>。
+  </p>
+
+  <h2>二、网安法：运营者义务 + 等保 / 关基</h2>
+  <p>
+    网络运营者 = 网络的所有者、管理者和网络服务提供者（现行第 78 条用语）。
+    对考试最有用的是<strong>第 23 条五类义务</strong>——这是下午卷「合规一句」的底座。
+  </p>
+  <table>
+    <tr><th>项</th><th>义务（现行第 23 条）</th><th>答题关键词</th></tr>
+    <tr><td>（一）</td><td>制定内部安全管理制度和操作规程，确定网络安全负责人，落实责任</td><td>制度 + 负责人</td></tr>
+    <tr><td>（二）</td><td>防范计算机病毒和网络攻击、网络侵入等危害网络安全行为</td><td>防病毒、防攻击</td></tr>
+    <tr><td>（三）</td><td>监测、记录网络运行状态和网络安全事件，<strong>留存相关网络日志不少于六个月</strong></td><td>日志 ≥ 6 个月</td></tr>
+    <tr><td>（四）</td><td>采取数据分类、重要数据备份和加密等措施</td><td>分类、备份、加密</td></tr>
+    <tr><td>（五）</td><td>法律、行政法规规定的其他义务</td><td>兜底，不必展开</td></tr>
+  </table>
+  <p>同章还常考：<strong>第 26 条</strong>真实身份信息；<strong>第 27 条</strong>应急预案、及时处置并按规定报告。不履行第 23、27 条义务，对应法律责任在现行<strong>第 61 条</strong>（修正决定把罚款上限大幅提高，关基特别严重危害可处二百万元以上一千万元以下罚款）。</p>
+  <div class="callout ok">
+    口诀（<strong>网安法运营者核心义务</strong>）：<strong>定制度、定负责人，防病毒、防攻击，日志至少留半年，数据分类备份再加密</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>等级保护现行条号</strong>）：<strong>现行法写在第二十三条，教材真题常写第二十一条；义务没变，条号要分清</strong>。
+  </div>
+
+  <h3>等保是基础，关基是重点保护</h3>
+  <table>
+    <tr><th></th><th>等级保护</th><th>关键信息基础设施</th></tr>
+    <tr>
+      <td>法律定位</td>
+      <td>国家实行网络安全等级保护制度（现行第 23 条）</td>
+      <td>在等保<strong>基础上实行重点保护</strong>（现行第 33 条；2017 文本常见第 31 条）</td>
+    </tr>
+    <tr>
+      <td>范围口诀</td>
+      <td>原则上覆盖网络运营者</td>
+      <td>公共通信和信息服务、能源、交通、水利、金融、公共服务、电子政务等；一旦破坏、丧失功能或数据泄露可能严重危害国家安全、国计民生、公共利益</td>
+    </tr>
+    <tr>
+      <td>额外义务（现行第 36 条等）</td>
+      <td>第 23 条五类</td>
+      <td>专门机构与负责人并做背景审查；培训考核；重要系统与数据库容灾备份；应急预案并定期演练；采购可能影响国家安全的产品服务须安全审查（第 37 条）；境内个人信息和重要数据原则上境内存储（第 39 条）；每年至少一次检测评估（第 40 条）</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>等保与关基重点保护</strong>）：<strong>等保是全国网络的基础制度，关基在等保之上再做重点保护</strong>。
+  </div>
+  <div class="callout warn">
+    易错：关基<strong>不是</strong>替代等保。列入关基仍要落实等保，再叠加重点保护。等保测评仍不等于风险评估。
+  </div>
+
+  <h3>2026 修订：考试够用的四条</h3>
+  <ul>
+    <li>新增<strong>第 3 条</strong>：网络安全工作坚持中国共产党的领导，贯彻总体国家安全观。</li>
+    <li>新增<strong>第 20 条</strong>：支持人工智能基础研究与关键技术，加强风险监测评估和安全监管；也支持用人工智能提升网络安全保护水平。</li>
+    <li>现行<strong>第 42 条</strong>第二款：网络运营者处理个人信息，应当遵守本法及《民法典》《个人信息保护法》等规定（修正决定：原第 40 条改第 42 条并增加该款）。</li>
+    <li>法律责任罚款上限提高（现行第 61 条等）：关基相关严重 / 特别严重后果，罚款可到二百万元以上一千万元以下量级——下午卷写「依法追究法律责任、罚款上限已提高」即可，<strong>不要默写未核对的旧罚则数字</strong>。</li>
+  </ul>
+
+  <h2>三、数安法：分类分级与重要数据</h2>
+  <p>
+    《数据安全法》管的是<strong>数据处理活动</strong>（收集、存储、使用、加工、传输、提供、公开等），不限于个人信息。
+    高频条是<strong>第 21 条</strong>（分类分级；此部法律 2021 年文本，条号未因网安法修订而改）。
+  </p>
+  <table>
+    <tr><th>考点</th><th>现行表述（第 21、27、30、31 条）</th><th>答题写法</th></tr>
+    <tr>
+      <td>分类分级</td>
+      <td>按数据重要程度，以及一旦遭到篡改、破坏、泄露或非法获取、非法利用造成的危害程度，实行分类分级保护</td>
+      <td>先分类、再分级、按级保护</td>
+    </tr>
+    <tr>
+      <td>国家核心数据</td>
+      <td>关系国家安全、国民经济命脉、重要民生、重大公共利益等数据，实行更加严格的管理制度</td>
+      <td>核心数据 ≠ 普通业务数据</td>
+    </tr>
+    <tr>
+      <td>重要数据</td>
+      <td>重要数据目录由协调机制统筹、各地区各部门确定具体目录并重点保护</td>
+      <td>进目录的才按重要数据重点保护</td>
+    </tr>
+    <tr>
+      <td>网络上的数据处理</td>
+      <td>利用互联网等信息网络开展数据处理活动，应当在<strong>网络安全等级保护制度的基础上</strong>履行数据安全保护义务（第 27 条）</td>
+      <td>数安法不取消等保</td>
+    </tr>
+    <tr>
+      <td>重要数据处理者</td>
+      <td>明确数据安全负责人和管理机构（第 27 条）；定期开展风险评估并报送报告（第 30 条）</td>
+      <td>负责人 + 机构 + 定期评估</td>
+    </tr>
+    <tr>
+      <td>重要数据出境</td>
+      <td>关基运营者适用《网络安全法》；其他处理者由国家网信部门会同有关部门制定办法（第 31 条）</td>
+      <td>关基出境先找网安法</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>数安法分类分级</strong>）：<strong>先分类再分级，核心数据管最严，重要数据进目录、要有负责人和定期评估</strong>。
+  </div>
+
+  <h2>四、个保法：同意、最小必要、敏感信息</h2>
+  <p>
+    个人信息 = 与已识别或可识别自然人有关的各种信息，<strong>不包括匿名化处理后的信息</strong>（第 4 条）。
+    处理包括收集、存储、使用、加工、传输、提供、公开、删除等。
+  </p>
+  <table>
+    <tr><th>原则（第 5–9 条）</th><th>一句话</th></tr>
+    <tr><td>合法、正当、必要和诚信</td><td>不得误导、欺诈、胁迫（第 5 条）</td></tr>
+    <tr><td>目的明确、最小影响、最小范围</td><td>不得过度收集（第 6 条）</td></tr>
+    <tr><td>公开、透明</td><td>公开规则，明示目的、方式和范围（第 7 条）</td></tr>
+    <tr><td>保证质量</td><td>避免不准确、不完整损害权益（第 8 条）</td></tr>
+    <tr><td>处理者负责</td><td>采取必要措施保障安全（第 9 条）</td></tr>
+  </table>
+  <p>
+    <strong>第 13 条</strong>：取得个人同意是处理合法性的第一项；合同履行、法定义务、突发公共卫生、合理范围内的新闻报道、已合法公开信息等情形，<strong>不需取得同意</strong>。
+    基于同意时，须充分知情前提下<strong>自愿、明确</strong>作出（第 14 条）；个人有权撤回同意（第 15 条）。
+  </p>
+  <table>
+    <tr><th>敏感个人信息（第 28 条）</th><th>处理规则</th></tr>
+    <tr>
+      <td>生物识别、宗教信仰、特定身份、医疗健康、金融账户、行踪轨迹等，以及<strong>不满十四周岁未成年人</strong>的个人信息</td>
+      <td>须有特定目的和充分必要性，并采取严格保护措施；<strong>应当取得单独同意</strong>（第 29 条；法律、行政法规要求书面同意的，从其规定）</td>
+    </tr>
+  </table>
+  <p>
+    向他人提供个人信息原则上也要<strong>单独同意</strong>（第 23 条）。公开个人信息原则上须单独同意（第 25 条）。
+    不满十四周岁：还须取得父母或其他监护人同意，并制定专门处理规则（第 31 条）。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>个保法同意规则</strong>）：<strong>普通个人信息要知情同意，敏感个人信息还要单独同意</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>敏感个人信息范围</strong>）：<strong>生物识别、宗教信仰、特定身份，医疗健康、金融账户、行踪轨迹，不满十四周岁也算敏感</strong>。
+  </div>
+  <div class="callout warn">
+    易错：姓名、手机号一般是个人信息，但不在第 28 条列举的敏感类型里（除非同时属于行踪等）。
+    「打包勾选隐私政策」≠ 单独同意。匿名化后不再适用个保法对「个人信息」的定义，但假脱敏、能复原的仍算个人信息。
+  </div>
+
+  <h2>五、下午卷：合规一句怎么写</h2>
+  <p>题干出现「依法合规 / 法律法规依据」，按对象各写一行，<strong>先点法律名称，再写义务关键词</strong>。不要默写未核对的罚款数字，也不要编造条号。</p>
+  <ol>
+    <li><strong>网络侧</strong>：依据《网络安全法》落实网络安全等级保护；制定制度并确定负责人；网络日志按规定留存<strong>不少于六个月</strong>。</li>
+    <li><strong>关基侧</strong>（题干有能源/金融/交通/电子政务等关键行业）：在等保基础上实行重点保护；重要数据和个人信息原则上<strong>境内存储</strong>；每年至少一次检测评估。</li>
+    <li><strong>数据侧</strong>：依据《数据安全法》对数据<strong>分类分级</strong>；重要数据明确负责人和管理机构，定期开展风险评估。</li>
+    <li><strong>个人侧</strong>：依据《个人信息保护法》遵循合法正当必要；告知并取得同意；病历、人脸、行踪等按<strong>敏感个人信息单独同意</strong>处理。</li>
+  </ol>
+  <div class="callout ok">
+    口诀（<strong>下午卷合规一句</strong>）：<strong>先点法律名称，再写义务关键词，日志半年、分类分级、单独同意各占一行</strong>。
+  </div>
+  <p class="meta">需求 → 技术 → 理由之外，合规题多一行「法律名称 + 义务」。等保测评仍是符合性检查，<strong>不等于</strong>风险评估。</p>
+
+  <h2>六、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 题干写「网络日志留存不少于六个月」，应优先引用哪部法的运营者义务？</div>
+    <div class="opts">
+      <button class="opt">A. 《数据安全法》的分类分级条款</button>
+      <button class="opt" data-correct="true">B. 《网络安全法》的网络运营者义务</button>
+      <button class="opt">C. 《个人信息保护法》的单独同意条款</button>
+      <button class="opt">D. 《密码法》的商用密码检测条款</button>
+    </div>
+    <div class="explain">答案 B。日志不少于六个月在现行《网络安全法》第 23 条第三项（2017 文本常见写法为第 21 条第三项）。数安法管分类分级，个保法管同意。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 「国家实行网络安全等级保护制度」在现行《网络安全法》中的条号是？</div>
+    <div class="opts">
+      <button class="opt">A. 现行第二十一条，与 2017 年文本条号完全相同</button>
+      <button class="opt" data-correct="true">B. 现行第二十三条；教材真题常见仍写第二十一条</button>
+      <button class="opt">C. 现行第三十三条，这是关基重点保护的专条</button>
+      <button class="opt">D. 现行第四十二条，这是个人信息处理衔接条款</button>
+    </div>
+    <div class="explain">答案 B。修正后全文第 23 条；教材/真题常见原第 21 条。第 33 条是关基重点保护，第 42 条衔接个保法/民法典。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 关键信息基础设施与等级保护的关系，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. 关基替代等保，列入关基后不必再做等级保护</button>
+      <button class="opt" data-correct="true">B. 关基在等保制度基础上实行重点保护</button>
+      <button class="opt">C. 等保只适用于关基，普通网络没有等保义务</button>
+      <button class="opt">D. 关基只做物理防护，等保只做密码应用测评</button>
+    </div>
+    <div class="explain">答案 B。现行第 33 条：在网络安全等级保护制度的基础上实行重点保护。关基叠加义务，不替代等保。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 《数据安全法》所称「国家核心数据」是指哪一类？</div>
+    <div class="opts">
+      <button class="opt">A. 企业客户名单和内部财务明细汇总</button>
+      <button class="opt" data-correct="true">B. 关系国家安全、国民经济命脉、重要民生、重大公共利益等数据</button>
+      <button class="opt">C. 所有经过分类分级登记的网络日志</button>
+      <button class="opt">D. 已获得个人单独同意的敏感个人信息</button>
+    </div>
+    <div class="explain">答案 B。数安法第 21 条第二款。核心数据实行更加严格的管理制度；不等于普通客户名单，也不等于个保法上的敏感个人信息。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 处理指纹、人脸等生物识别信息，原则上还应当怎么做？</div>
+    <div class="opts">
+      <button class="opt">A. 用一次概括同意覆盖所有后续处理目的</button>
+      <button class="opt" data-correct="true">B. 取得个人单独同意；法律要求书面同意的从其规定</button>
+      <button class="opt">C. 只需向主管部门事后备案，不必告知个人</button>
+      <button class="opt">D. 与劳动合同捆绑签署即可，不必再单独同意</button>
+    </div>
+    <div class="explain">答案 B。个保法第 28 条将生物识别列为敏感个人信息；第 29 条要求单独同意，法律、行政法规要求书面同意的从其规定。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · Under the Cybersecurity Law, network operators shall retain relevant network logs for no less than:</div>
+    <div class="opts">
+      <button class="opt">A. Three months as a recommended industry practice</button>
+      <button class="opt" data-correct="true">B. Six months as required by the grade protection duties</button>
+      <button class="opt">C. Twelve months for every category of personal data</button>
+      <button class="opt">D. Twenty-four months after each cybersecurity incident</button>
+    </div>
+    <div class="explain">答案 B。现行《网络安全法》第 23 条第三项：留存相关的网络日志不少于六个月。英文：classified protection / grade protection；network logs ≥ six months。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · 医院处理患者病历（医疗健康）并做数据分类分级，合规表述应同时点到？</div>
+    <div class="opts">
+      <button class="opt">A. 只写《网络安全法》，因为病历属于网络日志</button>
+      <button class="opt">B. 只写《数据安全法》，因为病历不是个人信息</button>
+      <button class="opt" data-correct="true">C. 个保法管敏感个人信息单独同意，数安法管分类分级</button>
+      <button class="opt">D. 只写等保测评标准，不必引用任何法律名称</button>
+    </div>
+    <div class="explain">答案 C。病历是敏感个人信息（个保法第 28 条）须单独同意；分类分级走数安法第 21 条。网络侧若问日志/等保，再补网安法。不要把病历当成「只是日志」。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开答案</summary>
+    <p>某市三级医院信息系统接入互联网预约挂号，保存患者病历与检验结果，并被认定为关键信息基础设施。请写出四条「合规一句」（法律名称 + 义务关键词）。不要编造未核对的罚款数字。</p>
+    <div class="ans">
+      ① <strong>网络 / 等保</strong>：依据《网络安全法》落实网络安全等级保护；确定网络安全负责人；网络日志按规定留存<strong>不少于六个月</strong>（现行第 23 条；教材常见原第 21 条）。<br>
+      ② <strong>关基</strong>：在等保基础上实行<strong>重点保护</strong>；设置专门安全管理机构；重要系统与数据库容灾备份；原则上境内存储个人信息和重要数据；每年至少一次检测评估。<br>
+      ③ <strong>数据</strong>：依据《数据安全法》对医疗数据<strong>分类分级</strong>；重要数据明确负责人和管理机构，定期风险评估并报送。<br>
+      ④ <strong>个人信息</strong>：依据《个人信息保护法》告知并取得同意；病历、检验结果属<strong>医疗健康类敏感个人信息</strong>，须<strong>单独同意</strong>并采取严格保护措施。<br>
+      ⑤ 不要写「关基替代等保」或「一次概括勾选等于单独同意」。等保测评是符合性检查，<strong>不等于</strong>风险评估。
+    </div>
+  </details>
+
+  <h2>七、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读入门 + 等保定位（15 分钟）</strong>：阅读
+      <a href="../reference/textbook/ch01.html">第 1 章 1.7 法律法规</a>
+      和
+      <a href="../reference/textbook/ch18.html">第 18 章 等级保护</a>（只复习法律依据，五环节细节已在第 12 课），
+      对照
+      <a href="../reference/cyber-laws-cheatsheet.html">三法速查卡</a>。
+      条号有疑义时打开
+      <a href="https://flk.npc.gov.cn/">国家法律法规数据库</a>
+      或
+      <a href="https://www.cac.gov.cn/2025-12/29/c_1768735112911946.htm">网安法修正后全文</a>。</li>
+    <li><strong>口述自测（10 分钟）</strong>：不看笔记，说出三法各管什么；第 23 条五类义务（含日志半年）；等保 vs 关基；核心数据 vs 重要数据；敏感个人信息七类（含不满十四周岁）；现行第 23 条 vs 教材第 21 条。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① 三法分工秒判：网安法管网络运行和等保关基，数安法管数据分类分级和重要数据，个保法管个人同意和敏感信息；② 网安法运营者核心义务：定制度、定负责人，防病毒、防攻击，日志至少留半年，数据分类备份再加密；③ 等级保护现行条号：现行法写在第二十三条，教材真题常写第二十一条；义务没变，条号要分清；④ 等保与关基重点保护：等保是全国网络的基础制度，关基在等保之上再做重点保护；⑤ 数安法分类分级：先分类再分级，核心数据管最严，重要数据进目录、要有负责人和定期评估；⑥ 个保法同意规则：普通个人信息要知情同意，敏感个人信息还要单独同意；⑦ 敏感个人信息范围：生物识别、宗教信仰、特定身份，医疗健康、金融账户、行踪轨迹，不满十四周岁也算敏感；⑧ 下午卷合规一句：先点法律名称，再写义务关键词，日志半年、分类分级、单独同意各占一行；⑨ 非对称密钥方向：公钥加密私钥解保密，私钥签名公钥验认证；⑩ 等保测评与风险评估：测评看符合性，评估看风险，两套不是同一件事。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>《信息安全工程师教程（第 2 版）》第 1 章 1.7（入门点名）· 第 18 章 等级保护（流程见第 12 课，本课只钉法律依据）·
+      <a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a></li>
+    <li>现行全文核查入口：<a href="https://flk.npc.gov.cn/">国家法律法规数据库</a></li>
+    <li>《网络安全法》修正决定（2025-10-28 通过，2026-01-01 施行）：
+      <a href="https://www.cac.gov.cn/2025-10/29/c_1763461514768457.htm">中央网信办转载</a></li>
+    <li>修正后重新公布全文（本课第 23、26、27、33、36、39、40、42、61、78 条据此核对）：
+      <a href="https://www.cac.gov.cn/2025-12/29/c_1768735112911946.htm">中央网信办 · 来源中国人大网</a></li>
+    <li>《数据安全法》全文（第 21、27、30、31 条）：
+      <a href="https://www.cac.gov.cn/2021-06/11/c_1624994566919140.htm">中央网信办</a></li>
+    <li>《个人信息保护法》全文（第 4–9、13–15、23、25、28–29、31 条）：
+      <a href="https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm">中央网信办</a></li>
+    <li>速查：<a href="../reference/cyber-laws-cheatsheet.html">三法速查</a> ·
+      <a href="../reference/mnemonics.html#lesson-27">第 27 课口诀</a> ·
+      <a href="../reference/classified-protection-cheatsheet.html">等保速查</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「第 21 条和第 23 条是不是同一条义务」「单独同意和概括勾选差在哪」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 27 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：冲刺缺口还剩<strong>下午卷 iptables / 拓扑命令模板</strong>（见第 23 课 §八）。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0026-gm-crypto-params.html',
-    label: '第 26 课',
-    title: '国密算法参数表'
+    file: '0027-cyber-laws.html',
+    label: '第 27 课',
+    title: '法律法规三法考点'
   };
 
   function el(tag, className, html) {
