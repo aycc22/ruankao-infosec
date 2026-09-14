@@ -76,6 +76,7 @@
 - 第 26 章大数据安全（辅助）：[博客园·R-Bear·第二十六章](https://www.cnblogs.com/R-bear/p/17840606.html)、[月梦工作室·第 26 章精讲](https://www.moondream.cn/?p=2149)、[51CTO·抑制 vs 泛化](https://rk.51cto.com/article/585395.html)
 - 2023–2025 机考考点分布（本工作区）：[`reference/exam-2023-2025.html`](reference/exam-2023-2025.html)
   只收录可公开核对的考点清单与题型，不收录完整回忆卷；二手来源包括 [信管网 2025 综合知识公开题干](https://www.cnitpm.com/pm1/179799rht2l9gca8.html)、[信管网试题栏目](https://www.cnitpm.com/class/19/e6_1.html)。
+  下午卷 iptables 命令语义以 [iptables(8)](https://man7.org/linux/man-pages/man8/iptables.8.html)、[iptables-extensions(8)](https://man7.org/linux/man-pages/man8/iptables-extensions.8.html)、[RHEL 6 Security Guide · Basic Firewall Policies](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-using_iptables-basic_firewall_policies) 核对；答题模板见第 28 课。
 
 以上内容可用于复习或自测，但若与现行考纲、指定教程、法律或国家标准冲突，以官方原文为准；不采用“押题”作为课程依据。
 
