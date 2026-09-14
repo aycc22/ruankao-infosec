@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>口诀速查 · 第 1-27 课汇总</title>
+<title>口诀速查 · 第 1-28 课汇总</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
     <div class="lesson-no">Reference · 记忆卡</div>
-    <h1>一句话口诀速查（第 1-27 课汇总）</h1>
+    <h1>一句话口诀速查（第 1-28 课汇总）</h1>
     <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-09-14</p>
   </header>
 
@@ -339,7 +339,18 @@
     <li><strong>个保法同意规则</strong>：普通个人信息要知情同意，敏感个人信息还要单独同意</li>
     <li><strong>敏感个人信息范围</strong>：生物识别、宗教信仰、特定身份，医疗健康、金融账户、行踪轨迹，不满十四周岁也算敏感</li>
     <li><strong>下午卷合规一句</strong>：先点法律名称，再写义务关键词，日志半年、分类分级、单独同意各占一行</li>
-    <li><strong>第 27 课易错</strong>：现行第 23 条 ≠ 另一条义务（与教材第 21 条是同一条）；关基 ≠ 替代等保；核心数据 ≠ 敏感个人信息；概括勾选 ≠ 单独同意；日志六个月在网安法不在个保法；等保测评 ≠ 风险评估</li>
+    <li><strong>第 27 课易错</strong>：现行第 23 条 ≠ 另一条义务（与教材第 21 条是同一条）；关基 ≠ 替代等保；核心数据 ≠ 敏感个人信息；概括勾选 ≠ 单独同意；日志六个月在网安法不在个保法、也不在数安法；等保测评 ≠ 风险评估</li>
+  </ul>
+
+  <h2 id="lesson-28">第 28 课 · iptables 与拓扑填空</h2>
+  <ul>
+    <li><strong>filter 三链分工</strong>：进本机走 INPUT，本机发出走 OUTPUT，路过转发走 FORWARD</li>
+    <li><strong>默认策略黑白名单</strong>：默认 ACCEPT 是黑名单思路，默认 DROP 是白名单思路；先写下放行名单，再用 DROP 把其余兜住</li>
+    <li><strong>下午卷放行模板</strong>：先把 INPUT 默认改成 DROP，再追加放行二十二、八十、四百四十三；协议写 tcp，端口写 dport，动作写 ACCEPT</li>
+    <li><strong>iptables 常用参数</strong>：追加用 A，插入用 I，删除用 D，查看用 L，清空用 F；协议写 p，目的端口 dport，跳转动作写 j</li>
+    <li><strong>下午卷拓扑填空</strong>：外网先过边界墙或网闸，网站邮件放进 DMZ，OA 和库放在内网；要近物理隔离就填网闸，只要逻辑过滤就填防火墙</li>
+    <li><strong>状态检测与包过滤</strong>：只看包头不记会话是包过滤，维护会话表才是状态检测</li>
+    <li><strong>第 28 课易错</strong>：本机 80/443 写 FORWARD；<code>-A … -j DROP</code> ≠ 默认策略；<code>-P</code> 不能写 REJECT；Web 和库放同一网段；近物理隔离填防火墙；日志半年写成数安法；等保测评 ≠ 风险评估</li>
   </ul>
 
   <h2>答题套路（下午卷通用）</h2>
@@ -351,7 +362,7 @@
   </ul>
 
   <footer>
-    本表汇总第 1-27 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
+    本表汇总第 1-28 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
     <a href="./attacks-glossary.html">攻击词汇表</a> · <a href="./crypto-cheatsheet.html">密码学速查</a> ·
     <a href="./pki-https-cheatsheet.html">PKI 速查</a> · <a href="./firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a> ·
     <a href="./ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="./vulnerability-cheatsheet.html">漏洞补丁速查</a> ·
@@ -372,6 +383,7 @@
     <a href="./access-control-cheatsheet.html">访问控制与安全模型速查</a> ·
     <a href="./gm-crypto-cheatsheet.html">国密参数速查</a> ·
     <a href="./cyber-laws-cheatsheet.html">三法速查</a> ·
+    <a href="./iptables-topology-cheatsheet.html">iptables/拓扑速查</a> ·
     <a href="../question-bank/index.html">自编题库</a>
   </footer>
 </main>

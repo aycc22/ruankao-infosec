@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0027-cyber-laws.html',
-    label: '第 27 课',
-    title: '法律法规三法考点'
+    file: '0028-iptables-topology.html',
+    label: '第 28 课',
+    title: 'iptables 与拓扑填空'
   };
 
   function el(tag, className, html) {

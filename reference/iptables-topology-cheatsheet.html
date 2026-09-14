@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · iptables 与拓扑填空</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>下午卷 iptables / 拓扑填空速查</h1>
+    <p class="meta">第 28 课配套 · 只收防御向命令模板与设备名 · 打印用</p>
+  </header>
+
+  <div class="callout warn">
+    不讲绕过防火墙。默认策略只能是 ACCEPT / DROP（iptables(8) <code>-P</code>）。
+    机考口径：<a href="./exam-2023-2025.html">2023–2025 考点 §三</a>。
+  </div>
+
+  <h2>一、filter 三链</h2>
+  <table>
+    <tr><th>链</th><th>选</th><th>别选</th></tr>
+    <tr><td>INPUT</td><td>目的是本机服务（SSH/Web）</td><td>路过转发</td></tr>
+    <tr><td>OUTPUT</td><td>本机进程发出</td><td>别人访问本机</td></tr>
+    <tr><td>FORWARD</td><td>本机当网关转发</td><td>本机网站端口</td></tr>
+  </table>
+  <p class="meta"><strong>filter 三链分工</strong>：进本机走 INPUT，本机发出走 OUTPUT，路过转发走 FORWARD。</p>
+
+  <h2>二、默认策略</h2>
+  <table>
+    <tr><th>命令</th><th>思路</th></tr>
+    <tr><td><code>iptables -P INPUT ACCEPT</code></td><td>黑名单：默认放行，再拦名单</td></tr>
+    <tr><td><code>iptables -P INPUT DROP</code></td><td>白名单：默认拒绝，再放行名单</td></tr>
+  </table>
+  <p class="meta"><strong>默认策略黑白名单</strong>：默认 ACCEPT 是黑名单思路，默认 DROP 是白名单思路；先写下放行名单，再用 DROP 把其余兜住。</p>
+  <ul>
+    <li>规则目标可用 ACCEPT / DROP / REJECT；<strong>策略不能写 REJECT</strong></li>
+    <li>DROP 丢弃不回包；REJECT 丢弃并回错误包</li>
+  </ul>
+
+  <h2>三、必背命令</h2>
+  <pre class="topo-ascii">iptables -P INPUT DROP
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+# 可选：iptables -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT</pre>
+  <p class="meta"><strong>下午卷放行模板</strong>：先把 INPUT 默认改成 DROP，再追加放行二十二、八十、四百四十三；协议写 tcp，端口写 dport，动作写 ACCEPT。</p>
+
+  <h2>四、参数速记</h2>
+  <table>
+    <tr><th>参数</th><th>记</th></tr>
+    <tr><td><code>-A</code></td><td>追加到链尾</td></tr>
+    <tr><td><code>-I</code></td><td>默认插到链头</td></tr>
+    <tr><td><code>-D</code></td><td>删除</td></tr>
+    <tr><td><code>-L</code> / <code>-nL</code></td><td>查看（<code>-n</code> 不反查域名）</td></tr>
+    <tr><td><code>-F</code></td><td>清空规则（不清策略）</td></tr>
+    <tr><td><code>-P</code></td><td>默认策略 ACCEPT|DROP</td></tr>
+    <tr><td><code>-p</code></td><td>协议</td></tr>
+    <tr><td><code>--dport</code></td><td>目的端口</td></tr>
+    <tr><td><code>-j</code></td><td>ACCEPT|DROP|REJECT</td></tr>
+  </table>
+  <p class="meta"><strong>iptables 常用参数</strong>：追加用 A，插入用 I，删除用 D，查看用 L，清空用 F；协议写 p，目的端口 dport，跳转动作写 j。</p>
+
+  <h2>五、拓扑填空</h2>
+  <div class="topo-flow" role="img" aria-label="外网到内网的屏蔽子网拓扑">
+    <div class="topo-box"><strong>外网</strong></div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box"><strong>边界墙/网闸</strong></div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box dmz"><strong>DMZ</strong>Web/邮件</div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box"><strong>内防火墙</strong></div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box lan"><strong>内网</strong>OA/库</div>
+  </div>
+  <table>
+    <tr><th>信号</th><th>填</th></tr>
+    <tr><td>对外 Web / 邮件</td><td>DMZ（屏蔽子网才有）</td></tr>
+    <tr><td>OA / 数据库</td><td>内网</td></tr>
+    <tr><td>近物理隔离、不直连</td><td>网闸</td></tr>
+    <tr><td>按端口过滤、可开门</td><td>防火墙</td></tr>
+    <tr><td>旁路监测</td><td>IDS（不是网闸）</td></tr>
+  </table>
+  <p class="meta"><strong>下午卷拓扑填空</strong>：外网先过边界墙或网闸，网站邮件放进 DMZ，OA 和库放在内网；要近物理隔离就填网闸，只要逻辑过滤就填防火墙。</p>
+
+  <h2>六、易错陷阱</h2>
+  <ul>
+    <li>本机网站端口写 FORWARD；nat 表的 PREROUTING 当成 filter 默认链</li>
+    <li><code>-A … -j DROP</code> 当成默认策略；<code>-P INPUT REJECT</code> 非法</li>
+    <li>Web 和库放同一网段；近物理隔离填防火墙</li>
+    <li>状态检测 ≠ 包过滤；日志半年在网安法不在数安法；等保测评 ≠ 风险评估</li>
+  </ul>
+  <p class="meta"><strong>状态检测与包过滤</strong>：只看包头不记会话是包过滤，维护会话表才是状态检测。</p>
+
+  <h2>七、英文词汇</h2>
+  <p>filter table · INPUT / OUTPUT / FORWARD · chain policy · whitelist / blacklist ·
+    append / insert / flush · destination port · ACCEPT / DROP / REJECT ·
+    DMZ · screened subnet · network gap</p>
+
+  <h2>八、下午卷模板</h2>
+  <p>先填<strong>设备名</strong>（Web→DMZ，库→内网，近物理隔离→网闸）→ 再写
+    <code>-P INPUT DROP</code> → 再按题干端口写 <code>-A INPUT -p tcp --dport … -j ACCEPT</code>。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0028-iptables-topology.html">第 28 课</a> ·
+    <a href="./mnemonics.html#lesson-28">口诀</a> ·
+    <a href="./firewall-vpn-cheatsheet.html">防火墙/VPN</a> ·
+    <a href="./physical-gap-cheatsheet.html">物理/网闸</a> ·
+    <a href="./textbook/ch08.html">教材第 8 章</a> ·
+    <a href="./exam-2023-2025.html">2023–2025 考点</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

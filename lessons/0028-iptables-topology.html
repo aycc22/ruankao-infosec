@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 28 课 · iptables 与拓扑填空</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 28 · 约 18 分钟 · 冲刺补缺</div>
+    <h1>下午卷怎么填：iptables 命令 + 拓扑设备名</h1>
+    <p class="meta">本课目标：写出 filter 表 INPUT/OUTPUT/FORWARD；分清默认 ACCEPT（黑名单）与默认 DROP（白名单）；默写放行 22/80/443 的命令模板；按「外网→边界墙/网闸→DMZ→内墙→内网」填设备名。不重讲 AH/ESP。</p>
+  </header>
+
+  <h2>开场：下午卷要的是「写得出」，不是「说得清」</h2>
+  <p>
+    <a href="./0023-afternoon-case-special.html">第 23 课 §八</a>冲刺缺口的最后一块，就是
+    <strong>iptables 命令模板 + 拓扑填设备名</strong>。
+    <a href="./0005-firewall-vpn.html">第 5 课</a>已经会认包过滤 / 状态检测 / DMZ / VPN；
+    <a href="./0024-physical-security-gap.html">第 24 课</a>已经会把网闸和防火墙拆开。
+    机考下午仍然是「给拓扑、给端口、给一句 Linux」，要你<strong>填命令或设备名</strong>，不是写防火墙原理短文。
+  </p>
+  <div class="callout ok">
+    第 27 课已把法律法规补上。本课专练答题卡上的<strong>写法</strong>：命令抄对、位置填对。
+  </div>
+  <div class="callout warn">
+    本课只讲<strong>防御向考试模板</strong>（默认拒绝、按端口放行、拓扑分区）。不讲如何绕过防火墙、不写攻击步骤。
+  </div>
+
+  <h2>零、先复习再开新</h2>
+  <div class="quiz">
+    <div class="q">R1 · 「网络日志留存不少于六个月」应首先引用哪部法？</div>
+    <div class="opts">
+      <button class="opt">A. 《数据安全法》分类分级条款</button>
+      <button class="opt" data-correct="true">B. 《网络安全法》运营者义务</button>
+      <button class="opt">C. 《个人信息保护法》单独同意</button>
+      <button class="opt">D. 《密码法》商用密码检测条款</button>
+    </div>
+    <div class="explain">答案 B。日志不少于六个月在现行《网络安全法》第 23 条第三项（教材常见原第 21 条）。数安法管分类分级，个保法管同意。第 27 课易错点。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">R2 · DMZ（隔离区）通常出现在哪种防火墙体系结构中？</div>
+    <div class="opts">
+      <button class="opt">A. 双重宿主主机模式，一台双网卡即可</button>
+      <button class="opt" data-correct="true">B. 屏蔽子网模式，内外两道过滤之间</button>
+      <button class="opt">C. 透明桥接部署模式，串在同一网段</button>
+      <button class="opt">D. 单臂路由部署模式，只接一个接口</button>
+    </div>
+    <div class="explain">答案 B。屏蔽子网 = 外过滤设备 → DMZ → 内过滤设备 → 内网。DMZ 只在这一种结构里作为独立网段出现。第 5 课。</div>
+  </div>
+
+  <h2>一、先认表：filter 的三条链</h2>
+  <p>
+    下午卷写 Linux 防火墙，默认考的是 <strong>iptables 的 filter 表</strong>。
+    手册写明：不写 <code>-t</code> 时就是 filter；内建三条链。
+  </p>
+  <table>
+    <tr><th>链</th><th>管什么包</th><th>下午卷怎么填</th></tr>
+    <tr>
+      <td><strong>INPUT</strong></td>
+      <td>目的是<strong>本机套接字</strong>（别人访问这台机上的服务）</td>
+      <td>放行 SSH/Web 几乎都写在 INPUT</td>
+    </tr>
+    <tr>
+      <td><strong>OUTPUT</strong></td>
+      <td><strong>本机进程发出</strong>的包</td>
+      <td>题干没说限制出站，通常不要乱填</td>
+    </tr>
+    <tr>
+      <td><strong>FORWARD</strong></td>
+      <td><strong>路过本机再转发</strong>（这台机当路由器/网关）</td>
+      <td>只有「转发/网关」才写 FORWARD</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>filter 三链分工</strong>）：<strong>进本机走 INPUT，本机发出走 OUTPUT，路过转发走 FORWARD</strong>。
+  </div>
+  <p class="meta">
+    依据：
+    <a href="https://man7.org/linux/man-pages/man8/iptables.8.html">iptables(8)</a>
+    TABLES：filter 是默认表；INPUT = packets destined to local sockets，
+    OUTPUT = locally-generated packets，FORWARD = packets being routed through the box。
+    同义说明见
+    <a href="https://www.iptables.org/documentation/HOWTO/packet-filtering-HOWTO-6.html">Packet Filtering HOWTO §6</a>。
+  </p>
+  <div class="callout warn">
+    易错：看见 80/443 就写 FORWARD。题干若是「这台 Linux 主机开放网站」，包的目的是本机 → <strong>INPUT</strong>。
+    PREROUTING / POSTROUTING 属于 <strong>nat</strong> 表，默认策略题不要往那儿填。
+  </div>
+
+  <h2>二、默认策略：ACCEPT 是黑名单，DROP 是白名单</h2>
+  <p>
+    每条链都有<strong>默认策略</strong>（<code>-P</code> / <code>--policy</code>）：链上规则都没命中时，按策略处理。
+    手册规定：策略目标只能是 <strong>ACCEPT 或 DROP</strong>，不能把 REJECT 写成 <code>-P</code>。
+  </p>
+  <table>
+    <tr><th>命令</th><th>思路</th><th>考试说法</th></tr>
+    <tr>
+      <td><code>iptables -P INPUT ACCEPT</code></td>
+      <td>默认放行，再按名单拦截</td>
+      <td><strong>黑名单</strong></td>
+    </tr>
+    <tr>
+      <td><code>iptables -P INPUT DROP</code></td>
+      <td>默认拒绝，再按名单放行</td>
+      <td><strong>白名单</strong>（机考更爱考）</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>默认策略黑白名单</strong>）：<strong>默认 ACCEPT 是黑名单思路，默认 DROP 是白名单思路；先写下放行名单，再用 DROP 把其余兜住</strong>。
+  </div>
+  <p class="meta">
+    依据：iptables(8)「If the end of a built-in chain is reached… the chain policy determines the fate」；
+    <code>-P</code>「The policy target must be either ACCEPT or DROP」。
+    Red Hat《Security Guide》2.8.3.2：安全取向通常默认 DROP，再按需放行
+    （<a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-using_iptables-basic_firewall_policies">Basic Firewall Policies</a>）。
+    机考口径见
+    <a href="../reference/exam-2023-2025.html">2023–2025 考点 §三</a>：默认 ACCEPT = 黑名单思路。
+  </p>
+  <div class="callout info">
+    <strong>DROP 和 REJECT 差在规则目标，不在默认策略：</strong>
+    规则里 <code>-j DROP</code>  silently 丢弃；<code>-j REJECT</code> 会回一个错误包（手册 TARGETS）。
+    下午卷默认策略空格，优先填 <code>DROP</code>，不要写成 <code>-P INPUT REJECT</code>。
+  </div>
+
+  <h2>三、必背命令模板（按题干端口抄）</h2>
+  <p>典型题干：Linux 主机只允许远程管理与网站访问，其余入站拒绝。答题卡按下面抄，端口以题干为准。</p>
+  <table>
+    <tr><th>要做的事</th><th>默写这一行</th></tr>
+    <tr>
+      <td>入站默认拒绝（白名单底座）</td>
+      <td><code>iptables -P INPUT DROP</code></td>
+    </tr>
+    <tr>
+      <td>放行 SSH（TCP 22）</td>
+      <td><code>iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code></td>
+    </tr>
+    <tr>
+      <td>放行 HTTP（TCP 80）</td>
+      <td><code>iptables -A INPUT -p tcp --dport 80 -j ACCEPT</code></td>
+    </tr>
+    <tr>
+      <td>放行 HTTPS（TCP 443）</td>
+      <td><code>iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code></td>
+    </tr>
+    <tr>
+      <td>80 与 443 写成一条（可选）</td>
+      <td><code>iptables -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT</code></td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>下午卷放行模板</strong>）：<strong>先把 INPUT 默认改成 DROP，再追加放行二十二、八十、四百四十三；协议写 tcp，端口写 dport，动作写 ACCEPT</strong>。
+  </div>
+  <p class="meta">
+    <code>--dport</code> 是 TCP/UDP 匹配模块的目的端口（手册 iptables-extensions：<code>--destination-port</code> / <code>--dport</code>）。
+    多端口用 <code>-m multiport --dports</code>（同一页 multiport 小节）。
+    考试两种写法都给分，<strong>不要把题干没有的端口自己编进去</strong>。
+  </p>
+  <div class="callout warn">
+    生产环境常会再放行回程连接，那是运维加固，不是本课必填项。
+    下午卷<strong>题干给哪些端口就写哪些</strong>，不要额外发明模块名去「显得专业」。
+  </div>
+
+  <h2>四、常用参数：改链、改规则</h2>
+  <table>
+    <tr><th>参数</th><th>做什么</th><th>考试提醒</th></tr>
+    <tr><td><code>-A</code> / <code>--append</code></td><td>追加到链<strong>尾</strong></td><td>最常填</td></tr>
+    <tr><td><code>-I</code> / <code>--insert</code></td><td>插入；不写序号则插到链<strong>头</strong></td><td>和 -A 别写反</td></tr>
+    <tr><td><code>-D</code> / <code>--delete</code></td><td>按规则或序号删除</td><td>删错行会放行缺口</td></tr>
+    <tr><td><code>-L</code> / <code>-nL</code></td><td>查看；<code>-n</code> 不反查域名</td><td>只看不改</td></tr>
+    <tr><td><code>-F</code> / <code>--flush</code></td><td>清空链上规则</td><td>不清默认策略本身</td></tr>
+    <tr><td><code>-P</code></td><td>设置内建链默认策略</td><td>只能 ACCEPT / DROP</td></tr>
+    <tr><td><code>-p</code></td><td>协议（tcp / udp / icmp…）</td><td>写端口前先写协议</td></tr>
+    <tr><td><code>--dport</code></td><td>目的端口</td><td>SSH 是 22 不是 21</td></tr>
+    <tr><td><code>-j</code></td><td>动作：ACCEPT / DROP / REJECT</td><td>策略用 DROP，规则才可用 REJECT</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>iptables 常用参数</strong>）：<strong>追加用 A，插入用 I，删除用 D，查看用 L，清空用 F；协议写 p，目的端口 dport，跳转动作写 j</strong>。
+  </div>
+  <p class="meta">
+    以上短选项释义均来自
+    <a href="https://man7.org/linux/man-pages/man8/iptables.8.html">iptables(8)</a>
+    OPTIONS：<code>-A</code> append to the end；<code>-I</code> insert at head if no number；
+    <code>-L</code> often with <code>-n</code> to avoid DNS lookups；<code>-F</code> flush = delete all rules。
+  </p>
+  <div class="callout info">
+    规则按<strong>从上到下第一条命中</strong>生效。所以「先放行再 DROP」是<strong>白名单思路</strong>：ACCEPT 写在链上，未命中的交给默认 DROP。
+    不要理解成「命令必须后写 DROP 才执行」——<code>-P</code> 改的是兜底策略，随时可以设。
+  </div>
+
+  <h2>五、拓扑填空：设备名比口号值钱</h2>
+  <p>屏蔽子网标准摆法（与第 5 课同一张图，本课练的是<strong>空格里填什么</strong>）：</p>
+  <div class="topo-flow" role="img" aria-label="外网经边界防火墙或网闸进入 DMZ，再经内防火墙进入内网">
+    <div class="topo-box"><strong>外网</strong>Internet</div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box"><strong>边界墙 / 网闸</strong>第一道关</div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box dmz"><strong>DMZ</strong>Web / 邮件</div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box"><strong>内防火墙</strong>第二道关</div>
+    <div class="topo-arrow">→</div>
+    <div class="topo-box lan"><strong>内网</strong>OA / 数据库</div>
+  </div>
+<pre class="topo-ascii">外网 ──► 边界防火墙或网闸 ──► DMZ（Web、邮件）──► 内防火墙 ──► 内网（OA、库）</pre>
+  <table>
+    <tr><th>题干信号</th><th>空格填</th><th>别填成</th></tr>
+    <tr>
+      <td>对外网站、邮件、DNS、公众能访问</td>
+      <td><strong>DMZ</strong></td>
+      <td>内网、外网网段</td>
+    </tr>
+    <tr>
+      <td>OA、业务库、仅内部使用</td>
+      <td><strong>内网</strong></td>
+      <td>DMZ、边界防火墙本身</td>
+    </tr>
+    <tr>
+      <td>「近物理隔离」「不直连」「摆渡 / 单向」</td>
+      <td><strong>网闸</strong></td>
+      <td>防火墙、VPN、IDS</td>
+    </tr>
+    <tr>
+      <td>按端口过滤、可开 80/443、逻辑隔离</td>
+      <td><strong>防火墙</strong></td>
+      <td>网闸（网闸不靠对外开端口隔离）</td>
+    </tr>
+    <tr>
+      <td>旁路监测、不阻断</td>
+      <td><strong>IDS</strong></td>
+      <td>IPS（IPS 串联可阻断，仍不是网闸）</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>下午卷拓扑填空</strong>）：<strong>外网先过边界墙或网闸，网站邮件放进 DMZ，OA 和库放在内网；要近物理隔离就填网闸，只要逻辑过滤就填防火墙</strong>。
+  </div>
+  <p class="meta">
+    DMZ 部署见第 5 课 / <a href="../reference/firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a>：对外开门放 DMZ，内部自用放内网。
+    网闸见第 24 课：强度高于防火墙逻辑隔离。
+  </p>
+
+  <h2>六、和第 5 课衔接：概念对了，命令才能写对</h2>
+  <ul>
+    <li><strong>状态检测 ≠ 包过滤</strong>：维护会话表、动态放行应答 → 状态检测；只看 IP/端口、无状态 → 包过滤。iptables 默认考的是包过滤写法，不要在命令空格里写「AH」或「ESP」。</li>
+    <li><strong>DMZ 只在屏蔽子网</strong>：双重宿主、屏蔽主机都没有这块独立隔离区。</li>
+    <li>VPN 解决的是<strong>加密隧道</strong>，不是拓扑里的隔离设备；远程接入题才选 SSL VPN / IPSec。</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>状态检测与包过滤</strong>）：<strong>只看包头不记会话是包过滤，维护会话表才是状态检测</strong>。
+  </div>
+
+  <h2>七、动手练一练</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · filter 表中，处理「目的是本机套接字」的链是？</div>
+    <div class="opts">
+      <button class="opt">A. OUTPUT 链，处理本机进程发出的包</button>
+      <button class="opt" data-correct="true">B. INPUT 链，处理发往本机服务的包</button>
+      <button class="opt">C. FORWARD 链，处理路过本机转发的包</button>
+      <button class="opt">D. PREROUTING 链，处理改写地址之前的包</button>
+    </div>
+    <div class="explain">答案 B。iptables(8)：INPUT = destined to local sockets。PREROUTING 在 nat 表，不是 filter 默认三链的答题空。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · <code>iptables -P INPUT ACCEPT</code> 对应哪种策略思路？</div>
+    <div class="opts">
+      <button class="opt">A. 白名单：默认拒绝，只放行名单中的流量</button>
+      <button class="opt" data-correct="true">B. 黑名单：默认放行，再拦截名单中的流量</button>
+      <button class="opt">C. 灰名单：默认排队，等管理员逐条审批</button>
+      <button class="opt">D. 无名单：默认转发，并改写所有目的地址</button>
+    </div>
+    <div class="explain">答案 B。默认 ACCEPT = 黑名单思路；默认 DROP 才是白名单。见 exam-2023-2025 §三与 iptables(8) 链策略。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 要把 INPUT 的默认策略改成拒绝，应写哪条？</div>
+    <div class="opts">
+      <button class="opt">A. <code>iptables -A INPUT -j DROP</code>（追加一条丢弃规则）</button>
+      <button class="opt" data-correct="true">B. <code>iptables -P INPUT DROP</code>（设置链的默认策略）</button>
+      <button class="opt">C. <code>iptables -F INPUT</code>（清空链上已有规则）</button>
+      <button class="opt">D. <code>iptables -L INPUT DROP</code>（列出规则并丢弃流量）</button>
+    </div>
+    <div class="explain">答案 B。<code>-P</code> 才是默认策略。 <code>-A … -j DROP</code> 只是链上一条规则；<code>-F</code> 清空规则但不等于设置策略；<code>-L</code> 只查看。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 放行本机 SSH（TCP 22），下午卷最常填的是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. <code>iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code></button>
+      <button class="opt">B. <code>iptables -A OUTPUT -p tcp --sport 22 -j DROP</code></button>
+      <button class="opt">C. <code>iptables -A FORWARD -p udp --dport 22 -j REJECT</code></button>
+      <button class="opt">D. <code>iptables -A INPUT -p icmp --dport 22 -j QUEUE</code></button>
+    </div>
+    <div class="explain">答案 A。入站到本机服务 → INPUT；SSH 是 TCP 22；动作用 ACCEPT。不要写成 UDP、FORWARD 或 ICMP。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · <code>-A</code> 与 <code>-I</code> 的正确差别是？</div>
+    <div class="opts">
+      <button class="opt">A. <code>-A</code> 插到链头，<code>-I</code> 追加到链尾</button>
+      <button class="opt" data-correct="true">B. <code>-A</code> 追加到链尾，<code>-I</code> 默认插到链头</button>
+      <button class="opt">C. <code>-A</code> 清空整条链，<code>-I</code> 只删除第一条</button>
+      <button class="opt">D. <code>-A</code> 设置默认策略，<code>-I</code> 用来查看规则</button>
+    </div>
+    <div class="explain">答案 B。手册：<code>-A</code> append to the end；<code>-I</code> 不写序号则 insert at the head。清空是 <code>-F</code>，策略是 <code>-P</code>，查看是 <code>-L</code>。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · In the filter table, which chain inspects packets destined for local sockets?</div>
+    <div class="opts">
+      <button class="opt">A. OUTPUT, for packets generated on this host</button>
+      <button class="opt" data-correct="true">B. INPUT, for packets aimed at local sockets</button>
+      <button class="opt">C. FORWARD, for packets routed through this host</button>
+      <button class="opt">D. PREROUTING, for packets being address-translated</button>
+    </div>
+    <div class="explain">答案 B。iptables(8) filter table: INPUT = destined to local sockets；FORWARD = routed through the box；OUTPUT = locally generated. PREROUTING is a nat-table chain.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · 对外官网 Web 与仅内部使用的市民库，应分别放在？</div>
+    <div class="opts">
+      <button class="opt">A. Web 放内网办公区，库放 DMZ 隔离区</button>
+      <button class="opt" data-correct="true">B. Web 放 DMZ 隔离区，库放内网办公区</button>
+      <button class="opt">C. Web 和库都直接放在外网公共网段</button>
+      <button class="opt">D. Web 和库都安装在边界防火墙主机</button>
+    </div>
+    <div class="explain">答案 B。对外开门放 DMZ，内部自用放内网。库放 DMZ 等于把数据暴露在可被公网摸到的区域。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（下午卷风格）· 点击展开填空答案</summary>
+    <p>某市政务网拓扑留了三个空：（1）外网与对外 Web 之间的第一道关；（2）对外 Web / 邮件所在网段；（3）OA 与市民库所在网段。另要求：Linux 门户主机只允许 SSH、HTTP、HTTPS 入站，其余入站拒绝。题干强调「内外网不直连、近物理隔离」时，第一道关应填什么？</p>
+    <div class="ans">
+      ① <strong>拓扑</strong>：外网 → <strong>网闸</strong>（近物理隔离；若只说端口过滤则填边界防火墙）→ <strong>DMZ</strong>（Web / 邮件）→ 内防火墙 → <strong>内网</strong>（OA / 库）。<br>
+      ② <strong>命令</strong>（白名单模板，端口按题干）：<br>
+      <code>iptables -P INPUT DROP</code><br>
+      <code>iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code><br>
+      <code>iptables -A INPUT -p tcp --dport 80 -j ACCEPT</code><br>
+      <code>iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code><br>
+      也可把 80、443 写成 <code>-m multiport --dports 80,443</code>。<br>
+      ③ 不要写 <code>-P INPUT REJECT</code>；不要把 Web 和库填进同一网段；等保测评仍<strong>不等于</strong>风险评估。
+    </div>
+  </details>
+
+  <h2>八、今日任务（约 35 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>精读 + 对照（15 分钟）</strong>：阅读
+      <a href="../reference/textbook/ch08.html">第 8 章 防火墙技术</a>
+      （三类防火墙与屏蔽子网，不重读 VPN），对照
+      <a href="../reference/iptables-topology-cheatsheet.html">iptables / 拓扑速查卡</a>
+      和
+      <a href="../reference/exam-2023-2025.html">2023–2025 考点 §三 Linux 防火墙</a>。</li>
+    <li><strong>默写命令（10 分钟）</strong>：不看笔记写出默认 DROP + 放行 22/80/443 四行；再说一遍 filter 三链各管什么。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——① filter 三链分工：进本机走 INPUT，本机发出走 OUTPUT，路过转发走 FORWARD；② 默认策略黑白名单：默认 ACCEPT 是黑名单思路，默认 DROP 是白名单思路；先写下放行名单，再用 DROP 把其余兜住；③ 下午卷放行模板：先把 INPUT 默认改成 DROP，再追加放行二十二、八十、四百四十三；协议写 tcp，端口写 dport，动作写 ACCEPT；④ iptables 常用参数：追加用 A，插入用 I，删除用 D，查看用 L，清空用 F；协议写 p，目的端口 dport，跳转动作写 j；⑤ 下午卷拓扑填空：外网先过边界墙或网闸，网站邮件放进 DMZ，OA 和库放在内网；要近物理隔离就填网闸，只要逻辑过滤就填防火墙；⑥ 状态检测与包过滤：只看包头不记会话是包过滤，维护会话表才是状态检测；⑦ 网络日志半年：日志留半年，先引网安法，不要写成数安法；⑧ 等保测评与风险评估：测评看符合性，评估看风险，两套不是同一件事。</li>
+  </ol>
+
+  <h2>九、本课知识从哪来</h2>
+  <ul>
+    <li>机考下午写法校准：<a href="../reference/exam-2023-2025.html">2023–2025 考点分布 §三</a>（filter 表、默认 ACCEPT=黑名单、<code>-P INPUT DROP</code>、放行 22/80/443）</li>
+    <li>《信息安全工程师教程（第 2 版）》第 8 章防火墙体系结构（屏蔽子网 / DMZ）·
+      <a href="http://www.tup.tsinghua.edu.cn/bookscenter/book_07922301.html">清华大学出版社</a>；精读
+      <a href="../reference/textbook/ch08.html">第 8 章</a></li>
+    <li>命令语义（本课实际打开核对）：
+      <a href="https://man7.org/linux/man-pages/man8/iptables.8.html">iptables(8)</a>
+      （filter 三链、<code>-A/-I/-D/-L/-F/-P/-p/-j</code>、策略只能 ACCEPT/DROP）；
+      <a href="https://man7.org/linux/man-pages/man8/iptables-extensions.8.html">iptables-extensions(8)</a>
+      （<code>--dport</code>、<code>-m multiport --dports</code>）；
+      <a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-using_iptables-basic_firewall_policies">RHEL 6 Security Guide · Basic Firewall Policies</a>
+      （默认 DROP 再按需放行）；
+      <a href="https://www.iptables.org/documentation/HOWTO/packet-filtering-HOWTO-6.html">Linux 2.4 Packet Filtering HOWTO §6</a></li>
+    <li>拓扑位置：<a href="./0005-firewall-vpn.html">第 5 课</a> /
+      <a href="../reference/firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a>；网闸：
+      <a href="./0024-physical-security-gap.html">第 24 课</a></li>
+    <li>速查：<a href="../reference/iptables-topology-cheatsheet.html">本课速查卡</a> ·
+      <a href="../reference/mnemonics.html#lesson-28">第 28 课口诀</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「为什么放行写 INPUT 不写 FORWARD」「网闸和防火墙在图上怎么选」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 28 课学完了」，我会逐题进行结业测。</p>
+    <p>下一课预告：<strong>官方真题计时模考 / 题库冲刺</strong>（清华社 2018–2022 试题分析 + <a href="../question-bank/sprint.html">自编题库</a>）。第 23 课 §八列出的冲刺缺口，本课收完 iptables / 拓扑这一块。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

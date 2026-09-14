@@ -421,6 +421,58 @@ footer {
   }
 }
 
+/* 拓扑示意（下午卷填设备名） */
+pre, .topo-ascii {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.topo-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.35rem 0.4rem;
+  margin: 1rem 0;
+  padding: 0.85rem 0.7rem;
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.topo-box {
+  flex: 1 1 6.2rem;
+  max-width: 9.5rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  text-align: center;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.topo-box strong { display: block; }
+.topo-box.dmz { border-color: var(--accent); background: #f7ebe8; }
+.topo-box.lan { border-color: var(--accent-2); background: #e8f0ec; }
+.topo-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 720px) {
+  .topo-arrow { width: 100%; justify-content: center; }
+  .topo-box { max-width: none; }
+}
+
 /* ============ 打印 ============ */
 @media print {
   html { font-size: 12pt; }
