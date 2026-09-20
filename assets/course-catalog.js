@@ -29,7 +29,8 @@ var COURSE_CATALOG = {
     { file: '0025-access-control-models.html', label: '第 25 课', title: '访问控制与安全模型' },
     { file: '0026-gm-crypto-params.html', label: '第 26 课', title: '国密算法参数表' },
     { file: '0027-cyber-laws.html', label: '第 27 课', title: '法律法规三法考点' },
-    { file: '0028-iptables-topology.html', label: '第 28 课', title: 'iptables 与拓扑填空' }
+    { file: '0028-iptables-topology.html', label: '第 28 课', title: 'iptables 与拓扑填空' },
+    { file: '0029-timed-mock-sprint.html', label: '第 29 课', title: '计时模考与错题回收' }
   ],
   references: [
     { file: 'textbook-index.html', label: '教材精读', title: '官方教程 26 章考点' },
@@ -60,7 +61,8 @@ var COURSE_CATALOG = {
     { file: 'gm-crypto-cheatsheet.html', label: '国密参数', title: '国密算法参数速查' },
     { file: 'cyber-laws-cheatsheet.html', label: '三法速查', title: '网安法 / 数安法 / 个保法' },
     { file: 'iptables-topology-cheatsheet.html', label: 'iptables/拓扑', title: '下午卷命令与拓扑填空' },
-    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-28 课口诀汇总' }
+    { file: 'mock-exam-cheatsheet.html', label: '计时模考', title: '计时模考与错题回收' },
+    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-29 课口诀汇总' }
   ],
   // 题库拥有者 aycc345（见 question-bank/manifest.json）；本仓库 aycc22 只是托管位置
   questionBank: [
