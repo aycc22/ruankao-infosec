@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 计时模考与错题回收</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档</div>
+    <h1>计时模考与错题回收速查</h1>
+    <p class="meta">第 29 课配套 · 方法卡，不含官方真题原题 · 打印用</p>
+  </header>
+
+  <div class="callout warn">
+    官方尺子只用清华社《2018 至 2022 年试题分析与解答》整卷对答案。
+    本站 <a href="../question-bank/sprint.html">sprint.html</a> 是自编练习，不是某年原卷。
+    2023 后回忆贴见 <a href="./exam-2023-2025.html">考点分布</a>，不能当及格线。
+  </div>
+
+  <h2>一、双轨</h2>
+  <table>
+    <tr><th>轨</th><th>材料</th><th>用途</th></tr>
+    <tr><td>尺子</td><td>清华社 2018–2022 试题分析</td><td>整卷计时、对答案、看 45 分线</td></tr>
+    <tr><td>份量</td><td><a href="../question-bank/index.html">题库</a> / sprint 60 单选 + 3 案例</td><td>加练手感与易错点</td></tr>
+  </table>
+  <p class="meta"><strong>模考双轨怎么分</strong>：尺子用清华社二〇一八到二〇二二整卷对答案，份量用本站自编冲刺卷加练，回忆贴不能当官方尺子。</p>
+
+  <h2>二、一场怎么坐</h2>
+  <table>
+    <tr><th>科目</th><th>做法</th></tr>
+    <tr>
+      <td>上午 75 单选</td>
+      <td>站点口径：两科连考共 240 分钟；科目一最长 120、最短 90 分钟（<a href="./exam-overview.html">考试全貌</a>）。练习可先压到 100–110 分钟找手感。</td>
+    </tr>
+    <tr>
+      <td>下午案例</td>
+      <td>按「风险 + 对策」成对写（<a href="../lessons/0023-afternoon-case-special.html">第 23 课</a>）。拓扑 / iptables 回第 28 课。</td>
+    </tr>
+    <tr>
+      <td>卡住</td>
+      <td>先标记跳过，会做的分先拿到，回头再补。</td>
+    </tr>
+  </table>
+  <p class="meta"><strong>计时模考为何现在上</strong>：知识点已经学完，要在限时压力下把答案从脑子里捞出来，才能变成考场分数。</p>
+  <p class="meta"><strong>上午限时手感</strong>：科目一在站点口径里最长一百二十分钟、最短九十分钟，练习可先压到一百分钟找手感。</p>
+  <p class="meta"><strong>卡住先跳再回头</strong>：不会的先标记跳过，把会做的分先拿到，别在一题上耗光整卷时间。</p>
+  <p class="meta"><strong>下午卷仍按风险对策</strong>：案例题先列风险再写成对对策，不要只堆设备名词。</p>
+
+  <h2>三、错题本五栏</h2>
+  <table>
+    <tr><th>题号</th><th>错选</th><th>正解</th><th>对应课</th><th>口诀锚点</th></tr>
+    <tr><td>（卷别+序号）</td><td>（选项+为何会选）</td><td>（正确项+半句理由）</td><td>（第 N 课）</td><td>（mnemonics 锚点）</td></tr>
+  </table>
+  <p class="meta"><strong>错题本五栏回收</strong>：记下题号、错选、正解、对应课、口诀锚点，缺一栏就不算真正回收。</p>
+  <p>口诀总表：<a href="./mnemonics.html">mnemonics.html</a>。本课专区：<a href="./mnemonics.html#lesson-29">#lesson-29</a>。</p>
+
+  <h2>四、薄弱清单（每次模考后过一遍）</h2>
+  <ul>
+    <li>密钥方向：公钥加密 → 私钥解密；私钥签名 → 公钥验签</li>
+    <li>等保测评 ≠ 风险评估</li>
+    <li>日志半年 → 网安法（现行第 23 条）</li>
+    <li>三法分工：日志/等保/关基 → 网安法；分类分级 → 数安法；同意/敏感 → 个保法</li>
+    <li>行三人列俩货：能力、前缀、口令 / ACL、保护位</li>
+    <li>DMZ 在屏蔽子网；Web→DMZ，库→内网</li>
+    <li>iptables：<code>-P INPUT DROP</code> + 放行 22/80/443</li>
+    <li>关基在等保之上做重点保护，不是替代等保</li>
+  </ul>
+  <p class="meta"><strong>冲刺薄弱清单加钉</strong>：密钥方向、等保测评不等于风险评估、日志半年先引网安法、三法分工、行三人列俩货、DMZ 在屏蔽子网、iptables 默认 DROP 再放行二十二八十与四百四十三、关基在等保之上。</p>
+
+  <footer>
+    配套课程：<a href="../lessons/0029-timed-mock-sprint.html">第 29 课</a> ·
+    <a href="./mnemonics.html#lesson-29">口诀</a> ·
+    <a href="../question-bank/sprint.html">冲刺卷</a> ·
+    <a href="./exam-2023-2025.html">2023–2025 考点</a> ·
+    <a href="./afternoon-case-cheatsheet.html">下午卷案例</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

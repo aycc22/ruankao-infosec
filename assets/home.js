@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0028-iptables-topology.html',
-    label: '第 28 课',
-    title: 'iptables 与拓扑填空'
+    file: '0029-timed-mock-sprint.html',
+    label: '第 29 课',
+    title: '计时模考与错题回收'
   };
 
   function el(tag, className, html) {
@@ -72,7 +72,8 @@
       'textbook-index.html',
       'mnemonics.html',
       'exam-overview.html',
-      'exam-2023-2025.html'
+      'exam-2023-2025.html',
+      'mock-exam-cheatsheet.html'
     ];
 
     var bankHub = COURSE_CATALOG.questionBank && COURSE_CATALOG.questionBank[0];
