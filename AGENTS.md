@@ -85,9 +85,10 @@
 - 冲刺薄弱点对话抽检 Round 3（2026-09-22，导师安然）：**作答 9/9**（跳过 1 题未计；`learning-records/0031-sprint-weak-points-round3.md`）；IaaS guest OS 归租户本次答对（Round 2 回补成功）
 - 冲刺薄弱点对话抽检 Round 4（2026-09-22，导师安然）：**10/10**（`learning-records/0032-sprint-weak-points-round4.md`）；零错题；补做 Round 3 跳过的防火墙技术题并答对；今日合计 Round1 10/10 + Round2 9/10 + Round3 9/9 + Round4 10/10
 - 冲刺薄弱点对话抽检 Round 5（2026-10-14，导师安然）：**8/10**（`learning-records/0033-sprint-weak-points-round5.md`）；两处错题 Q5 iptables 默认拒绝误用 `-A`（应为 `-P INPUT DROP`）、Q8 行三人误选能力表/ACL/角色（应为能力表、前缀、口令；列俩货＝ACL、保护位）
+- 冲刺薄弱点对话抽检 Round 6（2026-10-16，导师安然）：**9/10**（`learning-records/0034-sprint-weak-points-round6.md`）；唯一错题 Q9 木马特征误选自我复制+远程控制（应为伪装+远程控制+不自我复制）；Round 5 两处（INPUT `-P DROP`、行三人）本轮回补正确
 - 自编题库：`question-bank/`（60 道单选 + 3 道下午卷风格案例，非官方真题）
 - **下一课入口**：冲刺阶段——清华社 2018–2022 整卷计时 + `question-bank/sprint.html` / 对话抽检 + 错题本五栏
-- 间隔复习加钉：优先回炉 Round 5——iptables 默认拒绝用 `-P DROP`；行三人（能力、前缀、口令）列俩货（ACL、保护位）。其余：网安法等保条号——现行第 23 条 / 教材常见原第 21 条；三法分工——日志/等保/关基 → 网安法；分类分级 → 数安法；同意/敏感 → 个保法；等保测评≠风险评估；密钥方向；DMZ 在屏蔽子网；关基在等保之上；IaaS guest OS 归租户（责任共担；Round 3、Round 5 均答对）
+- 间隔复习加钉：优先回炉 Round 6——木马三关键词：伪装+远程控制+不自我复制（不自传）。Round 5 已回补：iptables 默认拒绝用 `-P DROP`；行三人（能力、前缀、口令）列俩货（ACL、保护位）。其余：网安法等保条号——现行第 23 条 / 教材常见原第 21 条；三法分工——日志/等保/关基 → 网安法；分类分级 → 数安法；同意/敏感 → 个保法；等保测评≠风险评估；密钥方向；DMZ 在屏蔽子网；关基在等保之上；IaaS guest OS 归租户（责任共担；Round 3、Round 5 均答对）
 
 
 ## 明确不做
