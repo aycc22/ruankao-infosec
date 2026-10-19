@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 30 课 · 2019 上午复盘：易混对比 + 参数 + 流程手算</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 30 · 约 18 分钟 · 冲刺复盘</div>
+    <h1>2019 上午复盘：易混对比 + 参数 + 流程手算</h1>
+    <p class="meta">本课目标：把清华社 2019 上午卷自报成绩收成可执行的复盘方法；用对比表分开易混对；背住高频数字；能顺着「明文分组、密钥、IV/计数器 → 密文」把分组模式和 DES 的 S 盒走一遍。本课<strong>不重开新章，也不粘贴官方原题</strong>。</p>
+  </header>
+
+  <h2>开场：41/75 说明什么</h2>
+  <p>
+    你（广西 / 南宁，考试 <strong>2026-10-24 至 27</strong>）完成了清华社
+    <strong>2019 上午卷</strong>自评：<strong>75 题里对 41 题、错 34 题，约 55%</strong>。
+    单题错项还没贴进错题本。两科目标仍是<strong>每科 ≥45 分</strong>。
+    55% 离及格线还有距离，但差距集中在「认错对、记错数、算不清流程」，不是缺一整章新知识。
+  </p>
+  <div class="callout ok">
+    本课是<strong>复盘方法</strong>：对比表、参数表、流程手算、五类错题本。
+    具体哪一题选错，等你按模板补录后再对话抽检。这里不编造 2019 的题号和选项。
+  </div>
+  <div class="callout warn">
+    不把官方真题原题抄进页面或对话。对答案仍用你手里的清华社《2018 至 2022 年试题分析与解答》。
+    本站题库是自编练习，不能当成 2019 原卷。
+  </div>
+
+  <h2>一、错题先归类，再贴错因</h2>
+  <p>
+    34 道错题不要堆成一张长清单。先放进五类错题本
+    （<a href="../learning-records/error-book/README.md">说明</a>），
+    每题再贴一个错因标签，三选一：
+  </p>
+  <table>
+    <tr><th>错因标签</th><th>什么时候贴</th><th>复盘动作</th></tr>
+    <tr>
+      <td><strong>概念混淆</strong></td>
+      <td>两个名词都会，但放反了（如 DAC/MAC、误用/异常、AH/ESP）</td>
+      <td>回本课对比表，只背「考点名 + 一句口诀」</td>
+    </tr>
+    <tr>
+      <td><strong>参数记忆</strong></td>
+      <td>概念对，数字、端口、报文类型错了</td>
+      <td>回本课参数表，抄到错题本「正解」栏</td>
+    </tr>
+    <tr>
+      <td><strong>审题问题</strong></td>
+      <td>知识点会，但看错主语、否定词或「哪一项不属于」</td>
+      <td>在错选栏写「看错了哪半句」，不重背整章</td>
+    </tr>
+  </table>
+  <p>五栏仍然要齐：<strong>题号、错选、正解、对应课或对比表锚点、口诀锚点</strong>。错因是第六个字段，三选一，不替代五栏。</p>
+  <div class="callout ok">
+    口诀（<strong>错因三标签</strong>）：<strong>概念放反贴混淆，数字端口贴参数，看错主语或否定词就贴审题</strong>。
+  </div>
+  <ul>
+    <li><a href="../learning-records/error-book/01-crypto-params-flows.md">01 密码参数与流程</a></li>
+    <li><a href="../learning-records/error-book/02-attacks-security-models.md">02 攻击与安全模型</a></li>
+    <li><a href="../learning-records/error-book/03-network-security-protocols.md">03 网络安全协议</a></li>
+    <li><a href="../learning-records/error-book/04-management-standards-laws.md">04 管理、标准与法律</a></li>
+    <li><a href="../learning-records/error-book/05-professional-english.md">05 专业英语</a></li>
+  </ul>
+
+  <h2 id="compare">二、易混对比表</h2>
+  <p>打印短表见 <a href="../reference/compare-params-cheatsheet.html">对比与参数速查卡</a>。下面每张表后面跟同一句口诀。</p>
+
+  <h3 id="active-passive">主动攻击 vs 被动攻击</h3>
+  <p class="meta">这是攻击分类，不要和第 10 课「主动防御 / 被动防御」混成一对。</p>
+  <table>
+    <tr><th></th><th>被动攻击</th><th>主动攻击</th></tr>
+    <tr><td>做什么</td><td>窃听、流量分析，获取信息</td><td>篡改、重放、伪造、中断服务</td></tr>
+    <tr><td>数据</td><td>不改报文、不打断服务</td><td>插入、修改或阻断通信</td></tr>
+    <tr><td>主要伤到</td><td>机密性</td><td>完整性、可用性，有时还有真实性</td></tr>
+    <tr><td>例子</td><td>嗅探口令、看流量规律</td><td>改报文、重放登录、DoS</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>主动攻击与被动攻击</strong>）：<strong>被动只偷听不改数据，主动会篡改、重放或打断服务</strong>。
+  </div>
+
+  <h3 id="anomaly-misuse">异常检测 vs 误用检测</h3>
+  <table>
+    <tr><th></th><th>误用检测</th><th>异常检测</th></tr>
+    <tr><td>靠什么</td><td>已知攻击的特征库 / 签名</td><td>正常行为基线，偏离就告警</td></tr>
+    <tr><td>擅长</td><td>已知攻击，误报相对低</td><td>有机会发现未知攻击</td></tr>
+    <tr><td>短板</td><td>特征库里没有的认不出</td><td>误报高，基线要调</td></tr>
+    <tr><td>题眼</td><td>特征、签名、规则匹配</td><td>基线、轮廓、统计偏离</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>异常检测与误用检测</strong>）：<strong>特征对已知是误用，基线看偏离是异常</strong>（与
+    <a href="./0006-ids-ips.html">第 6 课</a>同一句）。
+  </div>
+
+  <h3 id="dac-mac">DAC vs MAC</h3>
+  <table>
+    <tr><th></th><th>DAC 自主访问控制</th><th>MAC 强制访问控制</th></tr>
+    <tr><td>谁定规则</td><td>客体的主人</td><td>系统按密级 / 标签</td></tr>
+    <tr><td>能不能转授</td><td>主人可以把权限转给别人</td><td>用户改不了系统定下的密级</td></tr>
+    <tr><td>题眼</td><td>属主授权、自行共享、可转授</td><td>密级标签、强制管控、用户不能改</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>自主与强制访问控制</strong>）：<strong>主人自己定、可转授是自主访问控制；系统定密级、用户改不了是强制访问控制</strong>。
+  </div>
+
+  <h3 id="tls-ipsec">SSL/TLS vs IPSec</h3>
+  <table>
+    <tr><th></th><th>SSL/TLS</th><th>IPSec</th></tr>
+    <tr><td>工作位置</td><td>夹在传输层和应用之间</td><td>网络层（IP 层）</td></tr>
+    <tr><td>典型用途</td><td>HTTPS 网页、浏览器免客户端的 SSL VPN</td><td>站点到站点或全流量隧道</td></tr>
+    <tr><td>常看端口</td><td>TCP 443</td><td>IKE 用 UDP 500，NAT 穿越常见 UDP 4500</td></tr>
+    <tr><td>加密一句</td><td>握手后用对称密钥保护应用数据</td><td>AH 验真不保密，加密找 ESP</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>SSL/TLS 与 IPSec</strong>）：<strong>TLS 夹在传输层和应用之间，常见于网页；IPSec 在网络层做隧道，验真找 AH、加密找 ESP</strong>。
+  </div>
+
+  <h3 id="vpn-spoof">VPN vs 网络欺骗</h3>
+  <table>
+    <tr><th></th><th>VPN</th><th>网络欺骗</th></tr>
+    <tr><td>目的</td><td>在公网上建加密隧道，让合法双方安全通信</td><td>伪装身份或路由，让别人信错对象</td></tr>
+    <tr><td>典型手段</td><td>隧道、加解密、身份认证</td><td>IP 欺骗、ARP 欺骗、DNS 欺骗</td></tr>
+    <tr><td>站在哪边</td><td>防护技术</td><td>攻击手法</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>VPN 与网络欺骗</strong>）：<strong>虚拟专用网是去建加密隧道，网络欺骗是去伪装身份或路由</strong>。
+  </div>
+
+  <h3 id="ca-pki">CA 功能 vs PKI 组成</h3>
+  <table>
+    <tr><th>问的是</th><th>答什么</th></tr>
+    <tr><td><strong>CA 做什么</strong></td><td>签发证书、管理证书、吊销证书（信任根）。证书 = 身份 + 公钥 + CA 签名，里面没有私钥</td></tr>
+    <tr><td><strong>RA 做什么</strong></td><td>受理申请、审核身份。<strong>不签发</strong></td></tr>
+    <tr><td><strong>PKI 组成</strong></td><td>至少记住 CA、RA、证书库、CRL。证书库用来发布；CRL 是吊销列表。OCSP 是在线查询吊销状态</td></tr>
+    <tr><td>易混</td><td>「CA 的功能」≠「PKI 的全部零件」。问组成时要把 RA、证书库、CRL 一起写上</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>CA 功能与 PKI 组成</strong>）：<strong>认证中心负责签发和吊销，注册机构只审核；公钥基础设施还要带上证书库和吊销列表</strong>。
+  </div>
+
+  <h2 id="params">三、高频数字与参数</h2>
+  <p>口径写在「依据」列。教材精读没写的比特数，只在有标准或协议依据时补上，并标明出处。</p>
+  <table>
+    <tr><th>考点</th><th>记住</th><th>依据（标注）</th></tr>
+    <tr>
+      <td>SM3</td>
+      <td>杂凑<strong>输出 256 bit</strong></td>
+      <td>GB/T 32905—2016：杂凑值长度为 256 比特。教材精读第 3 章未列比特表；不要把 256 套到 SM2 / SM4 / SM9</td>
+    </tr>
+    <tr>
+      <td>DES</td>
+      <td>分组 <strong>64 bit</strong>；密钥字 64 bit，其中 <strong>56 bit</strong> 参与运算，<strong>8 bit</strong> 做奇偶校验</td>
+      <td>FIPS 46-3。有效密钥是 56，分组不是 56</td>
+    </tr>
+    <tr>
+      <td>3DES（TDEA）</td>
+      <td>两钥有效 <strong>112 bit</strong>（第三把等于第一把）；三钥有效 <strong>168 bit</strong></td>
+      <td>FIPS 46-3：密钥包由三把 DES 密钥组成。软考常见口径写 112 或 168。每把仍含 8 bit 校验时，两钥包常写成 128、三钥包常写成 192。新系统不要再选它</td>
+    </tr>
+    <tr>
+      <td>SET 常考密钥</td>
+      <td>交易数据用 <strong>DES 56 bit</strong> 会话密钥；数字信封和数字签名用 <strong>RSA 1024 bit</strong>；摘要用 <strong>SHA-1</strong></td>
+      <td>SET 规范设计口径（RSA 1997 年 SET FAQ：加密用 56 位 DES，签名和信封用 1024 位 RSA）。软考沿用这组数。不是现行推荐，也不要套到国密或 TLS</td>
+    </tr>
+    <tr>
+      <td>私有地址</td>
+      <td><strong>10.0.0.0/8</strong>；<strong>172.16.0.0–172.31.255.255</strong>（/12）；<strong>192.168.0.0/16</strong></td>
+      <td>RFC 1918。172.32 起不再算这一段</td>
+    </tr>
+    <tr>
+      <td>常见端口</td>
+      <td>22 SSH；80 HTTP；443 HTTPS；53 DNS；25 SMTP；110 POP3；143 IMAP；3389 远程桌面</td>
+      <td>IANA 周知端口。本站已用补充：21 FTP、23 Telnet、123 NTP、161 SNMP；IPSec 的 IKE 为 UDP 500 / 4500</td>
+    </tr>
+    <tr>
+      <td>BGP 四类报文</td>
+      <td>Open 协商参数；Update 通告或撤销路由；Notification 报错并关闭；Keepalive 防止保持计时器超时</td>
+      <td>RFC 4271 的四类。另有 Route-Refresh（RFC 2918），软考常考的是这四类</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>国密 SM3 输出长度</strong>）：<strong>杂凑值按国标是二百五十六比特，不要套到别的 SM 算法上</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>DES 密钥与分组</strong>）：<strong>分组六十四比特，密钥字里五十六比特干活、八比特做校验</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>私有地址三段</strong>）：<strong>十段整段、一百七十二从十六到三十一、一百九十二点一六八</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>BGP 四类报文</strong>）：<strong>Open 用来协商，Update 用来通告或撤销，Notification 报错就拆连接，Keepalive 用来保活</strong>。
+  </div>
+
+  <h2 id="modes">四、分组模式：明文、密钥、IV 怎么变成密文</h2>
+  <p>
+    下面用同一套符号，不抄任何一年的原题数字。
+    <strong>P</strong> 是明文分组，<strong>C</strong> 是密文分组，<strong>K</strong> 是密钥，<strong>E</strong> 是加密函数，<strong>IV</strong> 是初始向量。
+    DES 的分组长度是 64 bit；别的分组算法只是把「一块多长」换成自己的分组长度，缠法不变。
+  </p>
+  <h3>ECB</h3>
+  <p>
+    明文切成一块一块。每一块单独加密：<strong>C = E(K, P)</strong>。
+    没有 IV，前一块密文也不参加。密钥只作用于当前明文块。
+    相同的明文块配同一密钥，密文块也相同。
+  </p>
+  <h3>CBC</h3>
+  <p>
+    第一块先和 IV 异或，后面每一块先和<strong>上一块密文</strong>异或，再加密：
+    <strong>C = E(K, P XOR 上一块密文)</strong>，第一块的「上一块密文」用 IV 代替。
+    密钥加密的是「明文和 IV/前文密文异或之后」的结果。换 IV，第一块密文就变，后面块跟着变。
+  </p>
+  <h3>CFB</h3>
+  <p>
+    密钥不去直接加密明文。先加密上一块密文（第一块用 IV），得到一段密钥流，再和明文异或：
+    <strong>C = P XOR E(K, 上一块密文)</strong>。
+    进加密函数的是 IV 或前文密文；明文只在最后一步异或。
+  </p>
+  <h3>OFB</h3>
+  <p>
+    密钥加密的是<strong>上一轮自己的输出</strong>（第一轮用 IV），得到密钥流，再和明文异或：
+    <strong>密钥流 = E(K, 上一轮密钥流)</strong>，<strong>C = P XOR 密钥流</strong>。
+    密文不送回加密函数。密钥流只跟密钥和 IV 走，不跟明文或密文走。
+  </p>
+  <h3>CTR</h3>
+  <p>
+    准备计数器（常见是一次性随机数接一个递增计数）。用密钥加密计数器，再和明文异或：
+    <strong>C = P XOR E(K, 计数器)</strong>。
+    上一块密文不参加。各块可以分开算。同一密钥下，计数器不能重复。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>分组模式怎么缠</strong>）：<strong>ECB 各块单独加密；CBC 先和前文密文异或再加密；CFB、OFB、CTR 都是先做出密钥流再异或明文，CFB 吃前文密文，OFB 吃自己的输出，CTR 吃计数器</strong>。
+  </div>
+
+  <h2 id="sbox">五、DES 的 S 盒：几位进、几位出</h2>
+  <p>手算只追比特长度，不要求背官方八张真表。关系来自 FIPS 46-3，例子是本课自编的玩具表。</p>
+  <ol>
+    <li><strong>初始置换</strong>只换 64 bit 的位置，长度仍是 64，然后拆成左右各 32 bit。</li>
+    <li>右半 32 bit 做<strong>扩展置换</strong>，拉成 48 bit（有些位重复出现）。</li>
+    <li>这 48 bit 与本轮<strong>48 bit 子密钥</strong>异或，长度仍是 48。</li>
+    <li>48 bit 切成 8 段，每段 <strong>6 bit</strong> 送进一个 S 盒。</li>
+    <li>每个 S 盒：<strong>首末 2 bit 当行号（0–3），中间 4 bit 当列号（0–15）</strong>，表里的数写成 <strong>4 bit</strong>。</li>
+    <li>8 个盒子输出 8×4 = <strong>32 bit</strong>。再做一次换位，长度仍是 32，去和左半异或。</li>
+  </ol>
+  <p>压缩发生在 S 盒：<strong>6 bit 进、4 bit 出</strong>；八个盒子一起就是 <strong>48 bit 进、32 bit 出</strong>。置换本身不改长度。</p>
+
+  <h3>自编小例子（不是官方 S 盒，也不是真题数字）</h3>
+  <p>
+    假设只有一个玩具盒。输入 6 bit 写成 <strong>1 0 1 1 0 0</strong>。
+    首末两位是 <strong>1</strong> 和 <strong>0</strong>，拼成行号 <strong>10</strong>（十进制 2）。
+    中间四位是 <strong>0110</strong>，当作列号（十进制 6）。
+  </p>
+  <table>
+    <tr><th>行 \ 列</th><th>0100</th><th>0101</th><th>0110</th><th>0111</th></tr>
+    <tr><td>00</td><td>1</td><td>7</td><td>4</td><td>2</td></tr>
+    <tr><td>01</td><td>9</td><td>3</td><td>8</td><td>15</td></tr>
+    <tr><td>10</td><td>5</td><td>12</td><td><strong>13</strong></td><td>0</td></tr>
+    <tr><td>11</td><td>11</td><td>6</td><td>10</td><td>14</td></tr>
+  </table>
+  <p>
+    行 10、列 0110 查到 <strong>13</strong>。13 的四位二进制是 <strong>1101</strong>。
+    所以这一盒是 6 bit 进来、4 bit 出去。八个这样的盒子并排，48 bit 收成 32 bit。
+    这张表的数字是为了演示查法临时写的，不能拿去对官方 S1–S8。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>DES 的 S 盒进出</strong>）：<strong>置换只换位置不改长短，S 盒六比特进、四比特出，八个盒子把四十八比特收成三十二比特</strong>。
+  </div>
+
+  <h2>六、动手练一练</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 攻击者只窃听通信，不修改数据，也不中断服务。这属于？</div>
+    <div class="opts">
+      <button class="opt">A. 主动攻击，特征是插入或篡改数据</button>
+      <button class="opt" data-correct="true">B. 被动攻击，特征是获取信息而不改</button>
+      <button class="opt">C. 拒绝服务，特征是耗尽系统可用性</button>
+      <button class="opt">D. 网络欺骗，特征是伪装身份或路由</button>
+    </div>
+    <div class="explain">答案 B。被动攻击获取信息、不改数据。篡改、重放、打断服务才是主动攻击。不要和第 10 课的主动防御混为一谈。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 先建立正常行为基线，偏离基线就告警。这是哪种检测？</div>
+    <div class="opts">
+      <button class="opt">A. 误用检测，拿流量匹配已知特征</button>
+      <button class="opt" data-correct="true">B. 异常检测，看行为是否偏离基线</button>
+      <button class="opt">C. 漏洞扫描，专门去查找未装补丁</button>
+      <button class="opt">D. 协议分析，只判断报文格式对错</button>
+    </div>
+    <div class="explain">答案 B。特征、签名、已知模式 → 误用检测。基线、轮廓、偏离 → 异常检测。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 文件属主自己决定，并把读权限转授给同事。这是？</div>
+    <div class="opts">
+      <button class="opt">A. 强制访问控制，系统按密级标签管</button>
+      <button class="opt" data-correct="true">B. 自主访问控制，主人定权且可转授</button>
+      <button class="opt">C. 基于角色控制，必须先赋岗位角色</button>
+      <button class="opt">D. 基于属性控制，随时间地点而变化</button>
+    </div>
+    <div class="explain">答案 B。主人自己定、可转授 = DAC。系统定密级、用户改不了 = MAC。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · IPSec 里负责加密的协议，以及 IPSec 所处的层，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. AH 负责加密，工作在应用层之上</button>
+      <button class="opt" data-correct="true">B. ESP 负责加密，IPSec 在网络层</button>
+      <button class="opt">C. TLS 负责加密，IPSec 只做路由</button>
+      <button class="opt">D. IKE 负责加密，工作在传输层</button>
+    </div>
+    <div class="explain">答案 B。AH 验真不保密，加密找 ESP。IPSec 在网络层；TLS 夹在传输层和应用之间，常见于网页。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 在公网上为分部和总部建立加密隧道。这件事的目的是？</div>
+    <div class="opts">
+      <button class="opt">A. 网络欺骗，用来伪装地址或路由</button>
+      <button class="opt" data-correct="true">B. 虚拟专用网，用来打通加密信道</button>
+      <button class="opt">C. 被动窃听，用来复制别人的流量</button>
+      <button class="opt">D. 蜜罐诱捕，用来暴露虚假的服务</button>
+    </div>
+    <div class="explain">答案 B。VPN 的目的是加密隧道。伪装身份或路由才是网络欺骗。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 公钥基础设施里，负责审核身份但不签发证书的是？</div>
+    <div class="opts">
+      <button class="opt">A. 认证中心 CA，负责签发和吊销</button>
+      <button class="opt" data-correct="true">B. 注册机构 RA，只审核并不签发</button>
+      <button class="opt">C. 证书吊销列表，用来公布作废证书</button>
+      <button class="opt">D. 证书库目录，用来公开发布证书</button>
+    </div>
+    <div class="explain">答案 B。CA 签发、管理、吊销。RA 只审核。PKI 组成还要加上证书库和 CRL，不能只答 CA。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · SM3 的输出长度，以及 DES 一个 S 盒的进出比特，正确的是？</div>
+    <div class="opts">
+      <button class="opt">A. SM3 输出一百二十八位，S 盒四进六出</button>
+      <button class="opt" data-correct="true">B. SM3 输出二百五十六位，S 盒六进四出</button>
+      <button class="opt">C. SM3 输出五百一十二位，S 盒八进八出</button>
+      <button class="opt">D. SM3 输出一百六十四位，S 盒四进八出</button>
+    </div>
+    <div class="explain">答案 B。GB/T 32905：SM3 杂凑值 256 bit。FIPS 46-3：每个 S 盒 6 bit 进、4 bit 出。DES 分组是 64 bit，有效密钥是 56 bit，不要和 S 盒的进出比特搞混。</div>
+  </div>
+
+  <h2>七、今日任务（约 40 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>过对比表（12 分钟）</strong>：打开
+      <a href="../reference/compare-params-cheatsheet.html">对比与参数速查卡</a>，
+      遮住右列，口述六对对比。卡壳就回本课对应锚点。</li>
+    <li><strong>抄参数（8 分钟）</strong>：把 SM3 256、DES 56+8 / 分组 64、3DES 112 或 168、SET 的 56 与 1024（并记住这是旧规范口径）、三段私有地址、八个端口、BGP 四类报文，抄到纸上。数字旁写上表里的依据，避免和别的算法串台。</li>
+    <li><strong>手算两遍（10 分钟）</strong>：不看笔记，用自己的话说 CBC 里 IV 和上一块密文各在哪一步；再用本课玩具输入 <strong>101100</strong> 说出「行 10、列 0110、输出 4 bit」。不要去对官方真题里的 S 盒表。</li>
+    <li><strong>错题本开栏（10 分钟）</strong>：按
+      <a href="../learning-records/error-book/README.md">五类错题本</a>
+      把 2019 上午你还记得的错题补进对应 md。每行填齐五栏，错因三选一。不记得题干就留空，不要编题号。记录页：
+      <a href="../learning-records/0040-2019-morning-41-75.md">0040</a>。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——
+      ① 主动攻击与被动攻击：被动只偷听不改数据，主动会篡改、重放或打断服务；
+      ② 异常检测与误用检测：特征对已知是误用，基线看偏离是异常；
+      ③ 自主与强制访问控制：主人自己定、可转授是自主访问控制；系统定密级、用户改不了是强制访问控制；
+      ④ SSL/TLS 与 IPSec：TLS 夹在传输层和应用之间，常见于网页；IPSec 在网络层做隧道，验真找 AH、加密找 ESP；
+      ⑤ VPN 与网络欺骗：虚拟专用网是去建加密隧道，网络欺骗是去伪装身份或路由；
+      ⑥ CA 功能与 PKI 组成：认证中心负责签发和吊销，注册机构只审核；公钥基础设施还要带上证书库和吊销列表；
+      ⑦ 国密 SM3 输出长度：杂凑值按国标是二百五十六比特，不要套到别的 SM 算法上；
+      ⑧ DES 密钥与分组：分组六十四比特，密钥字里五十六比特干活、八比特做校验；
+      ⑨ 分组模式怎么缠：ECB 各块单独加密；CBC 先和前文密文异或再加密；CFB 吃前文密文，OFB 吃自己的输出，CTR 吃计数器；
+      ⑩ DES 的 S 盒进出：置换只换位置不改长短，S 盒六比特进、四比特出。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>成绩事实：2019 上午自报 41/75（错 34，约 55%）。单题清单尚未补录，见
+      <a href="../learning-records/0040-2019-morning-41-75.md">learning-records/0040</a></li>
+    <li>已学对比：<a href="./0006-ids-ips.html">第 6 课</a> 误用/异常 ·
+      <a href="./0025-access-control-models.html">第 25 课</a> DAC/MAC ·
+      <a href="./0004-pki-https.html">第 4 课</a> CA/RA ·
+      <a href="./0005-firewall-vpn.html">第 5 课</a> IPSec AH/ESP</li>
+    <li>SM3 输出长度：GB/T 32905—2016（站点资源表已列题录）</li>
+    <li>DES 分组、56+8 校验位、S 盒 6 进 4 出：FIPS 46-3</li>
+    <li>SET 的 56 位 DES 与 1024 位 RSA：SET 规范设计口径（RSA 1997 SET FAQ），软考沿用；不是现行推荐</li>
+    <li>私有地址：RFC 1918。BGP 四类报文：RFC 4271</li>
+    <li>速查：<a href="../reference/compare-params-cheatsheet.html">本课速查卡</a> ·
+      <a href="../reference/mnemonics.html#lesson-30">第 30 课口诀</a> ·
+      <a href="../reference/mock-exam-cheatsheet.html">第 29 课错题五栏</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「CBC 和 CFB 谁把密文送回去」「172.16 到哪一段为止」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「<strong>第30课学完了</strong>」，我会逐题进行结业测。</p>
+    <p>下一课入口：先把本课对比表和参数背熟，再按
+      <a href="../learning-records/error-book/README.md">五类错题本</a>
+      补录 2019 上午错题，然后做对话抽检。不要把官方原题粘进仓库。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
