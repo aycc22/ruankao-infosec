@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>口诀速查 · 第 1-29 课汇总</title>
+<title>口诀速查 · 第 1-30 课汇总</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
     <div class="lesson-no">Reference · 记忆卡</div>
-    <h1>一句话口诀速查（第 1-29 课汇总）</h1>
-    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-09-20</p>
+    <h1>一句话口诀速查（第 1-30 课汇总）</h1>
+    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-10-19</p>
   </header>
 
   <div class="callout ok">
@@ -364,6 +364,23 @@
     <li><strong>冲刺薄弱清单加钉</strong>：密钥方向、等保测评不等于风险评估、日志半年先引网安法、三法分工、行三人列俩货、DMZ 在屏蔽子网、iptables 默认 DROP 再放行二十二八十与四百四十三、关基在等保之上</li>
   </ul>
 
+  <h2 id="lesson-30">第 30 课 · 2019 上午复盘</h2>
+  <ul>
+    <li><strong>错因三标签</strong>：概念放反贴混淆，数字端口贴参数，看错主语或否定词就贴审题</li>
+    <li><strong>主动攻击与被动攻击</strong>：被动只偷听不改数据，主动会篡改、重放或打断服务</li>
+    <li><strong>异常检测与误用检测</strong>：特征对已知是误用，基线看偏离是异常</li>
+    <li><strong>自主与强制访问控制</strong>：主人自己定、可转授是自主访问控制；系统定密级、用户改不了是强制访问控制</li>
+    <li><strong>SSL/TLS 与 IPSec</strong>：TLS 夹在传输层和应用之间，常见于网页；IPSec 在网络层做隧道，验真找 AH、加密找 ESP</li>
+    <li><strong>VPN 与网络欺骗</strong>：虚拟专用网是去建加密隧道，网络欺骗是去伪装身份或路由</li>
+    <li><strong>CA 功能与 PKI 组成</strong>：认证中心负责签发和吊销，注册机构只审核；公钥基础设施还要带上证书库和吊销列表</li>
+    <li><strong>国密 SM3 输出长度</strong>：杂凑值按国标是二百五十六比特，不要套到别的 SM 算法上</li>
+    <li><strong>DES 密钥与分组</strong>：分组六十四比特，密钥字里五十六比特干活、八比特做校验</li>
+    <li><strong>私有地址三段</strong>：十段整段、一百七十二从十六到三十一、一百九十二点一六八</li>
+    <li><strong>BGP 四类报文</strong>：Open 用来协商，Update 用来通告或撤销，Notification 报错就拆连接，Keepalive 用来保活</li>
+    <li><strong>分组模式怎么缠</strong>：ECB 各块单独加密；CBC 先和前文密文异或再加密；CFB、OFB、CTR 都是先做出密钥流再异或明文，CFB 吃前文密文，OFB 吃自己的输出，CTR 吃计数器</li>
+    <li><strong>DES 的 S 盒进出</strong>：置换只换位置不改长短，S 盒六比特进、四比特出，八个盒子把四十八比特收成三十二比特</li>
+  </ul>
+
   <h2>答题套路（下午卷通用）</h2>
   <ul>
     <li><strong>方案设计题写法</strong>：需求 → 技术 → 理由，每条一行，别空着</li>
@@ -373,7 +390,7 @@
   </ul>
 
   <footer>
-    本表汇总第 1-29 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
+    本表汇总第 1-30 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
     <a href="./attacks-glossary.html">攻击词汇表</a> · <a href="./crypto-cheatsheet.html">密码学速查</a> ·
     <a href="./pki-https-cheatsheet.html">PKI 速查</a> · <a href="./firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a> ·
     <a href="./ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="./vulnerability-cheatsheet.html">漏洞补丁速查</a> ·
@@ -396,6 +413,7 @@
     <a href="./cyber-laws-cheatsheet.html">三法速查</a> ·
     <a href="./iptables-topology-cheatsheet.html">iptables/拓扑速查</a> ·
     <a href="./mock-exam-cheatsheet.html">计时模考速查</a> ·
+    <a href="./compare-params-cheatsheet.html">对比与参数速查</a> ·
     <a href="../question-bank/index.html">自编题库</a>
   </footer>
 </main>

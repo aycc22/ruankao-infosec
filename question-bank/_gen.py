@@ -800,7 +800,7 @@ def build() -> str:
   <h2>做完之后</h2>
   <ul>
     <li>错题对照 <a href="../reference/mnemonics.html">口诀速查</a>，尤其是密钥方向、DMZ、木马英文、等保≠风险。</li>
-    <li>下一课：<a href="../lessons/0025-access-control-models.html">第 25 课 访问控制与安全模型</a>。</li>
+    <li>下一课：<a href="../lessons/0030-2019-morning-recovery.html">第 30 课 2019 上午复盘</a>。</li>
     <li>返回 <a href="./index.html">题库首页</a> · <a href="../index.html">课程首页</a>。</li>
   </ul>
 

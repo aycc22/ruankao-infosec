@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 易混对比与高频参数</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 速查文档 · 可打印</div>
+    <h1>易混对比与高频参数</h1>
+    <p class="meta">第 30 课配套短表 · 不含官方真题原题 · 浏览器直接打印</p>
+  </header>
+
+  <p class="meta">
+    配套课程：<a href="../lessons/0030-2019-morning-recovery.html">第 30 课</a> ·
+    口诀：<a href="./mnemonics.html#lesson-30">#lesson-30</a> ·
+    错题本：<a href="../learning-records/error-book/README.md">五类模板</a>
+  </p>
+
+  <h2 id="active-passive">主动攻击 vs 被动攻击</h2>
+  <table>
+    <tr><th></th><th>被动攻击</th><th>主动攻击</th></tr>
+    <tr><td>行为</td><td>窃听、流量分析，不改数据</td><td>篡改、重放、伪造、中断</td></tr>
+    <tr><td>主要伤到</td><td>机密性</td><td>完整性、可用性</td></tr>
+  </table>
+  <p class="meta"><strong>主动攻击与被动攻击</strong>：被动只偷听不改数据，主动会篡改、重放或打断服务。</p>
+
+  <h2 id="anomaly-misuse">异常检测 vs 误用检测</h2>
+  <table>
+    <tr><th></th><th>误用检测</th><th>异常检测</th></tr>
+    <tr><td>依据</td><td>已知特征 / 签名</td><td>正常基线，偏离即告警</td></tr>
+    <tr><td>短板</td><td>不认识库外攻击</td><td>误报高</td></tr>
+  </table>
+  <p class="meta"><strong>异常检测与误用检测</strong>：特征对已知是误用，基线看偏离是异常。</p>
+
+  <h2 id="dac-mac">DAC vs MAC</h2>
+  <table>
+    <tr><th></th><th>DAC</th><th>MAC</th></tr>
+    <tr><td>谁定</td><td>主人自己定，可转授</td><td>系统定密级，用户改不了</td></tr>
+  </table>
+  <p class="meta"><strong>自主与强制访问控制</strong>：主人自己定、可转授是自主访问控制；系统定密级、用户改不了是强制访问控制。</p>
+
+  <h2 id="tls-ipsec">SSL/TLS vs IPSec</h2>
+  <table>
+    <tr><th></th><th>SSL/TLS</th><th>IPSec</th></tr>
+    <tr><td>层</td><td>传输层与应用之间</td><td>网络层</td></tr>
+    <tr><td>典型用途</td><td>HTTPS / 浏览器接入</td><td>站点隧道、全流量</td></tr>
+    <tr><td>一句</td><td>常见端口 TCP 443</td><td>AH 验真不保密，加密找 ESP</td></tr>
+  </table>
+  <p class="meta"><strong>SSL/TLS 与 IPSec</strong>：TLS 夹在传输层和应用之间，常见于网页；IPSec 在网络层做隧道，验真找 AH、加密找 ESP。</p>
+
+  <h2 id="vpn-spoof">VPN vs 网络欺骗</h2>
+  <table>
+    <tr><th></th><th>VPN</th><th>网络欺骗</th></tr>
+    <tr><td>目的</td><td>加密隧道，合法通信</td><td>伪装身份或路由</td></tr>
+  </table>
+  <p class="meta"><strong>VPN 与网络欺骗</strong>：虚拟专用网是去建加密隧道，网络欺骗是去伪装身份或路由。</p>
+
+  <h2 id="ca-pki">CA 功能 vs PKI 组成</h2>
+  <table>
+    <tr><th>名称</th><th>一句</th></tr>
+    <tr><td>CA</td><td>签发、管理、吊销证书</td></tr>
+    <tr><td>RA</td><td>审核身份，不签发</td></tr>
+    <tr><td>证书库</td><td>发布证书</td></tr>
+    <tr><td>CRL</td><td>吊销列表；OCSP 是在线查状态</td></tr>
+  </table>
+  <p class="meta"><strong>CA 功能与 PKI 组成</strong>：认证中心负责签发和吊销，注册机构只审核；公钥基础设施还要带上证书库和吊销列表。</p>
+
+  <h2 id="params">高频数字与参数</h2>
+  <table>
+    <tr><th>项</th><th>数字</th><th>标注</th></tr>
+    <tr><td>SM3</td><td>输出 256 bit</td><td>GB/T 32905—2016。不要套到其他 SM</td></tr>
+    <tr><td>DES</td><td>分组 64；有效密钥 56；另 8 bit 校验</td><td>FIPS 46-3</td></tr>
+    <tr><td>3DES</td><td>两钥有效 112；三钥有效 168</td><td>软考常见口径。含校验时常写成 128 / 192</td></tr>
+    <tr><td>SET</td><td>DES 56；RSA 1024；摘要 SHA-1</td><td>SET 规范设计口径，不是现行推荐</td></tr>
+    <tr><td>私有地址</td><td>10/8；172.16–172.31；192.168/16</td><td>RFC 1918</td></tr>
+    <tr><td>端口</td><td>22 80 443 53 25 110 143 3389</td><td>SSH HTTP HTTPS DNS SMTP POP3 IMAP 远程桌面</td></tr>
+    <tr><td>BGP</td><td>Open / Update / Notification / Keepalive</td><td>RFC 4271：协商；通告或撤销；报错关闭；保活</td></tr>
+  </table>
+  <p class="meta"><strong>国密 SM3 输出长度</strong>：杂凑值按国标是二百五十六比特，不要套到别的 SM 算法上。</p>
+  <p class="meta"><strong>DES 密钥与分组</strong>：分组六十四比特，密钥字里五十六比特干活、八比特做校验。</p>
+  <p class="meta"><strong>私有地址三段</strong>：十段整段、一百七十二从十六到三十一、一百九十二点一六八。</p>
+  <p class="meta"><strong>BGP 四类报文</strong>：Open 用来协商，Update 用来通告或撤销，Notification 报错就拆连接，Keepalive 用来保活。</p>
+
+  <h2 id="modes">分组模式（关系，不抄原题）</h2>
+  <table>
+    <tr><th>模式</th><th>密文怎么来</th></tr>
+    <tr><td>ECB</td><td>C = E(K, P)。无 IV</td></tr>
+    <tr><td>CBC</td><td>C = E(K, P XOR 上一块密文)。第一块用 IV</td></tr>
+    <tr><td>CFB</td><td>C = P XOR E(K, 上一块密文)。第一块用 IV</td></tr>
+    <tr><td>OFB</td><td>密钥流 = E(K, 上一轮密钥流)，C = P XOR 密钥流。起点是 IV</td></tr>
+    <tr><td>CTR</td><td>C = P XOR E(K, 计数器)</td></tr>
+  </table>
+  <p class="meta"><strong>分组模式怎么缠</strong>：ECB 各块单独加密；CBC 先和前文密文异或再加密；CFB、OFB、CTR 都是先做出密钥流再异或明文，CFB 吃前文密文，OFB 吃自己的输出，CTR 吃计数器。</p>
+
+  <h2 id="sbox">DES 的 S 盒</h2>
+  <ul>
+    <li>置换只换位置：64 仍是 64；扩展把右半 32 拉成 48，再与 48 bit 子密钥异或。</li>
+    <li>每个 S 盒：6 bit 进、4 bit 出。首末 2 bit 定行，中间 4 bit 定列。</li>
+    <li>八个盒子：48 bit 进、32 bit 出。</li>
+  </ul>
+  <p class="meta"><strong>DES 的 S 盒进出</strong>：置换只换位置不改长短，S 盒六比特进、四比特出，八个盒子把四十八比特收成三十二比特。</p>
+  <p>查表示例在第 30 课，用的是自编玩具表，不是官方 S 盒。</p>
+
+  <h2>错因三标签</h2>
+  <p>概念混淆 / 参数记忆 / 审题问题。五栏：题号、错选、正解、对应课或对比表锚点、口诀锚点。</p>
+  <p class="meta"><strong>错因三标签</strong>：概念放反贴混淆，数字端口贴参数，看错主语或否定词就贴审题。</p>
+
+  <footer>
+    <a href="../lessons/0030-2019-morning-recovery.html">第 30 课</a> ·
+    <a href="./mnemonics.html#lesson-30">口诀</a> ·
+    <a href="../learning-records/error-book/README.md">错题本</a> ·
+    <a href="./crypto-cheatsheet.html">密码学</a> ·
+    <a href="./pki-https-cheatsheet.html">PKI</a> ·
+    <a href="./firewall-vpn-cheatsheet.html">防火墙/VPN</a> ·
+    <a href="./ids-ips-cheatsheet.html">IDS/IPS</a>
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

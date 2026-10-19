@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0029-timed-mock-sprint.html',
-    label: '第 29 课',
-    title: '计时模考与错题回收'
+    file: '0030-2019-morning-recovery.html',
+    label: '第 30 课',
+    title: '2019 上午复盘'
   };
 
   function el(tag, className, html) {
