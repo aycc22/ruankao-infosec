@@ -9,5 +9,6 @@
   "language": "zh-CN",
   "entry": "index.html",
   "sprint": "sprint.html",
+  "iptablesAfternoon": "iptables-afternoon.html",
   "note": "题库拥有者是 GitHub 账号 aycc345。本目录托管在 aycc22/ruankao-infosec 课程站点内，便于 GitHub Pages 浏览；托管仓库账号不等于题库拥有者。"
 }

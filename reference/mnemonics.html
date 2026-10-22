@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>口诀速查 · 第 1-30 课汇总</title>
+<title>口诀速查 · 第 1-31 课汇总</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
     <div class="lesson-no">Reference · 记忆卡</div>
-    <h1>一句话口诀速查（第 1-30 课汇总）</h1>
-    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-10-19</p>
+    <h1>一句话口诀速查（第 1-31 课汇总）</h1>
+    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-10-22</p>
   </header>
 
   <div class="callout ok">
@@ -381,6 +381,20 @@
     <li><strong>DES 的 S 盒进出</strong>：置换只换位置不改长短，S 盒六比特进、四比特出，八个盒子把四十八比特收成三十二比特</li>
   </ul>
 
+  <h2 id="lesson-31">第 31 课 · 下午卷 iptables 专练</h2>
+  <ul>
+    <li><strong>下午卷先选链</strong>：包要进这台机器自己的服务，就写 INPUT；包只是从这台网关转发到别的网段，就写 FORWARD；本机进程自己发出的包，才写 OUTPUT</li>
+    <li><strong>默认策略和追加规则</strong>：要改整条链的兜底，用 -P 写成 DROP 或 ACCEPT；要在链尾加一条具体规则，用 -A</li>
+    <li><strong>匹配参数怎么读</strong>：-s 看来源地址，-d 看目的地址，-p 看协议，--dport 看目的端口，-i 看进来的网卡，-o 看出去的网卡，-j 写动作</li>
+    <li><strong>接口能写在哪条链</strong>：进来的网卡 -i 用在 INPUT、FORWARD 和 PREROUTING；出去的网卡 -o 用在 FORWARD、OUTPUT 和 POSTROUTING</li>
+    <li><strong>连接状态怎么放行</strong>：先放行已经建立和相关的回程，再按端口放行新连接；其余交给默认 DROP（字头：先回程再新建）</li>
+    <li><strong>读规则看第一条命中</strong>：链上从上往下，第一条命中并决定去留的规则生效，写在它后面的相反动作不会再生效</li>
+    <li><strong>边界墙放行网站</strong>：转发默认先拒绝；外网进来、隔离区出去、对准网站地址和端口的新连接才放行；外网直连内网没有放行规则，就由默认拒绝兜住</li>
+    <li><strong>本机只开 SSH 和 HTTPS</strong>：入站默认先拒绝；回环和已建立的回程先放行；新连接只放 TCP 的二十二和四百四十三</li>
+    <li><strong>NAT 填空只辨认</strong>：改目的地址用 DNAT，写在 nat 表的 PREROUTING；改源地址用 SNAT 或 MASQUERADE，写在 nat 表的 POSTROUTING；出口地址会变时用 MASQUERADE</li>
+    <li><strong>第 31 课易错</strong>：本机服务写成 FORWARD；网关转发写成 INPUT；默认拒绝写成 -A 追加 DROP；在 INPUT 上写 -o；先写一条匹配全部的 DROP 再追加放行；MASQUERADE 填进 PREROUTING；DNAT 填进 filter 表</li>
+  </ul>
+
   <h2>答题套路（下午卷通用）</h2>
   <ul>
     <li><strong>方案设计题写法</strong>：需求 → 技术 → 理由，每条一行，别空着</li>
@@ -390,7 +404,7 @@
   </ul>
 
   <footer>
-    本表汇总第 1-30 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
+    本表汇总第 1-31 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
     <a href="./attacks-glossary.html">攻击词汇表</a> · <a href="./crypto-cheatsheet.html">密码学速查</a> ·
     <a href="./pki-https-cheatsheet.html">PKI 速查</a> · <a href="./firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a> ·
     <a href="./ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="./vulnerability-cheatsheet.html">漏洞补丁速查</a> ·

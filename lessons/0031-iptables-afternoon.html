@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 31 课 · 下午卷 iptables 专练</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 31 · 约 18 分钟 · 下午卷加深</div>
+    <h1>下午卷 iptables 专练：读规则、选链、写一条</h1>
+    <p class="meta">本课目标：读一条规则说出效果；按场景选 INPUT 或 FORWARD 并写出一条；分清默认策略 <code>-P</code> 与追加 <code>-A</code>；会用 <code>-s/-d/-p/--dport/-i/-o/-j</code> 和 NEW/ESTABLISHED；NAT 只做到填空辨认。设备名与 22/80/443 入门模板回看第 28 课，这里不重讲。</p>
+  </header>
+
+  <h2>开场：第 28 课会抄，本课要会改</h2>
+  <p>
+    <a href="./0028-iptables-topology.html">第 28 课</a>已经能默写
+    <code>iptables -P INPUT DROP</code>，再追加放行 22、80、443。
+    下午卷下一步经常是：给一段已有规则让你判效果，或给一句场景让你只写一条，或在空里填链名、接口、状态、NAT 目标。
+    拓扑上「网站进 DMZ、库进内网」仍用第 28 课那句，本课把命令写到网卡和地址上。
+  </p>
+  <div class="callout warn">
+    只练<strong>防御向填空</strong>：默认拒绝、按地址和端口放行、回程放行、NAT 名词对链。
+    不讲绕过防火墙。题目都是自编场景，不是官方原题。
+  </div>
+
+  <h2>零、先钉一处旧错</h2>
+  <p>冲刺抽检里出现过：默认拒绝误写成追加一条 DROP。先做这一题，再进入新写法。</p>
+  <div class="quiz">
+    <div class="q">R1 · 要把 INPUT 的兜底改成拒绝，下午卷应填哪一条？</div>
+    <div class="opts">
+      <button class="opt">A. <code>iptables -A INPUT -j DROP</code>（链尾追加一条）</button>
+      <button class="opt" data-correct="true">B. <code>iptables -P INPUT DROP</code>（设置默认策略）</button>
+      <button class="opt">C. <code>iptables -F INPUT DROP</code>（清空链并拒绝）</button>
+      <button class="opt">D. <code>iptables -P INPUT REJECT</code>（策略写回包拒绝）</button>
+    </div>
+    <div class="explain">答案 B。<code>-P</code> 改的是整条内建链的兜底，目标只能是 ACCEPT 或 DROP。<code>-A … -j DROP</code> 只是链上一条规则；<code>-F</code> 是清空规则；策略不能写成 REJECT。见 iptables(8) 的 <code>-P</code>。</div>
+  </div>
+  <div class="callout ok">
+    口诀（<strong>默认策略和追加规则</strong>）：<strong>要改整条链的兜底，用 -P 写成 DROP 或 ACCEPT；要在链尾加一条具体规则，用 -A</strong>。
+  </div>
+
+  <h2>一、先选链，再看第一条命中</h2>
+  <table>
+    <tr><th>题干在说什么</th><th>写这条链</th><th>依据（iptables(8) filter）</th></tr>
+    <tr>
+      <td>别人访问<strong>这台机器上</strong>的 SSH / 网站</td>
+      <td><strong>INPUT</strong></td>
+      <td>目的是本机套接字</td>
+    </tr>
+    <tr>
+      <td>这台 Linux <strong>当网关</strong>，包转到 DMZ 或内网</td>
+      <td><strong>FORWARD</strong></td>
+      <td>包被路由穿过本机</td>
+    </tr>
+    <tr>
+      <td>限制<strong>本机进程自己发出</strong>的包</td>
+      <td><strong>OUTPUT</strong></td>
+      <td>本机产生的包</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>下午卷先选链</strong>）：<strong>包要进这台机器自己的服务，就写 INPUT；包只是从这台网关转发到别的网段，就写 FORWARD；本机进程自己发出的包，才写 OUTPUT</strong>。
+  </div>
+  <p>
+    链上从上往下匹配。带 <code>-j ACCEPT</code>、<code>-j DROP</code> 或 <code>-j REJECT</code> 的规则一旦命中，这个包的去留就定了，写在后面的相反动作不会再生效。
+    链上的规则都没命中，才落到 <code>-P</code> 的兜底。
+  </p>
+  <pre class="topo-ascii">iptables -P INPUT ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT</pre>
+  <p>上面三条里，SSH 会被丢掉：第一条 DROP 先命中，第二条 ACCEPT 轮不到。默认策略虽是 ACCEPT，也救不了已经被 DROP 的包。</p>
+  <div class="callout ok">
+    口诀（<strong>读规则看第一条命中</strong>）：<strong>链上从上往下，第一条命中并决定去留的规则生效，写在它后面的相反动作不会再生效</strong>。
+  </div>
+  <p class="meta">
+    依据：
+    <a href="https://man7.org/linux/man-pages/man8/iptables.8.html">iptables(8)</a>
+    filter 三链；<code>-j</code> 的内建目标会立刻决定包的命运；内建链走到末尾才由策略接手。
+    增删改查的 A/I/D/L/F 仍用<a href="./0028-iptables-topology.html">第 28 课</a>，本课不重列。
+  </p>
+
+  <h2>二、一条规则里的匹配项</h2>
+  <table>
+    <tr><th>参数</th><th>下午卷读法</th><th>书写提醒</th></tr>
+    <tr><td><code>-s</code></td><td>来源地址</td><td>只允许某台管理机时才写</td></tr>
+    <tr><td><code>-d</code></td><td>目的地址</td><td>对准 DMZ 里那台网站</td></tr>
+    <tr><td><code>-p</code></td><td>协议，常见 tcp</td><td>写 <code>--dport</code> 前先写协议</td></tr>
+    <tr><td><code>--dport</code></td><td>目的端口</td><td>入站服务看目的端口</td></tr>
+    <tr><td><code>-i</code></td><td>包进来的网卡</td><td>INPUT、FORWARD、PREROUTING</td></tr>
+    <tr><td><code>-o</code></td><td>包出去的网卡</td><td>FORWARD、OUTPUT、POSTROUTING</td></tr>
+    <tr><td><code>-j</code></td><td>动作</td><td>ACCEPT / DROP / REJECT，或 NAT 目标</td></tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>匹配参数怎么读</strong>）：<strong>-s 看来源地址，-d 看目的地址，-p 看协议，--dport 看目的端口，-i 看进来的网卡，-o 看出去的网卡，-j 写动作</strong>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>接口能写在哪条链</strong>）：<strong>进来的网卡 -i 用在 INPUT、FORWARD 和 PREROUTING；出去的网卡 -o 用在 FORWARD、OUTPUT 和 POSTROUTING</strong>。
+  </div>
+  <div class="callout warn">
+    易错：在 INPUT 上写 <code>-o</code>，或在 OUTPUT 上写 <code>-i</code>。FORWARD 上两个都能写：<code>-i</code> 是从哪块网卡进来，<code>-o</code> 是转到哪块网卡出去。题干给的网卡名照抄，不要改成自己机器上的 ens 名称。
+  </div>
+  <p class="meta">
+    依据：iptables(8) 的 <code>-s</code>、<code>-d</code>、<code>-i</code>、<code>-o</code>。
+    <code>--dport</code> 见
+    <a href="https://man7.org/linux/man-pages/man8/iptables-extensions.8.html">iptables-extensions(8)</a>。
+  </p>
+
+  <h2>三、NEW 与 ESTABLISHED：回程要单独放行</h2>
+  <p>
+    只写「目的端口 80 放行」时，网站的<strong>请求</strong>能过去，<strong>回包</strong>的目的端口往往不是 80（回包看的是客户端那个临时端口）。
+    白名单若默认 DROP，回程对不上 <code>--dport 80</code>，连接就建不起来。状态匹配用来放行回程。
+  </p>
+  <table>
+    <tr><th>状态</th><th>手册含义（conntrack / state）</th><th>下午卷怎么用</th></tr>
+    <tr>
+      <td><strong>ESTABLISHED</strong></td>
+      <td>这条连接已经双向看到过包</td>
+      <td>回程放行写它</td>
+    </tr>
+    <tr>
+      <td><strong>RELATED</strong></td>
+      <td>新连接，但挂在已有连接上（如 ICMP 差错）</td>
+      <td>和 ESTABLISHED 写在同一条</td>
+    </tr>
+    <tr>
+      <td><strong>NEW</strong></td>
+      <td>刚开始，还没双向看到包</td>
+      <td>只对题干允许的端口写 NEW</td>
+    </tr>
+    <tr>
+      <td><strong>INVALID</strong></td>
+      <td>对不上任何已知连接</td>
+      <td>本课不要求单独写</td>
+    </tr>
+  </table>
+  <div class="callout ok">
+    口诀（<strong>连接状态怎么放行</strong>）：<strong>先放行已经建立和相关的回程，再按端口放行新连接；其余交给默认 DROP</strong>（字头：先回程再新建）。
+  </div>
+  <p class="meta">
+    写法：<code>-m state --state ESTABLISHED,RELATED</code>。
+    state 模块认 INVALID、ESTABLISHED、NEW、RELATED、UNTRACKED，含义见 iptables-extensions(8) 的 conntrack 一节。
+    考试写 <code>-m conntrack --ctstate</code> 也是同一类状态，题干用哪个模块就抄哪个。
+  </p>
+
+  <h2>四、迷你案例：边界墙放行 DMZ 网站</h2>
+  <p>
+    自编场景。某社区卫生服务中心用一台 Linux 当边界防火墙：<code>eth0</code> 接外网，<code>eth1</code> 接 DMZ，网站是 <code>192.168.10.8</code>，只开放 TCP 80；<code>eth2</code> 接内网 <code>192.168.20.0/24</code>，就诊库不对外。
+    包是穿过防火墙转到网站，链用 <strong>FORWARD</strong>。
+  </p>
+  <pre class="topo-ascii">iptables -P FORWARD DROP
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth1 -p tcp -d 192.168.10.8 --dport 80 -m state --state NEW -j ACCEPT</pre>
+  <p>
+    外网到内网没有对应的 ACCEPT，走到链尾由 <code>-P FORWARD DROP</code> 兜住。
+    题干若要求「写明禁止直连」，把下面这条<strong>追加在放行之后</strong>：
+  </p>
+  <pre class="topo-ascii">iptables -A FORWARD -i eth0 -o eth2 -j DROP</pre>
+  <div class="callout warn">
+    这条明示 DROP 不要用 <code>-I</code> 插到链头。插到最前会先命中，后面放行 80 的规则轮不到。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>边界墙放行网站</strong>）：<strong>转发默认先拒绝；外网进来、隔离区出去、对准网站地址和端口的新连接才放行；外网直连内网没有放行规则，就由默认拒绝兜住</strong>。
+  </div>
+
+  <h2>五、迷你案例：本机只开 SSH 和 HTTPS</h2>
+  <p>
+    另一台机器是门户自己，题干说「只允许远程管理和 HTTPS」。包的目的是这台机器上的服务，链用 <strong>INPUT</strong>。
+    第 28 课题干若给了 80 就写 80；本题干没有 80，放行名单里就不出现 80。
+  </p>
+  <pre class="topo-ascii">iptables -P INPUT DROP
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 22,443 -m state --state NEW -j ACCEPT</pre>
+  <p>
+    <code>-i lo</code> 放行环回接口进来的包，本机进程互访才不会被默认 DROP 挡住。
+    22 与 443 也可以拆成两条 <code>--dport</code>，和 multiport 二选一，按题干空格抄。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>本机只开 SSH 和 HTTPS</strong>）：<strong>入站默认先拒绝；回环和已建立的回程先放行；新连接只放 TCP 的二十二和四百四十三</strong>。
+  </div>
+
+  <h2>六、NAT 只做到填空辨认</h2>
+  <p>下午卷若只留一个空，先认「改的是源还是目的」，再填表和链。本课不要求默写整套地址转换。</p>
+  <table>
+    <tr><th>看到的要求</th><th>填空</th><th>手册位置</th></tr>
+    <tr>
+      <td>进来的包，<strong>目的地址</strong>要改到内网或 DMZ 某台机</td>
+      <td>nat 表 <strong>PREROUTING</strong>，<code>-j DNAT</code></td>
+      <td>DNAT 用于 PREROUTING、OUTPUT</td>
+    </tr>
+    <tr>
+      <td>离开的包，<strong>源地址</strong>改成固定公网地址</td>
+      <td>nat 表 <strong>POSTROUTING</strong>，<code>-j SNAT</code></td>
+      <td>固定地址用 SNAT，不用 MASQUERADE</td>
+    </tr>
+    <tr>
+      <td>出口地址会变（拨号、DHCP）</td>
+      <td>nat 表 <strong>POSTROUTING</strong>，<code>-j MASQUERADE</code></td>
+      <td>MASQUERADE 只在 POSTROUTING</td>
+    </tr>
+  </table>
+  <pre class="topo-ascii"># 认得出即可：改目的
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 192.168.10.8:80
+# 认得出即可：出口地址会变，改源
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</pre>
+  <div class="callout ok">
+    口诀（<strong>NAT 填空只辨认</strong>）：<strong>改目的地址用 DNAT，写在 nat 表的 PREROUTING；改源地址用 SNAT 或 MASQUERADE，写在 nat 表的 POSTROUTING；出口地址会变时用 MASQUERADE</strong>。
+  </div>
+  <div class="callout info">
+    DNAT 只改地址。改完之后包若要转到 DMZ，filter 的 FORWARD 仍要有放行，两处空都要填。
+    现行手册里 SNAT 也能出现在 nat 的 INPUT（内核 2.6.36 起）；下午卷看到「包要离开本机、改源地址」，优先填 POSTROUTING。
+  </div>
+  <div class="callout warn">
+    口诀（<strong>第 31 课易错</strong>）：<strong>本机服务写成 FORWARD；网关转发写成 INPUT；默认拒绝写成 -A 追加 DROP；在 INPUT 上写 -o；先写一条匹配全部的 DROP 再追加放行；MASQUERADE 填进 PREROUTING；DNAT 填进 filter 表</strong>。
+  </div>
+  <p class="meta">
+    依据：iptables-extensions(8) 的 DNAT、SNAT、MASQUERADE 三节；iptables(8) 的 nat 表四条内建链。
+  </p>
+
+  <h2>七、动手练一练</h2>
+
+  <div class="quiz">
+    <div class="q">Q1 · 外网访问 DMZ 网站，包只路过这台 Linux 网关。规则应写在？</div>
+    <div class="opts">
+      <button class="opt">A. filter 表 INPUT，端口属于入站服务</button>
+      <button class="opt" data-correct="true">B. filter 表 FORWARD，数据包正在被转发</button>
+      <button class="opt">C. filter 表 OUTPUT，回包由本机进程生成</button>
+      <button class="opt">D. nat 表 POSTROUTING，此处要改目的地址</button>
+    </div>
+    <div class="explain">答案 B。目的不是防火墙自己的套接字，是转发到 DMZ，所以写 filter 的 FORWARD。改目的地址才用 nat，而且那是 PREROUTING 上的 DNAT，不是这条过滤规则。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q2 · 策略为 <code>-P INPUT DROP</code>。规则是 <code>-A INPUT -p tcp -s 10.8.0.5 --dport 22 -j ACCEPT</code>。效果是？</div>
+    <div class="opts">
+      <button class="opt">A. 任意来源都能访问本机上的全部 TCP 端口</button>
+      <button class="opt" data-correct="true">B. 只有 10.8.0.5 能访问本机的 TCP 22</button>
+      <button class="opt">C. 来自 10.8.0.5 的流量会被转发进内网</button>
+      <button class="opt">D. 本机向外主动连接 22 时会改写源地址</button>
+    </div>
+    <div class="explain">答案 B。链是 INPUT，管的是进本机的包；<code>-s</code> 限制来源；<code>--dport 22</code> 只放行 SSH。其余入站没命中，由默认 DROP 兜住。转发看 FORWARD，改源地址看 nat。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q3 · 外网网卡 eth0 进来、转到内网网卡 eth2 的包要明确丢掉。哪条对？</div>
+    <div class="opts">
+      <button class="opt">A. <code>iptables -A INPUT -o eth0 -i eth2 -j DROP</code></button>
+      <button class="opt" data-correct="true">B. <code>iptables -A FORWARD -i eth0 -o eth2 -j DROP</code></button>
+      <button class="opt">C. <code>iptables -A OUTPUT -i eth2 -o eth0 -j DROP</code></button>
+      <button class="opt">D. <code>iptables -A FORWARD -o eth0 -i eth2 -j DROP</code></button>
+    </div>
+    <div class="explain">答案 B。路过转发用 FORWARD；<code>-i eth0</code> 是从外网进来，<code>-o eth2</code> 是转到内网出去。INPUT 不能写 <code>-o</code>，OUTPUT 不能写 <code>-i</code>。D 把进出网卡写反了。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q4 · 本机白名单里，已建立连接的回包应先写哪一条？</div>
+    <div class="opts">
+      <button class="opt">A. <code>iptables -A INPUT -m state --state NEW,INVALID -j ACCEPT</code></button>
+      <button class="opt" data-correct="true">B. <code>iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</code></button>
+      <button class="opt">C. <code>iptables -A FORWARD -m state --state INVALID,NEW -j DNAT</code></button>
+      <button class="opt">D. <code>iptables -t nat -A PREROUTING -m state --state NEW -j MASQUERADE</code></button>
+    </div>
+    <div class="explain">答案 B。ESTABLISHED 表示连接已经双向看到包，用来放行回程；RELATED 一并写上。NEW 是新连接，要配具体端口。DNAT、MASQUERADE 是 nat 目标，不是这条回程放行。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q5 · 策略仍是 ACCEPT。先追加 <code>-A INPUT -p tcp --dport 22 -j DROP</code>，再追加同端口的 <code>-j ACCEPT</code>。SSH 会怎样？</div>
+    <div class="opts">
+      <button class="opt">A. 后写的 ACCEPT 覆盖前面，SSH 可以连上</button>
+      <button class="opt" data-correct="true">B. 先写的 DROP 已经命中，SSH 被丢弃</button>
+      <button class="opt">C. 两条互相抵消，改由 FORWARD 链处理</button>
+      <button class="opt">D. 策略是 ACCEPT，所以两条规则都不看</button>
+    </div>
+    <div class="explain">答案 B。规则是 <code>-A INPUT -p tcp --dport 22 -j DROP</code> 在前，同端口 ACCEPT 在后。第一条命中后包已经丢掉，后面的 ACCEPT 不会再生效。策略只处理整条链都没命中的包。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q6 · 出口公网地址由 DHCP 分配、会变化。内网上网改写源地址，应辨认为？</div>
+    <div class="opts">
+      <button class="opt">A. 写在 filter 表 INPUT 链，动作填 DNAT</button>
+      <button class="opt">B. 写在 nat 表 PREROUTING 链，动作填 DNAT</button>
+      <button class="opt" data-correct="true">C. 写在 nat 表 POSTROUTING 链，动作填 MASQUERADE</button>
+      <button class="opt">D. 写在 filter 表 FORWARD 链，动作填 REJECT</button>
+    </div>
+    <div class="explain">答案 C。改的是离开本机时的源地址，链在 POSTROUTING。地址会变时手册要求用 MASQUERADE，固定地址才用 SNAT。DNAT 改的是目的地址。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q7 · 公网访问防火墙外网口的 TCP 80，目的要改成 DMZ 的 192.168.10.8。应辨认为？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. nat 表 PREROUTING，动作为 DNAT</button>
+      <button class="opt">B. nat 表 POSTROUTING，动作为 SNAT</button>
+      <button class="opt">C. filter 表 OUTPUT，动作为 MASQUERADE</button>
+      <button class="opt">D. filter 表 INPUT，动作为 ACCEPT</button>
+    </div>
+    <div class="explain">答案 A。进来就改目的地址，写 nat 的 PREROUTING 加 DNAT。SNAT / MASQUERADE 改的是源地址。改完地址后，转发仍要在 filter 的 FORWARD 放行，那是另一条规则。</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q">Q8 · 本机只允许 SSH 与 HTTPS 的新连接。放行新连接应写成？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. <code>iptables -A INPUT -p tcp -m multiport --dports 22,443 -m state --state NEW -j ACCEPT</code></button>
+      <button class="opt">B. <code>iptables -A FORWARD -p tcp -m multiport --dports 22,80 -m state --state NEW -j ACCEPT</code></button>
+      <button class="opt">C. <code>iptables -A INPUT -p udp -m multiport --dports 22,443 -m state --state NEW -j DROP</code></button>
+      <button class="opt">D. <code>iptables -t nat -A POSTROUTING -p tcp --dport 443 -j DNAT --to-destination 10.1.1.8:443</code></button>
+    </div>
+    <div class="explain">答案 A。本机服务用 INPUT；题干是 TCP 的 22 和 443；新连接状态写 NEW。FORWARD 是网关转发；80 不在本题放行名单里；DNAT 不能代替这条过滤规则。</div>
+  </div>
+
+  <h2>八、今日任务（约 25 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>对照模板（10 分钟）</strong>：合上本页，默写第四节边界墙三条、第五节本机四条。网卡名和地址按上面的自编场景写。再打开
+      <a href="../reference/iptables-topology-cheatsheet.html#lesson-31">速查卡第 31 课区</a>对一下。</li>
+    <li><strong>题库（10 分钟）</strong>：做
+      <a href="../question-bank/iptables-afternoon.html">iptables 下午专练</a>
+      （6 道单选 + 1 道案例 3 小题）。案例先自己写，再展开要点。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：按考点背——
+      ① 下午卷先选链：包要进这台机器自己的服务，就写 INPUT；包只是从这台网关转发到别的网段，就写 FORWARD；本机进程自己发出的包，才写 OUTPUT；
+      ② 默认策略和追加规则：要改整条链的兜底，用 -P 写成 DROP 或 ACCEPT；要在链尾加一条具体规则，用 -A；
+      ③ 匹配参数怎么读：-s 看来源地址，-d 看目的地址，-p 看协议，--dport 看目的端口，-i 看进来的网卡，-o 看出去的网卡，-j 写动作；
+      ④ 接口能写在哪条链：进来的网卡 -i 用在 INPUT、FORWARD 和 PREROUTING；出去的网卡 -o 用在 FORWARD、OUTPUT 和 POSTROUTING；
+      ⑤ 连接状态怎么放行：先放行已经建立和相关的回程，再按端口放行新连接；其余交给默认 DROP（字头：先回程再新建）；
+      ⑥ 读规则看第一条命中：链上从上往下，第一条命中并决定去留的规则生效，写在它后面的相反动作不会再生效；
+      ⑦ 边界墙放行网站：转发默认先拒绝；外网进来、隔离区出去、对准网站地址和端口的新连接才放行；外网直连内网没有放行规则，就由默认拒绝兜住；
+      ⑧ 本机只开 SSH 和 HTTPS：入站默认先拒绝；回环和已建立的回程先放行；新连接只放 TCP 的二十二和四百四十三；
+      ⑨ NAT 填空只辨认：改目的地址用 DNAT，写在 nat 表的 PREROUTING；改源地址用 SNAT 或 MASQUERADE，写在 nat 表的 POSTROUTING；出口地址会变时用 MASQUERADE。</li>
+  </ol>
+
+  <h2>九、本课知识从哪来</h2>
+  <ul>
+    <li>命令语义（本课写前核对）：
+      <a href="https://man7.org/linux/man-pages/man8/iptables.8.html">iptables(8)</a>
+      （filter 三链、nat 四链、<code>-P/-A/-s/-d/-i/-o/-j</code>，策略只能 ACCEPT 或 DROP）；
+      <a href="https://man7.org/linux/man-pages/man8/iptables-extensions.8.html">iptables-extensions(8)</a>
+      （state / conntrack 的 NEW、ESTABLISHED、RELATED；DNAT、SNAT、MASQUERADE；<code>--dport</code> 与 multiport）</li>
+    <li>入门模板与拓扑设备名：<a href="./0028-iptables-topology.html">第 28 课</a> ·
+      <a href="../reference/iptables-topology-cheatsheet.html">速查卡</a> ·
+      教材精读 <a href="../reference/textbook/ch08.html">第 8 章</a>（类型与屏蔽子网，命令以本课为准）</li>
+    <li>机考里已经练过的底座（默认 DROP、22/80/443）见
+      <a href="../reference/exam-2023-2025.html">2023–2025 考点 §三</a>。本课的状态、接口和 NAT 辨认是在手册上的加深，不把自编题说成某年原题。</li>
+    <li>口诀：<a href="../reference/mnemonics.html#lesson-31">#lesson-31</a> ·
+      加练：<a href="../question-bank/iptables-afternoon.html">题库 iptables 下午专练</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「回程为什么不是 --dport 80」「DNAT 之后还要不要写 FORWARD」都可以继续拆开讲。</p>
+    <p>学完后在对话里说「第 31 课学完了」，我会按结业测规则逐题问。课内这 9 题和题库不计入结业测分数。</p>
+    <p>第 30 课的 2019 错题本仍可另做；本课专练下午卷命令。下一处练习：<a href="../question-bank/iptables-afternoon.html">题库同主题案例</a>。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
