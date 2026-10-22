@@ -1,8 +1,8 @@
 (function () {
   var DEFAULT_LESSON = {
-    file: '0030-2019-morning-recovery.html',
-    label: '第 30 课',
-    title: '2019 上午复盘'
+    file: '0031-iptables-afternoon.html',
+    label: '第 31 课',
+    title: '下午卷 iptables 专练'
   };
 
   function el(tag, className, html) {
@@ -60,7 +60,7 @@
     card.href = 'question-bank/' + hub.file;
     card.innerHTML =
       '<span class="continue-label">题库</span>' +
-      '<span class="continue-title">自编冲刺 · 第 1–24 课综合单选 + 下午卷案例</span>';
+      '<span class="continue-title">自编冲刺 · 综合单选、下午案例、iptables 专练</span>';
     mount.appendChild(card);
   }
 

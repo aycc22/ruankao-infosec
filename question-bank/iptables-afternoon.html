@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题库 · iptables 下午专练</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">题库 · 下午卷专练</div>
+    <h1>iptables 下午专练</h1>
+    <p class="meta">6 道单选 · 1 道案例 3 小题 · 点选项显示解析 · 非官方真题 · 题库拥有者：aycc345</p>
+  </header>
+
+  <div id="practice-progress" class="practice-progress">共 6 道单选 · 点选项后显示对错与解析</div>
+
+  <div class="callout warn">
+    <strong>自编练习，不是某年软考原卷。</strong>配合
+    <a href="../lessons/0031-iptables-afternoon.html">第 31 课</a>
+    使用。入门模板仍见
+    <a href="../lessons/0028-iptables-topology.html">第 28 课</a>。
+    结业测在对话里另做，本题库不计入结业测分数。
+  </div>
+
+  <h2 id="choice">单选</h2>
+
+  <div class="quiz" id="q1">
+    <div class="q">1 · 策略为 <code>-P FORWARD DROP</code>。规则是 <code>-A FORWARD -p tcp -d 192.168.10.8 --dport 80 -j ACCEPT</code>。效果是？</div>
+    <div class="opts">
+      <button class="opt">A. 任意目的主机的 TCP 80 都会被转发通过</button>
+      <button class="opt" data-correct="true">B. 只有转到 192.168.10.8 的 TCP 80 被放行</button>
+      <button class="opt">C. 防火墙本机网站 192.168.10.8 因此被打开</button>
+      <button class="opt">D. 转发时源地址会被改写成 192.168.10.8</button>
+    </div>
+    <div class="explain">答案 B。<code>-d</code> 限制目的地址，<code>--dport 80</code> 限制目的端口，链是 FORWARD。其余转发由默认 DROP 兜住。本机服务看 INPUT；改源地址看 nat 的 SNAT 或 MASQUERADE。</div>
+  </div>
+
+  <div class="quiz" id="q2">
+    <div class="q">2 · 关于 <code>-o</code>（出去的网卡），手册允许写在哪些链上？</div>
+    <div class="opts">
+      <button class="opt">A. 只能写在 INPUT 链上，用来表示进来的网卡</button>
+      <button class="opt" data-correct="true">B. 可以写在 FORWARD、OUTPUT 和 POSTROUTING</button>
+      <button class="opt">C. 只能写在 OUTPUT 链上，并且等同目的端口</button>
+      <button class="opt">D. 可以写在 PREROUTING、INPUT 以及 FORWARD</button>
+    </div>
+    <div class="explain">答案 B。iptables(8)：<code>-o</code> 用于 FORWARD、OUTPUT、POSTROUTING。<code>-i</code> 才用于 INPUT、FORWARD、PREROUTING。D 把 <code>-i</code> 的链套到了 <code>-o</code> 上。</div>
+  </div>
+
+  <div class="quiz" id="q3">
+    <div class="q">3 · 按 iptables-extensions 的连接状态，NEW 指的是？</div>
+    <div class="opts">
+      <button class="opt">A. 这条连接已经在两个方向上都看到包</button>
+      <button class="opt" data-correct="true">B. 连接刚开始，还没有双向都看到包</button>
+      <button class="opt">C. 挂在已有连接上的 ICMP 差错或相关流</button>
+      <button class="opt">D. 对不上任何已知连接的无效数据包</button>
+    </div>
+    <div class="explain">答案 B。NEW 是新连接或尚未双向看到包。ESTABLISHED 才是已经双向看到包。RELATED 是挂在已有连接上的相关流。INVALID 是对不上已知连接。</div>
+  </div>
+
+  <div class="quiz" id="q4">
+    <div class="q">4 · 公网地址固定。内网出去时把源地址改成这个固定地址，填空优先写？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. nat 表 POSTROUTING，动作为 SNAT</button>
+      <button class="opt">B. nat 表 PREROUTING，动作为 DNAT</button>
+      <button class="opt">C. nat 表 POSTROUTING，动作为 DNAT</button>
+      <button class="opt">D. filter 表 INPUT，动作为 MASQUERADE</button>
+    </div>
+    <div class="explain">答案 A。改源地址、包要离开本机，优先填 POSTROUTING。地址固定用 SNAT；地址会变才用 MASQUERADE。DNAT 改的是目的地址，常见位置是 PREROUTING。</div>
+  </div>
+
+  <div class="quiz" id="q5">
+    <div class="q">5 · 先执行 <code>iptables -A FORWARD -j DROP</code>，再追加一条放行 TCP 80。转发的 80 端口会怎样？</div>
+    <div class="opts">
+      <button class="opt">A. 后写的放行优先，80 端口可以转发</button>
+      <button class="opt" data-correct="true">B. 前面的 DROP 先命中，80 放行轮不到</button>
+      <button class="opt">C. <code>-A</code> 会把 DROP 插到链头前面</button>
+      <button class="opt">D. 这行等于把默认策略改成了 DROP</button>
+    </div>
+    <div class="explain">答案 B。<code>-A</code> 追加到链尾，先追加的 DROP 没有匹配条件，所有走到它的转发包都被丢掉，后面的 ACCEPT 不会再生效。改默认策略要用 <code>-P</code>，插到链头要用 <code>-I</code>。</div>
+  </div>
+
+  <div class="quiz" id="q6">
+    <div class="q">6 · 门户主机只对本机开放 SSH 与 HTTPS，链应选？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. filter 表的 INPUT，包要进本机服务</button>
+      <button class="opt">B. filter 表的 FORWARD，包在网关被转发</button>
+      <button class="opt">C. nat 表的 POSTROUTING，用来改写源地址</button>
+      <button class="opt">D. nat 表的 PREROUTING，用来改写目的</button>
+    </div>
+    <div class="explain">答案 A。别人访问这台机器上的 22/443，目的是本机套接字，写 INPUT。FORWARD 用于路过转发。POSTROUTING / PREROUTING 是 nat 改地址的位置，不能代替本机放行。</div>
+  </div>
+
+  <h2 id="case-lib">案例 · 县图书馆边界防火墙（3 小题）</h2>
+  <div class="case-prompt" id="case-lib-1">
+    <h3>自编场景</h3>
+    <p>县图书馆有一台 Linux 边界防火墙。<code>eth0</code> 接外网，<code>eth1</code> 接 DMZ，门户网站地址 <code>172.16.8.10</code>，只提供 HTTPS（TCP 443）。<code>eth2</code> 接内网 <code>172.16.9.0/24</code>，借阅库不允许外网直连。包穿过防火墙到达门户，不进入防火墙自己的网站进程。</p>
+    <p><strong>请先自己写，再展开对照。</strong></p>
+    <ol>
+      <li>写出一条规则：外网访问门户的 TCP 443 新连接予以放行。要写出链、进来的网卡、出去的网卡、目的地址、目的端口和 NEW。</li>
+      <li>默认策略怎么写，才能让「外网到内网」在没有单独 ACCEPT 时也被拒绝？再写一条放行已建立和相关回程的规则。</li>
+      <li>下面三条命令各做什么：哪条改目的地址，哪条改源地址，哪条只做过滤转发？
+        <br><code>iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j DNAT --to-destination 172.16.8.10:443</code>
+        <br><code>iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</code>
+        <br><code>iptables -A FORWARD -i eth0 -o eth1 -p tcp -d 172.16.8.10 --dport 443 -m state --state NEW -j ACCEPT</code>
+      </li>
+    </ol>
+    <details class="details">
+      <summary>展开参考要点</summary>
+      <div class="ans">
+        <ul>
+          <li>小题 1：链用 FORWARD。示例：<code>iptables -A FORWARD -i eth0 -o eth1 -p tcp -d 172.16.8.10 --dport 443 -m state --state NEW -j ACCEPT</code>。网卡名以题干为准。</li>
+          <li>小题 2：<code>iptables -P FORWARD DROP</code>。外网到内网没有 ACCEPT，链尾由默认 DROP 兜住。<code>iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT</code> 放行回程。这条回程要写在「匹配全部的 DROP」之前；默认策略本身可以先设好。</li>
+          <li>小题 3：第一条 nat PREROUTING + DNAT，改目的地址。第二条 nat POSTROUTING + MASQUERADE，出口地址会变时改源地址。第三条 filter 的 FORWARD（没写 <code>-t</code> 就是 filter），只放行转发，不改地址。</li>
+          <li>口诀：改目的地址用 DNAT，写在 nat 表的 PREROUTING；改源地址用 SNAT 或 MASQUERADE，写在 nat 表的 POSTROUTING；出口地址会变时用 MASQUERADE。</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <h2>做完之后</h2>
+  <ul>
+    <li>错题对照 <a href="../reference/mnemonics.html#lesson-31">第 31 课口诀</a>。</li>
+    <li>课程：<a href="../lessons/0031-iptables-afternoon.html">第 31 课</a> · 入门模板 <a href="../lessons/0028-iptables-topology.html">第 28 课</a>。</li>
+    <li>返回 <a href="./index.html">题库首页</a> · <a href="./sprint.html">综合冲刺</a> · <a href="../index.html">课程首页</a>。</li>
+  </ul>
+
+  <footer>
+    <p>题库拥有者：aycc345。题目为课程组自编，供 2026 年 10 月考季备考练习。南宁考场批次以准考证为准。托管仓库 aycc22/ruankao-infosec 不等于题库拥有者。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>
