@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>速查 · 2026 下午卷题型</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Reference · 考前速查</div>
+    <h1>2026 下午卷五槽位速查</h1>
+    <p class="meta">配合<a href="../lessons/0032-afternoon-exam-forecast.html">第 32 课</a> · 2026-10-23 整理 · 题型预测，不是原题。命令细节见<a href="./iptables-topology-cheatsheet.html">第 28/31 课速查</a>，场景写法见<a href="./afternoon-case-cheatsheet.html">第 23 课速查</a>。</p>
+  </header>
+
+  <div class="callout warn">
+    应用技术 75 分，及格 45，150 分钟。近年机考常见 5 道。先填名词和命令，计算题先写公式。
+  </div>
+
+  <h2>一、五槽位</h2>
+  <table>
+    <tr><th>槽位</th><th>今晚写得出的句子</th><th>置信</th></tr>
+    <tr><td>密码手算</td><td>RSA 求 n、φ(n)、d；明文小于 n。备用：同一密钥流用两次不安全；DES 填充 / S 盒</td><td>高 / 算法中</td></tr>
+    <tr><td>边界</td><td>网闸、屏蔽子网、DMZ 放网站、filter、黑名单、FORWARD 放行 80/443、SSH 限制源 IP</td><td>高</td></tr>
+    <tr><td>流量</td><td>SYN/ACK 开放，RST 关闭；<code>ip.addr == x &amp;&amp; tcp.dstport == y</code></td><td>高</td></tr>
+    <tr><td>主机</td><td>644、ls -l、md5sum；eventvwr.msc、4625 登录失败、firewall.cpl</td><td>高</td></tr>
+    <tr><td>场景</td><td>泛化 / 抑制；META-INF 与 Manifest；SQL 参数化</td><td>中</td></tr>
+  </table>
+  <p>口诀（<strong>下午卷五槽位</strong>）：<strong>密码手算防火墙令，流量主机加场景</strong>（字头：密防流主场）。</p>
+
+  <h2>二、RSA</h2>
+  <ul>
+    <li><code>n = p × q</code>，<code>φ(n) = (p − 1) × (q − 1)</code>，<code>e × d</code> 对 φ(n) 的余数是 1</li>
+    <li>加密 <code>c = m^e mod n</code>；签名 <code>s = m^d mod n</code></li>
+    <li>公开 n、e；保密 p、q、φ(n)、d</li>
+    <li>m ≥ n 不能直接加密</li>
+    <li>核对：公钥 (55, 3)，明文 18 → φ=40，d=27，密文 2</li>
+    <li>核对：p=47，q=71，e=3 → n=3337，φ=3220，d=2147</li>
+  </ul>
+  <p>口诀（<strong>RSA 能否直接加密</strong>）：<strong>明文必须小于模数，大于等于 n 就先分块</strong>。</p>
+  <p>口诀（<strong>密钥方向</strong>）：<strong>公钥加密用私钥解，私钥签名用公钥验</strong>。</p>
+  <p>口诀（<strong>流密码密钥流</strong>）：<strong>同一密钥流用两次，密文相异或就露出明文差</strong>。<code>a</code> 的 ASCII = 97 = <code>01100001</code>。</p>
+
+  <h2>三、防火墙与 iptables</h2>
+  <table>
+    <tr><th>题眼</th><th>答案</th></tr>
+    <tr><td>接近物理隔离</td><td>网闸</td></tr>
+    <tr><td>两道过滤夹着隔离区</td><td>屏蔽子网</td></tr>
+    <tr><td>防火墙在四道防线中</td><td>第一道保护。保护、监测、响应、恢复</td></tr>
+    <tr><td>策略 ACCEPT</td><td>黑名单</td></tr>
+    <tr><td>表名</td><td>filter</td></tr>
+    <tr><td>去后面的服务器</td><td>FORWARD</td></tr>
+    <tr><td>/24</td><td>255.255.255.0</td></tr>
+    <tr><td>CSF 比 PDRR 多什么</td><td>识别。风险评估属于识别，防火墙属于保护</td></tr>
+  </table>
+  <div class="callout">
+    <code>iptables -t filter -P FORWARD DROP</code><br>
+    <code>iptables -A FORWARD -p tcp -d 网站IP --dport 80 -j ACCEPT</code><br>
+    <code>iptables -A FORWARD -p tcp -d 网站IP --dport 443 -j ACCEPT</code><br>
+    <code>iptables -A FORWARD -p tcp -s 运维IP -d 服务器IP --dport 22 -j ACCEPT</code><br>
+    <code>iptables -t filter -P INPUT DROP</code>
+  </div>
+  <p>口诀（<strong>iptables 黑白名单</strong>）：<strong>默认放行是黑名单，默认拒绝才是白名单</strong>。</p>
+  <p>口诀（<strong>iptables 三链</strong>）：<strong>进看 INPUT，出看 OUTPUT，穿过防火墙看 FORWARD</strong>。</p>
+
+  <h2>四、流量与主机</h2>
+  <ul>
+    <li>开放：SYN/ACK。关闭：RST 或 RST/ACK</li>
+    <li>过滤：<code>ip.addr == 地址 &amp;&amp; tcp.dstport == 端口</code></li>
+    <li>Linux：<code>ll</code>≈<code>ls -l</code>；644=<code>rw-r--r--</code>；<code>../</code> 父目录；<code>md5sum</code> / <code>sha256sum</code></li>
+    <li>Windows：<code>eventvwr.msc</code>；<code>firewall.cpl</code>；4624 成功，4625 失败</li>
+  </ul>
+  <p>口诀（<strong>端口扫描回包</strong>）：<strong>开放端口回 SYN/ACK，关闭端口回 RST</strong>。</p>
+
+  <h2>五、场景关键词</h2>
+  <ul>
+    <li>8750 → 5k–10k = <strong>泛化</strong>；抹掉 = <strong>抑制</strong>；薪水 = 属性隐私</li>
+    <li>题干四级（公开/内部/秘密/机密）时，员工个人信息的常见写法是三级秘密数据。题干用数安法三分法时，改写一般 / 重要 / 核心</li>
+    <li>过度采集：网络安全法、数据安全法、个人信息保护法</li>
+    <li>Android：签名 <code>META-INF</code>，权限 <code>AndroidManifest.xml</code>，Content Provider 易泄漏，默认无 root</li>
+    <li>SQL 注入：参数化查询。命令执行：禁止把输入送进 system/exec</li>
+  </ul>
+  <p>口诀（<strong>脱敏手法</strong>）：<strong>精确值改成区间叫泛化，直接抹掉字段叫抑制</strong>。</p>
+  <p>口诀（<strong>Android 泄漏点</strong>）：<strong>签名在 META-INF，权限在 Manifest，内容提供者最易漏</strong>。</p>
+  <p>口诀（<strong>SQL 注入防护</strong>）：<strong>参数化查询先编译，用户输入不当成语句</strong>。</p>
+
+  <h2>六、抽到论述题时</h2>
+  <ul>
+    <li>应急：准备、检测、抑制、根除、恢复、跟踪（<a href="./incident-response-cheatsheet.html">应急速查</a>）</li>
+    <li>等保：定级、备案、建设、测评、监督（<a href="./classified-protection-cheatsheet.html">等保速查</a>）</li>
+    <li>云：先分 IaaS / PaaS / SaaS 谁负责（<a href="./cloud-security-cheatsheet.html">云安全速查</a>）</li>
+    <li>工控：可用 &gt; 完整 &gt; 机密；安全分区、网络专用、横向隔离、纵向认证</li>
+  </ul>
+
+  <footer>
+    来源见第 32 课文末。2024 年 CSF、WebShell、流密码细节来自单源回忆。2025 年完整下午卷本次未核对到公开原文。
+  </footer>
+</main>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

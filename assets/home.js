@@ -69,9 +69,9 @@
     if (!mount) return;
 
     var featured = [
-      'textbook-index.html',
+      'afternoon-forecast-cheatsheet.html',
       'mnemonics.html',
-      'exam-overview.html',
+      'iptables-topology-cheatsheet.html',
       'exam-2023-2025.html',
       'mock-exam-cheatsheet.html'
     ];

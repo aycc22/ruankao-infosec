@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>口诀速查 · 第 1-31 课汇总</title>
+<title>口诀速查 · 第 1-32 课汇总</title>
 <link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <main>
   <header class="lesson-head">
     <div class="lesson-no">Reference · 记忆卡</div>
-    <h1>一句话口诀速查（第 1-31 课汇总）</h1>
-    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-10-22</p>
+    <h1>一句话口诀速查（第 1-32 课汇总）</h1>
+    <p class="meta">每天睡前 3 分钟过一遍 · 每课一个专区 · 更新至 2026-10-23</p>
   </header>
 
   <div class="callout ok">
@@ -395,6 +395,21 @@
     <li><strong>第 31 课易错</strong>：本机服务写成 FORWARD；网关转发写成 INPUT；默认拒绝写成 -A 追加 DROP；在 INPUT 上写 -o；先写一条匹配全部的 DROP 再追加放行；MASQUERADE 填进 PREROUTING；DNAT 填进 filter 表</li>
   </ul>
 
+  <h2 id="lesson-32">第 32 课 · 下午卷题型预测</h2>
+  <ul>
+    <li><strong>下午卷五槽位</strong>：密码手算防火墙令，流量主机加场景（字头：密防流主场）</li>
+    <li><strong>下午卷抢分顺序</strong>：先填名词和命令，再写原因与对策，计算题先写公式</li>
+    <li><strong>RSA 能否直接加密</strong>：明文必须小于模数，大于等于 n 就先分块</li>
+    <li><strong>流密码密钥流</strong>：同一密钥流用两次，密文相异或就露出明文差</li>
+    <li><strong>密钥方向</strong>：公钥加密用私钥解，私钥签名用公钥验</li>
+    <li><strong>iptables 黑白名单</strong>：默认放行是黑名单，默认拒绝才是白名单</li>
+    <li><strong>iptables 三链</strong>：进看 INPUT，出看 OUTPUT，穿过防火墙看 FORWARD</li>
+    <li><strong>端口扫描回包</strong>：开放端口回 SYN/ACK，关闭端口回 RST</li>
+    <li><strong>脱敏手法</strong>：精确值改成区间叫泛化，直接抹掉字段叫抑制</li>
+    <li><strong>Android 泄漏点</strong>：签名在 META-INF，权限在 Manifest，内容提供者最易漏</li>
+    <li><strong>SQL 注入防护</strong>：参数化查询先编译，用户输入不当成语句</li>
+  </ul>
+
   <h2>答题套路（下午卷通用）</h2>
   <ul>
     <li><strong>方案设计题写法</strong>：需求 → 技术 → 理由，每条一行，别空着</li>
@@ -404,7 +419,7 @@
   </ul>
 
   <footer>
-    本表汇总第 1-31 课口诀，随课程持续更新。配套速查：<a href="./exam-overview.html">考试全貌</a> ·
+    本表汇总第 1-32 课口诀，随课程持续更新。配套速查：<a href="./afternoon-forecast-cheatsheet.html">2026 题型速查</a> · <a href="./exam-overview.html">考试全貌</a> ·
     <a href="./attacks-glossary.html">攻击词汇表</a> · <a href="./crypto-cheatsheet.html">密码学速查</a> ·
     <a href="./pki-https-cheatsheet.html">PKI 速查</a> · <a href="./firewall-vpn-cheatsheet.html">防火墙 VPN 速查</a> ·
     <a href="./ids-ips-cheatsheet.html">IDS/IPS 速查</a> · <a href="./vulnerability-cheatsheet.html">漏洞补丁速查</a> ·

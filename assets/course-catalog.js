@@ -32,7 +32,8 @@ var COURSE_CATALOG = {
     { file: '0028-iptables-topology.html', label: '第 28 课', title: 'iptables 与拓扑填空' },
     { file: '0029-timed-mock-sprint.html', label: '第 29 课', title: '计时模考与错题回收' },
     { file: '0030-2019-morning-recovery.html', label: '第 30 课', title: '2019 上午复盘' },
-    { file: '0031-iptables-afternoon.html', label: '第 31 课', title: '下午卷 iptables 专练' }
+    { file: '0031-iptables-afternoon.html', label: '第 31 课', title: '下午卷 iptables 专练' },
+    { file: '0032-afternoon-exam-forecast.html', label: '第 32 课', title: '下午卷题型预测' }
   ],
   references: [
     { file: 'textbook-index.html', label: '教材精读', title: '官方教程 26 章考点' },
@@ -58,6 +59,7 @@ var COURSE_CATALOG = {
     { file: 'mobile-app-security-cheatsheet.html', label: '移动应用', title: '移动应用安全速查' },
     { file: 'big-data-security-cheatsheet.html', label: '大数据安全', title: '大数据安全速查' },
     { file: 'afternoon-case-cheatsheet.html', label: '下午卷案例', title: '下午卷安全工程案例速查' },
+    { file: 'afternoon-forecast-cheatsheet.html', label: '题型预测', title: '2026 下午卷五槽位速查' },
     { file: 'physical-gap-cheatsheet.html', label: '物理/网闸', title: '物理安全与网闸速查' },
     { file: 'access-control-cheatsheet.html', label: '访问控制', title: '访问控制与安全模型速查' },
     { file: 'gm-crypto-cheatsheet.html', label: '国密参数', title: '国密算法参数速查' },
@@ -65,7 +67,7 @@ var COURSE_CATALOG = {
     { file: 'iptables-topology-cheatsheet.html', label: 'iptables/拓扑', title: '下午卷命令与拓扑填空' },
     { file: 'mock-exam-cheatsheet.html', label: '计时模考', title: '计时模考与错题回收' },
     { file: 'compare-params-cheatsheet.html', label: '对比/参数', title: '易混对比与高频参数' },
-    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-31 课口诀汇总' }
+    { file: 'mnemonics.html', label: '口诀速查', title: '第 1-32 课口诀汇总' }
   ],
   // 题库拥有者 aycc345（见 question-bank/manifest.json）；本仓库 aycc22 只是托管位置
   questionBank: [

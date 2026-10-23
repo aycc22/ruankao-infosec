@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 32 课 · 下午卷题型预测</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<main>
+  <header class="lesson-head">
+    <div class="lesson-no">Lesson 32 · 约 20 分钟 · 考前专项</div>
+    <h1>下午卷：五类高频案例与 2026 题型预测</h1>
+    <p class="meta">本课目标：把已学的第 23、28、31 课放进近十年下午卷的五个槽位；按置信度准备 2026 年 10 月这科；能手写 RSA 中间量、流量结论和场景关键词。</p>
+  </header>
+
+  <div class="callout warn">
+    <strong>先看边界：</strong>这是按历年题型做的<strong>槽位预测</strong>，不是今年原题。2023 年起机考抽题，不同批次题目可以不同。官方成套解析只到 2022 年；2023、2024 用的是可交叉的考后回忆；2025 年完整下午卷在本次检索里没有对得上的公开原文。目标仍是写满得分点，拿到 45 分。场景成对写用<a href="./0023-afternoon-case-special.html">第 23 课</a>，iptables 的选链、状态和 NAT 用<a href="./0028-iptables-topology.html">第 28 课</a>和<a href="./0031-iptables-afternoon.html">第 31 课</a>。本课只排「这科更可能考哪一类」。
+  </div>
+
+  <h2>一、这科卷面长什么样</h2>
+  <p>
+    科目二叫<strong>应用技术</strong>（考生口头说「下午题」）。总分 <strong>75</strong>，及格 <strong>45</strong>，时长 <strong>150 分钟</strong>。
+    2022 年是 4 道大题；2023 年希赛考后解析写明变成 <strong>5 道</strong>。每道下面有若干小问，小问常见 2–6 分。
+    机考要在系统里打字：名词、命令、公式、短句都能得分，空着是 0 分。
+  </p>
+  <div class="callout ok">
+    口诀（<strong>下午卷抢分顺序</strong>）：<strong>先填名词和命令，再写原因与对策，计算题先写公式</strong>。
+  </div>
+
+  <h2>二、2016–2024 下午卷实际在考什么</h2>
+  <p>下表只记「题型槽位」，不收录整卷。同一年常同时占满前四个槽位，第五个槽位在轮换。</p>
+  <table>
+    <tr><th>年份</th><th>密码计算</th><th>边界 / 防火墙</th><th>流量或扫描</th><th>主机命令</th><th>场景轮换</th><th>依据</th></tr>
+    <tr><td>2016–2020</td><td>仿射、DES、RSA、认证协议</td><td>防火墙结构、双向过滤</td><td>扫描与报文</td><td>Linux 权限、账号</td><td>缓冲区溢出、心脏滴血</td><td>历年题汇编（二手）</td></tr>
+    <tr><td>2021</td><td>认证与协议</td><td>体系结构、Snort、镜像口</td><td>DNS、CC</td><td>SSH、审计、权限</td><td>政务站定级、SQL 注入、Android</td><td><a href="http://m.cnitpm.com/pm1/142967ofa0e0tkma.html">信管网考点汇总</a></td></tr>
+    <tr><td>2022</td><td>RSA 小整数 + 明文须小于 n</td><td>网闸、屏蔽子网、iptables、四道防线</td><td>Windows 日志 + 报文</td><td>Linux 命令题</td><td>数据分级、隐私、泛化</td><td><a href="https://www.cnitpm.com/pm1/152048drwczstv57.html">信管网公开题干</a></td></tr>
+    <tr><td>2023</td><td>DES 填充与 S 盒</td><td>iptables 小问</td><td>nmap、Wireshark，RST 判端口</td><td>Windows 隐藏账号</td><td>PHP 命令执行、Android 组件</td><td>希赛与信管网考后解析相互印证</td></tr>
+    <tr><td>2024</td><td>流密码异或、分组/流分类</td><td>抓包 + Windows 防火墙</td><td>过滤表达式、控制端地址</td><td>Linux 权限、WebShell</td><td>Android 清单；CSF 比 PDRR 多「识别」</td><td>单源考生回忆，使用时降一档置信</td></tr>
+    <tr><td>2025</td><td colspan="5">信管网「2025 案例分析」页仍挂着 2022 年数据安全例题，并写着考后更新。未见第二来源能对上的完整下午卷，本课不把它当成 2025 真题。</td><td>检索截止 2026-10-23</td></tr>
+  </table>
+
+  <h2>三、2026 年 10 月：五槽位预测</h2>
+  <p>预测单位是「你会遇到哪一类写法」，不是「这五道原题」。前四槽位近十年反复出现，第五槽位按轮换准备三条备用答案。</p>
+  <table>
+    <tr><th>槽位</th><th>最可能的题面</th><th>置信</th><th>为什么这样排</th></tr>
+    <tr>
+      <td><strong>1 密码手算</strong></td>
+      <td>RSA：求 n、φ(n)、私钥 d，并判断明文能否直接加密。备用：流密码「同一密钥流用两次」；DES 填充 / S 盒</td>
+      <td>高（一定有密码题）<br>中（具体算法）</td>
+      <td>2023 是 DES，2024 回忆是流密码。RSA 在 2020、2022 完整出现，间隔后最值得今晚手算一遍</td>
+    </tr>
+    <tr>
+      <td><strong>2 边界设备</strong></td>
+      <td>拓扑填空：网闸、屏蔽子网、DMZ 放网站、内网放数据库；iptables 的 filter 表、黑名单、放行 80/443、限制 SSH 源地址</td>
+      <td>高</td>
+      <td>2016 至 2023 几乎年年有。2024 回忆改成 Windows 防火墙界面。命令写法以第 28、31 课为准，考场再出就按那两课填</td>
+    </tr>
+    <tr>
+      <td><strong>3 流量认读</strong></td>
+      <td>Wireshark 过滤式；开放端口回 SYN/ACK，关闭端口回 RST；写出控制端 IP 和端口</td>
+      <td>高</td>
+      <td>2021 至 2024 连续出现，是机考最稳的「看图填空」</td>
+    </tr>
+    <tr>
+      <td><strong>4 主机命令</strong></td>
+      <td>Linux：<code>ls -l</code>、644、父目录 <code>../</code>、哈希命令。或 Windows：<code>eventvwr.msc</code>、4625 表示登录失败、<code>firewall.cpl</code></td>
+      <td>高</td>
+      <td>主机题年年有，Windows 与 Linux 轮换。两个模板都准备，各背 6 个词</td>
+    </tr>
+    <tr>
+      <td><strong>5 场景轮换</strong></td>
+      <td>优先准备两条：隐私「泛化 / 抑制」；Android 的 Manifest、META-INF、Content Provider。备用：SQL 注入用参数化查询</td>
+      <td>中</td>
+      <td>2022 考隐私，2021/2023/2024 都有 Android，2021/2023 有 Web。三条里能写出关键词即可</td>
+    </tr>
+  </table>
+  <div class="callout info">
+    整道论述题里，应急六阶段、云计算责任、工控十六字近年整题频率低于上面五槽。若抽到，直接用
+    <a href="./0013-incident-response.html">第 13 课</a>、
+    <a href="./0019-cloud-security.html">第 19 课</a>、
+    <a href="./0020-ics-security.html">第 20 课</a>
+    的模板按顺序写满；四场景成对写用<a href="./0023-afternoon-case-special.html">第 23 课</a>。等保五环节经常嵌在防火墙拓扑里，用
+    <a href="./0012-classified-protection.html">第 12 课</a>的「定级、备案、建设、测评、监督」。法规名词用<a href="./0027-cyber-laws.html">第 27 课</a>。
+  </div>
+  <div class="callout ok">
+    口诀（<strong>下午卷五槽位</strong>）：<strong>密码手算防火墙令，流量主机加场景</strong>（字头：密防流主场）。
+  </div>
+
+  <h2>四、五个槽位怎么写才有分</h2>
+
+  <h3>槽位 1 · RSA 只记四步</h3>
+  <p>公开的是 <strong>n 和 e</strong>。保密的是 <strong>p、q、φ(n)、d</strong>。加密用公钥：<code>c = m^e mod n</code>。签名用私钥：<code>s = m^d mod n</code>，验签用公钥。</p>
+  <ol>
+    <li><code>n = p × q</code></li>
+    <li><code>φ(n) = (p − 1) × (q − 1)</code></li>
+    <li>找 d，使 <code>e × d</code> 除以 φ(n) 的余数是 1</li>
+    <li>明文 m 必须 <strong>小于 n</strong>。m ≥ n 时不能直接加密，要先分块或先做哈希</li>
+  </ol>
+  <p>用 2020 年公开题的小数核对手感：公钥 (n, e) = (55, 3)，明文 18。</p>
+  <ul>
+    <li><code>n = 5 × 11 = 55</code>，<code>φ(n) = 4 × 10 = 40</code></li>
+    <li><code>3 × 27 = 81</code>，81 除以 40 余 1，所以私钥 d = 27</li>
+    <li><code>18³ = 5832</code>，5832 除以 55 余 2，密文是 2</li>
+    <li>回代：<code>2^27 mod 55 = 18</code></li>
+  </ul>
+  <p>2022 年公开题的规模：p=47，q=71，e=3。则 n=3337，φ(n)=3220，d=2147（因为 3×2147=6441，6441 − 2×3220=1）。用户名 <code>admin</code> 的十六进制是 <code>61646d696e</code>，这个整数远大于 3337，所以不能直接加密。</p>
+  <p>流密码备用句：同一段密钥流加密两条明文时，两条密文异或等于两条明文异或；知道一条明文就能推出另一条。字符 <code>a</code> 的 ASCII 是 97，二进制 <code>01100001</code>。</p>
+  <div class="callout ok">
+    口诀（<strong>RSA 能否直接加密</strong>）：<strong>明文必须小于模数，大于等于 n 就先分块</strong>。
+    <br>口诀（<strong>流密码密钥流</strong>）：<strong>同一密钥流用两次，密文相异或就露出明文差</strong>。
+    <br>口诀（<strong>密钥方向</strong>）：<strong>公钥加密用私钥解，私钥签名用公钥验</strong>。
+  </div>
+
+  <h3>槽位 2 · 拓扑名词 + 四条命令</h3>
+  <table>
+    <tr><th>题眼</th><th>写法</th></tr>
+    <tr><td>隔离强度接近物理隔离</td><td><strong>网闸</strong>（GAP）</td></tr>
+    <tr><td>两道过滤、中间有隔离区</td><td><strong>屏蔽子网</strong>；网站在 DMZ，数据库在内网</td></tr>
+    <tr><td>四道防线里的防火墙</td><td>第一道<strong>保护</strong>。四道是保护、监测、响应、恢复（PDRR）</td></tr>
+    <tr><td>策略全是 ACCEPT</td><td><strong>黑名单</strong>：默认放行，规则负责拦截</td></tr>
+    <tr><td>图里的表</td><td><strong>filter</strong>。三链：进 INPUT，出 OUTPUT，转发 FORWARD</td></tr>
+    <tr><td>包是发给后面的服务器</td><td>写在 <strong>FORWARD</strong>。发给防火墙自己才写 INPUT</td></tr>
+    <tr><td>/24</td><td>子网掩码 <strong>255.255.255.0</strong></td></tr>
+  </table>
+  <p>命令按题干 IP 替换。默认拒绝用白名单思路：</p>
+  <div class="callout">
+    <code>iptables -t filter -P FORWARD DROP</code><br>
+    <code>iptables -A FORWARD -p tcp -d 网站IP --dport 80 -j ACCEPT</code><br>
+    <code>iptables -A FORWARD -p tcp -d 网站IP --dport 443 -j ACCEPT</code><br>
+    <code>iptables -A FORWARD -p tcp -s 运维IP -d 服务器IP --dport 22 -j ACCEPT</code>
+  </div>
+  <p>「不允许任何数据包进入本机」：<code>iptables -t filter -P INPUT DROP</code>。回程要先放行 ESTABLISHED、RELATED，网卡和 NAT 的填空以第 31 课为准。</p>
+  <p>CSF 备用（2024 单源回忆，五个功能本身是 NIST 公开框架）：识别、保护、检测、响应、恢复。相对 PDRR，CSF 多了<strong>识别</strong>。防火墙属于保护，风险评估属于识别。</p>
+  <div class="callout ok">
+    口诀（<strong>iptables 黑白名单</strong>）：<strong>默认放行是黑名单，默认拒绝才是白名单</strong>。
+    <br>口诀（<strong>iptables 三链</strong>）：<strong>进看 INPUT，出看 OUTPUT，穿过防火墙看 FORWARD</strong>。
+  </div>
+
+  <h3>槽位 3 · 报文只记三个结论</h3>
+  <ul>
+    <li>开放端口：对 SYN 回 <strong>SYN/ACK</strong></li>
+    <li>关闭端口：回 <strong>RST</strong> 或 RST/ACK</li>
+    <li>过滤式：<code>ip.addr == 地址 &amp;&amp; tcp.dstport == 端口</code></li>
+  </ul>
+  <p>事件类型按破坏的属性写：打瘫服务写<strong>可用性</strong>；窃听写<strong>机密性</strong>；篡改页面写<strong>完整性</strong>。有害程序、网络攻击、信息破坏这几个类名，题干给了分类表就照表抄。</p>
+  <div class="callout ok">
+    口诀（<strong>端口扫描回包</strong>）：<strong>开放端口回 SYN/ACK，关闭端口回 RST</strong>。
+  </div>
+
+  <h3>槽位 4 · 主机填空，两边都背</h3>
+  <table>
+    <tr><th>Linux</th><th>Windows</th></tr>
+    <tr><td><code>ll</code> 常是 <code>ls -l</code> 的别名</td><td>事件查看器：<code>eventvwr.msc</code></td></tr>
+    <tr><td><code>rw-r--r--</code> = <strong>644</strong>；<code>rwxr-xr-x</code> = 755。记法：r=4，w=2，x=1</td><td>防火墙界面：<code>firewall.cpl</code></td></tr>
+    <tr><td><code>../</code> 是上一级目录</td><td><strong>4624</strong> 登录成功，<strong>4625</strong> 登录失败；再看登录类型区分本地还是网络</td></tr>
+    <tr><td>哈希：<code>md5sum</code>、<code>sha256sum</code></td><td>隐藏账号常在用户名后加 <code>$</code>，用 <code>net user</code> 管理账号</td></tr>
+    <tr><td>提示符 <code>#</code> 常见于 root，<code>$</code> 常见于普通用户</td><td>远程桌面 3389；加固时限制来源并开网络级认证</td></tr>
+  </table>
+  <p>WebShell 小问的写法：找出参数名和 <code>system</code> / <code>exec</code>，请求方法看 <code>$_GET</code> 还是 <code>$_POST</code>，再拼出「域名 + 脚本 + 参数」。对策写：删后门、改口令、查上传点、服务器禁止执行上传目录。</p>
+
+  <h3>槽位 5 · 三条备用，各两句</h3>
+  <ul>
+    <li><strong>隐私</strong>：薪水是属性隐私。8750 显示成 5k–10k 是<strong>泛化</strong>（降低粒度）。直接抹掉是<strong>抑制</strong>。题干若自带「公开 / 内部 / 秘密 / 机密」四级，公开解析里「一般员工个人信息」常写成<strong>三级秘密数据</strong>。题干若改用《数据安全法》的一般数据、重要数据、核心数据，就按这三分法写。</li>
+    <li><strong>法规</strong>：过度采集个人信息、数据安全义务没尽到，对应《网络安全法》《数据安全法》《个人信息保护法》。</li>
+    <li><strong>Android</strong>：签名在 <code>META-INF</code>，权限在 <code>AndroidManifest.xml</code>。四大组件：Activity、Service、Broadcast Receiver、Content Provider。对外暴露的 <strong>Content Provider</strong> 最容易漏数据。普通应用默认没有 root。</li>
+    <li><strong>Web</strong>：SQL 注入的对策是<strong>参数化查询</strong>（预编译）。命令执行的对策是不把用户输入送进 <code>system</code>。配对写法：威胁一句，对策一句。</li>
+  </ul>
+  <div class="callout ok">
+    口诀（<strong>脱敏手法</strong>）：<strong>精确值改成区间叫泛化，直接抹掉字段叫抑制</strong>。
+    <br>口诀（<strong>Android 泄漏点</strong>）：<strong>签名在 META-INF，权限在 Manifest，内容提供者最易漏</strong>。
+    <br>口诀（<strong>SQL 注入防护</strong>）：<strong>参数化查询先编译，用户输入不当成语句</strong>。
+  </div>
+
+  <h2>五、考场 150 分钟怎么分配</h2>
+  <ol>
+    <li>先通读五道题的问题列表，把「填名称、填命令、填端口」的小问做完。这部分最接近 45 分里的保底分。</li>
+    <li>密码题先写 n、φ(n)、「e×d 对 φ(n) 余 1」和加密公式。算术来不及算完，过程分仍然在。</li>
+    <li>论述小问用「原因 + 对策」成对写，每条一行。写满 4 条通常就覆盖了分值。</li>
+    <li>单题超过 25 分钟还卡住，先跳到下一道的填空。五道都碰到，比一道算到底更接近及格。</li>
+  </ol>
+
+  <h2>六、动手练一练</h2>
+  <div class="quiz">
+    <div class="q">Q1 · 近十年下午卷几乎每年都有的计算类题目是？</div>
+    <div class="opts">
+      <button class="opt">A. 工控分区与十六字方针默写</button>
+      <button class="opt" data-correct="true">B. RSA 或分组流密码的小整数手算</button>
+      <button class="opt">C. 云计算四种部署模式的对比</button>
+      <button class="opt">D. 蜜罐四种配置名称的默写</button>
+    </div>
+    <div class="explain">答案 B。密码手算是稳定槽位。工控、云、蜜罐会以概念出现，整道计算题的频率低得多。</div>
+  </div>
+  <div class="quiz">
+    <div class="q">Q2 · iptables 的 INPUT、FORWARD、OUTPUT 策略都是 ACCEPT，这表示？</div>
+    <div class="opts">
+      <button class="opt">A. 白名单策略，默认拒绝再放行</button>
+      <button class="opt" data-correct="true">B. 黑名单策略，默认放行再拦截</button>
+      <button class="opt">C. 物理隔离策略，强度接近网闸</button>
+      <button class="opt">D. 旁路检测策略，只告警不阻断</button>
+    </div>
+    <div class="explain">答案 B。默认 ACCEPT = 黑名单。默认 DROP 再逐条 ACCEPT = 白名单。</div>
+  </div>
+  <div class="quiz">
+    <div class="q">Q3 · 用 RSA 直接加密整数明文 m 时，m 和模数 n 应满足？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. m 必须小于 n，否则先分块</button>
+      <button class="opt">B. m 必须大于 n，否则先填充</button>
+      <button class="opt">C. m 必须等于 e，否则先换钥</button>
+      <button class="opt">D. m 必须等于 d，否则先签名</button>
+    </div>
+    <div class="explain">答案 A。2022 年公开题里 admin 的整数远大于 n=3337，所以不能直接加密。</div>
+  </div>
+  <div class="quiz">
+    <div class="q">Q4 · 月薪 8750 脱敏后显示为 5k–10k，这种处理是？</div>
+    <div class="opts">
+      <button class="opt">A. 抑制，把该字段直接抹掉</button>
+      <button class="opt" data-correct="true">B. 泛化，把精确值降成区间</button>
+      <button class="opt">C. 加密，把数值变成不可读密文</button>
+      <button class="opt">D. 签名，用私钥对薪水值盖章</button>
+    </div>
+    <div class="explain">答案 B。泛化是降低粒度并保留统计意义。抑制是删除或屏蔽。加密和签名是另一类机制。</div>
+  </div>
+  <div class="quiz">
+    <div class="q">Q5 · 同一段流密码密钥流加密了两条不同明文，主要风险是？</div>
+    <div class="opts">
+      <button class="opt" data-correct="true">A. 两密文异或会露出明文的差</button>
+      <button class="opt">B. 两密文相加就会得到私钥</button>
+      <button class="opt">C. 分组长度会自动扩成 256</button>
+      <button class="opt">D. 公钥证书会因此立刻吊销</button>
+    </div>
+    <div class="explain">答案 A。c1 XOR c2 = m1 XOR m2。知道其中一条明文，就能推出另一条。</div>
+  </div>
+  <div class="quiz">
+    <div class="q">Q6 · 端口扫描发出 SYN 后收到 RST/ACK，通常说明？</div>
+    <div class="opts">
+      <button class="opt">A. 该端口开放并完成了握手</button>
+      <button class="opt" data-correct="true">B. 该端口关闭或连接被重置</button>
+      <button class="opt">C. 该主机已经被木马完全控</button>
+      <button class="opt">D. 这段流量一定属于 DNS 服务</button>
+    </div>
+    <div class="explain">答案 B。SYN/ACK 表示开放。RST/ACK 表示关闭或被重置拒绝。单凭这一包不能断定主机已被控制。</div>
+  </div>
+  <div class="quiz">
+    <div class="q">Q7 · Android app permissions are declared mainly in?（英文题）</div>
+    <div class="opts">
+      <button class="opt">A. The META-INF signature directory</button>
+      <button class="opt" data-correct="true">B. The AndroidManifest.xml file</button>
+      <button class="opt">C. The Linux /etc/shadow password file</button>
+      <button class="opt">D. The Windows event viewer console</button>
+    </div>
+    <div class="explain">答案 B。权限在 AndroidManifest.xml。META-INF 放签名。shadow 和事件查看器是主机题。</div>
+  </div>
+
+  <details class="details">
+    <summary>附加题（自拟小案例）· 点击展开参考写法</summary>
+    <p>公司边界是屏蔽子网。网站 10.1.1.10 在 DMZ，数据库在内网。防火墙 filter 表三条链策略都是 ACCEPT。互联网要访问网站的 80 和 443；只有运维机 10.8.8.8 能 SSH 到网站。测试库里的工资 8750 被显示成 5k–10k。登录 SQL 仍用字符串拼接。</p>
+    <div class="ans">
+      <strong>（1）结构与策略</strong><br>
+      屏蔽子网；默认 ACCEPT 是黑名单；穿过防火墙去网站的规则写在 FORWARD。<br><br>
+      <strong>（2）规则</strong><br>
+      <code>iptables -t filter -P FORWARD DROP</code><br>
+      <code>iptables -A FORWARD -p tcp -d 10.1.1.10 --dport 80 -j ACCEPT</code><br>
+      <code>iptables -A FORWARD -p tcp -d 10.1.1.10 --dport 443 -j ACCEPT</code><br>
+      <code>iptables -A FORWARD -p tcp -s 10.8.8.8 -d 10.1.1.10 --dport 22 -j ACCEPT</code><br><br>
+      <strong>（3）数据与注入</strong><br>
+      8750→5k–10k 是泛化。登录拼接应改为参数化查询。再补：库留在内网、测试数据脱敏、最小权限。
+    </div>
+  </details>
+
+  <h2>七、今晚任务（约 25 分钟）</h2>
+  <ol class="task-list">
+    <li><strong>对着速查卡讲一遍（10 分钟）</strong>：打开<a href="../reference/afternoon-forecast-cheatsheet.html">2026 下午卷题型速查</a>，盖住右列，只看题眼把名词和命令说出来。</li>
+    <li><strong>手算一道（8 分钟）</strong>：公钥 (55, 3)，明文 18。写出 n 的因子、φ(n)、d 和密文。对答案：φ=40，d=27，密文=2。</li>
+    <li><strong>睡前回忆（5 分钟）</strong>：① 五槽位：密码手算防火墙令，流量主机加场景；② 黑白名单：默认放行是黑名单，默认拒绝才是白名单；③ RSA：明文必须小于模数，大于等于 n 就先分块；④ 脱敏：精确值改成区间叫泛化，直接抹掉字段叫抑制；⑤ 密钥方向：公钥加密用私钥解，私钥签名用公钥验。</li>
+  </ol>
+
+  <h2>八、本课知识从哪来</h2>
+  <ul>
+    <li>官方成套只到 2022：<a href="https://www.tup.tsinghua.edu.cn/booksCenter/book_10316801.html">清华社《2018 至 2022 年试题分析与解答》</a></li>
+    <li>2022 下午公开题干：<a href="https://www.cnitpm.com/pm1/152048drwczstv57.html">信管网 · 2022 下半年案例分析</a></li>
+    <li>2021 考点清单：<a href="http://m.cnitpm.com/pm1/142967ofa0e0tkma.html">信管网 · 案例分析考点汇总</a></li>
+    <li>2023 考后：<a href="https://www.educity.cn/rk/5240477.html">希赛 · 2023 下半年解析</a>，<a href="https://www.cnitpm.com/pm1/153167dyt83zm01y.html">信管网 · 2023 难度分析</a></li>
+    <li>2024 单源回忆（降置信）：<a href="https://kitploit.com/en/tools/github/jas502n/2024informationsecurityengineer">2024 考生回忆条目</a></li>
+    <li>卷面分值与问答题型：<a href="https://www.educity.cn/rk/1972030.html">希赛 · 下午题题型说明</a>；本工作区 <a href="../reference/exam-2023-2025.html">2023–2025 考点分布</a></li>
+    <li>已学模板：<a href="./0023-afternoon-case-special.html">第 23 课 场景写法</a> · <a href="./0027-cyber-laws.html">第 27 课 三法</a> · <a href="./0028-iptables-topology.html">第 28 课</a> · <a href="./0031-iptables-afternoon.html">第 31 课 iptables</a> · <a href="../reference/mnemonics.html#lesson-32">本课口诀</a></li>
+  </ul>
+
+  <footer>
+    <p><strong>有不清楚的地方，随时问你的老师（我）。</strong>「这道 RSA 的 d 怎么试出来」「FORWARD 和 INPUT 怎么选」都可以拿题干来对。</p>
+    <p>学完后在对话里说「第 32 课学完了」，我会逐题做结业测。第 31 课如果还没学完，命令题仍以那一课为准。</p>
+  </footer>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/course-nav.js"></script>
+</body>
+</html>

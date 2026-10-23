@@ -77,6 +77,12 @@
 - 2023–2025 机考考点分布（本工作区）：[`reference/exam-2023-2025.html`](reference/exam-2023-2025.html)
   只收录可公开核对的考点清单与题型，不收录完整回忆卷；二手来源包括 [信管网 2025 综合知识公开题干](https://www.cnitpm.com/pm1/179799rht2l9gca8.html)、[信管网试题栏目](https://www.cnitpm.com/class/19/e6_1.html)。
   下午卷 iptables 命令语义以 [iptables(8)](https://man7.org/linux/man-pages/man8/iptables.8.html)、[iptables-extensions(8)](https://man7.org/linux/man-pages/man8/iptables-extensions.8.html)、[RHEL 6 Security Guide · Basic Firewall Policies](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/security_guide/sect-security_guide-using_iptables-basic_firewall_policies) 核对；入门模板见第 28 课，读规则、状态与 NAT 辨认见第 31 课。
+- 2026 下午卷题型预测（本工作区，2026-10-23）：[`lessons/0032-afternoon-exam-forecast.html`](lessons/0032-afternoon-exam-forecast.html)、[`reference/afternoon-forecast-cheatsheet.html`](reference/afternoon-forecast-cheatsheet.html)。这是槽位预测，不是原题。
+  - 2022 公开题干：[信管网 · 2022 下半年案例分析](https://www.cnitpm.com/pm1/152048drwczstv57.html)
+  - 2021 考点清单：[信管网 · 案例分析考点汇总](http://m.cnitpm.com/pm1/142967ofa0e0tkma.html)
+  - 2023 考后（两源一致）：[希赛](https://www.educity.cn/rk/5240477.html)、[信管网难度分析](https://www.cnitpm.com/pm1/153167dyt83zm01y.html)
+  - 2024 仅单源回忆：[考生回忆条目](https://kitploit.com/en/tools/github/jas502n/2024informationsecurityengineer)。未找到第二来源，课内降置信。
+  - 2025 下午：信管网 [《案例分析》页面](https://www.cnitpm.com/pm1/17980063kmgghr85.html) 仍是 2022 年数据安全例题并标注更新中。人人文库一份「零信任 + CVE-2025、每题 20 分」文档与历年简答题体例不符，不采用。
 
 以上内容可用于复习或自测，但若与现行考纲、指定教程、法律或国家标准冲突，以官方原文为准；不采用“押题”作为课程依据。
 
