@@ -94,8 +94,9 @@
 - 清华社 2019 上午卷自评（2026-10-19，Asia/Shanghai）：**41/75**（错 34，约 55%；`learning-records/0040-2019-morning-41-75.md`）。单题错项尚未贴出，不编造题号
 - 第 30 课（2019 上午复盘：易混对比 + 参数 + 流程手算）：**已制作**，结业测尚未做（`lessons/0030-2019-morning-recovery.html`；速查 `reference/compare-params-cheatsheet.html`；五类错题本空表 `learning-records/error-book/`）
 - 第 31 课（下午卷 iptables 专练：读规则、选链、NEW/ESTABLISHED、NAT 填空辨认）：**已制作**，用户尚未学习，结业测尚未做（`lessons/0031-iptables-afternoon.html`；口诀 `reference/mnemonics.html#lesson-31`；题库 `question-bank/iptables-afternoon.html`；占位 `learning-records/0041-lesson31-iptables-afternoon.md`）。学完后对话结业测
+- 第 32 课（下午卷题型预测：五槽位，不是原题）：**已制作**，用户尚未学习（`lessons/0032-afternoon-exam-forecast.html`；速查 `reference/afternoon-forecast-cheatsheet.html`；口诀 `reference/mnemonics.html#lesson-32`）。学完后对话结业测
 - 自编题库：`question-bank/`（60 道单选 + 3 道下午卷风格案例，另有 iptables 下午专练 6 道单选 + 1 道案例 3 小题；非官方真题）
-- **下一课入口**：第 31 课下午卷 iptables 专练。第 30 课结业测与 2019 错题补录仍待做
+- **下一课入口**：第 32 课下午卷题型预测。第 31 课结业测、第 30 课结业测与 2019 错题补录仍待做
 - 间隔复习加钉：优先回炉 DAC≠MAC（Round 7 专练 Q2 仍选反：系统按密级标签强制管控误选 DAC，应为 MAC；主人自己定、可转授＝DAC；系统定密级、用户改不了＝MAC。后半卷 Q38 是另一头——属主转授误选 MAC；Round 4 曾对，本轮 Q1 / Q3 / Q4 / Q5 对）。下午卷风格案例本场 **9/9**，不替代这一处加钉。前半卷三处本轮易错回炉 5/5 已回补：加密给乙用乙的公钥、英文可用性＝Availability、基线看偏离＝异常（特征对已知＝误用）。综合 Round 7 仍对：ESP、IaaS guest OS 归租户、日志半年→网安法、iptables 默认拒绝用 `-P INPUT DROP`、行三人（能力、前缀、口令）、DMZ 在屏蔽子网、等保测评≠风险评估、木马三关键词、工控可用＞完整＞机密、XSS 插脚本 / CSRF 借登录态。其余：网安法等保条号——现行第 23 条 / 教材常见原第 21 条；三法分工——日志/等保/关基 → 网安法；分类分级 → 数安法；同意/敏感 → 个保法；关基在等保之上
 
 

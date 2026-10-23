@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 // Service Worker：离线缓存课程与速查（版本号随内容更新递增）
-var CACHE_VERSION = 'ruankao-v12';
+var CACHE_VERSION = 'ruankao-v13';
 var CORE_ASSETS = [
   './',
   './index.html',
